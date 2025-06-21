@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     weaviate_url: str
     weaviate_api_key: str
     weaviate_class_name: str = "Product"
+    huggingface_api_key: Optional[str] = None  # Add this line!
     
     # LangSmith Configuration
     langchain_tracing_v2: bool = True
