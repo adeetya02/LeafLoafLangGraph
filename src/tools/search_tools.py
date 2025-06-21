@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 from src.config.settings import settings
 from src.core.config_manager import config_manager
 import structlog
+from datetime import datetime
 
 logger = structlog.get_logger()
 
@@ -77,7 +78,15 @@ class ProductSearchTool:
             # Process results
             products = []
             for item in results.objects:
-                products.append(item.properties)
+                product = item.properties
+                # Convert datetime objects to strings
+                cleaned_product = {}
+                for key, value in product.items():
+                    if isinstance(value, datetime):
+                        cleaned_product[key] = value.isoformat()
+                    else:
+                        cleaned_product[key] = value
+                products.append(cleaned_product)
             
             logger.info(f"Found {len(products)} products")
             if len(products) > 0:
