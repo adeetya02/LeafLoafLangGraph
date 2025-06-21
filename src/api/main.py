@@ -12,6 +12,7 @@ from src.models.state import SearchState, AgentStatus, SearchStrategy
 from src.utils.id_generator import generate_request_id, generate_trace_id
 import structlog
 from src.core.config_manager import config_manager
+from src.config.product_attributes import PRODUCT_ATTRIBUTES, DEFAULT_ALPHA, MIN_ALPHA, MAX_ALPHA
 
 logger = structlog.get_logger()
 
@@ -48,8 +49,36 @@ class SearchResponse(BaseModel):
     error: Optional[str] = None
     langsmith_trace_url: Optional[str] = None
 
+def calculate_dynamic_alpha(query: str) -> float:
+    """Calculate alpha using product attributes config"""
+    query_lower = query.lower()
+    alpha = DEFAULT_ALPHA
+    
+    # Track what we find
+    attribute_matches = []
+    
+    # Check each attribute category
+    for category, config in PRODUCT_ATTRIBUTES.items():
+        terms = config["terms"]
+        impact = config["alpha_impact"]
+        
+        # Count matches in this category
+        matches = sum(1 for term in terms if term in query_lower)
+        
+        if matches > 0:
+            alpha += impact * matches
+            attribute_matches.append(f"{category}:{matches}")
+    
+    # Keep alpha in bounds
+    alpha = max(MIN_ALPHA, min(MAX_ALPHA, alpha))
+    
+    # Log for debugging
+    logger.info(f"Query: '{query}' | Matches: {attribute_matches} | Alpha: {alpha}")
+    
+    return alpha    
+
 # Initialize state for a new search
-def create_initial_state(request: SearchRequest) -> SearchState:
+def create_initial_state(request: SearchRequest,calculated_alpha: float) -> SearchState:
     """Create initial state for LangGraph execution"""
     request_id = generate_request_id()
     trace_id = generate_trace_id()
@@ -72,7 +101,7 @@ def create_initial_state(request: SearchRequest) -> SearchState:
         "timestamp": datetime.utcnow(),
         
         # Search config (static for now)
-        "alpha_value": search_config["alpha"],
+        "alpha_value": calculated_alpha,
         "search_strategy": SearchStrategy.HYBRID,
         
         # Agent state
@@ -107,8 +136,10 @@ async def search_products(request: SearchRequest):
     start_time = time.perf_counter()
     
     try:
+        # Calculate dynamic alpha based on query
+        calculated_alpha = calculate_dynamic_alpha(request.query)
         # Create initial state
-        initial_state = create_initial_state(request)
+        initial_state = create_initial_state(request,calculated_alpha)
         
         logger.info(
             "Starting search",

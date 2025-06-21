@@ -645,3 +645,86 @@ markdown### ⚡ Performance Optimization Needed
    
    # Do:
    - Single call with higher limit (15-20 results)
+
+   Update: December 2024 - Performance & Search Improvements
+✅ Previously Completed:
+
+LangGraph multi-agent system with React pattern
+Weaviate integration working
+Fixed product merge issue (field name mismatch)
+Console logging working
+Basic search returning results
+
+🎯 Today's Planned Improvements:
+1. Single Weaviate Call Optimization
+
+Current: 2 calls per search (exact + category) = ~520ms
+Change: Single hybrid search call with dynamic parameters
+Expected: ~250ms (2x performance improvement)
+Location: src/agents/product_search.py - _plan_tool_calls() method
+
+2. Dynamic Alpha Calculation
+
+Current: Static alpha = 0.7 for all queries
+New: Dynamic alpha based on query analysis
+
+Specific queries (brands, attributes): α = 0.2-0.4
+General products: α = 0.4-0.6
+Exploratory queries: α = 0.7-0.9
+
+
+Location: New logic in supervisor.py
+
+3. Industry-Standard Tag Extraction
+
+Tags to Extract:
+
+Dietary claims (organic, gluten-free, kosher)
+Nutritional attributes (2%, low-fat, sugar-free)
+Preparation state (fresh, frozen, sliced)
+Quality grades (Grade A, Prime, Choice)
+Size descriptors (large, family-size, mini)
+
+
+Purpose: Better search relevance through tag-aware alpha adjustment
+Location: New rule configuration file + supervisor enhancement
+
+4. Customer-Safe Response Filtering
+
+Issue: Currently returning wholesale prices and pack sizes
+Fix: Filter to show only retail-appropriate fields
+Fields to Show: name, retailPrice, retailPackSize, isOrganic
+Fields to Hide: wholesalePrice, packSize, caseQuantity
+Location: response_compiler.py - _format_products() method
+
+📊 Expected Search Experience Improvements:
+Query TypeBeforeAfter"organic tomatoes"520ms, mixed results250ms, organic only"2% milk"All milk typesSpecifically 2% milk"dinner ideas"Poor semantic resultsGood meal suggestions"specific brand milk"Brand buried in resultsBrand products first
+🧪 Testing Plan:
+
+Test locally with various query types
+Measure latency improvements
+Verify alpha calculations
+Check result relevance
+Then deploy to GCP
+
+🔄 Implementation Order:
+
+Fix double Weaviate call (quick win)
+Add dynamic alpha calculation
+Implement tag extraction rules
+Test end-to-end locally
+Deploy to GCP for user testing
+
+📝 Notes:
+
+ML recommendations will be separate component (Phase 2)
+Redis caching will be added after validating base improvements
+Focus on search accuracy and speed for now
+
+🚀 Next After This:
+
+GCP deployment
+User testing and feedback
+Redis caching layer
+ML recommendation engine
+Voice integration (Twilio + 11Labs)
