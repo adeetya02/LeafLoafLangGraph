@@ -56,7 +56,7 @@ class ProductSearchTool:
                 self.client.close()
                 logger.info("Weaviate client connection closed")
     
-    async def run(self, query: str, limit: int = 10, filters: Optional[Dict] = None) -> Dict[str, Any]:
+    async def run(self, query: str, limit: int = 10, alpha: Optional[float]= None,filters: Optional[Dict] = None) -> Dict[str, Any]:
         """Execute product search"""
         try:
             # Get search configuration
@@ -69,10 +69,12 @@ class ProductSearchTool:
             collection = self.client.collections.get(settings.weaviate_class_name)
             
             # Execute hybrid search
+            # Use provided alpha or fall back to config
+            search_alpha = alpha if alpha is not None else search_config["alpha"]
             results = collection.query.hybrid(
-                query=query,
-                alpha=alpha,
-                limit=limit
+            query=query,
+            alpha=search_alpha,
+            limit=limit
             )
             
             # Process results
