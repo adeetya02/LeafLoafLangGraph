@@ -96,3 +96,37 @@ This document:
 4. ✅ Sets clear next steps
 
 Should I create this file in your repo? It helps track what we actually implemented vs the ambitious blueprint! 📝
+markdown## 🔄 Architecture Clarification (Updated)
+
+### Original Understanding vs. Actual Requirement:
+- **What we built**: Simple state-based agents (sequential flow)
+- **What's needed**: React (Reasoning + Acting) agents with tool calling
+- **Key difference**: React agents can loop, call tools, and make decisions
+
+### React Agent Pattern:
+User Query
+↓
+Supervisor (React Agent)
+├─ Reason: "I need to search for products"
+├─ Act: Call product_search tool
+├─ Observe: Results
+└─ Reason: "I have enough info" → Response
+OR "I need more info" → Loop
+
+### Updated State Structure:
+- Added `messages` list for conversation history
+- Added `tool_calls` tracking
+- Added `reasoning` steps
+- Added `should_continue` for React loops
+
+### Files to Update:
+1. ✅ `src/models/state.py` - Added React support
+2. ⏳ `src/agents/` - Need to rebuild as React agents
+3. ⏳ `src/tools/` - Need to create tool definitions
+4. ⏳ `src/core/graph.py` - Need conditional edges for loops
+
+### Next Steps:
+1. Create tool definitions (product_search, get_details, etc.)
+2. Rebuild agents with React pattern
+3. Add conditional routing in graph
+4. Test React loops with LangSmith tracing

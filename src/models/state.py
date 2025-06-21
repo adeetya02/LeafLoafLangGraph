@@ -1,6 +1,7 @@
-from typing import TypedDict, Optional, List, Dict, Any
+from typing import TypedDict, Optional, List, Dict, Any, Annotated
 from datetime import datetime
 from enum import Enum
+import operator
 
 class AgentStatus(Enum):
     PENDING = "pending"
@@ -14,25 +15,36 @@ class SearchStrategy(Enum):
     SEMANTIC = "semantic"
     HYBRID = "hybrid"
 
+class Message(TypedDict):
+    role: str  # "system", "human", "assistant", "tool"
+    content: str
+    tool_calls: Optional[List[Dict[str, Any]]]
+    tool_call_id: Optional[str]
+
 class SearchState(TypedDict):
+    # Conversation messages for React pattern
+    messages: Annotated[List[Message], operator.add]
+    
     # Request Context
     query: str
     request_id: str
     timestamp: datetime
     
-    # Alpha Calculation
+    # Search Configuration (for now static)
     alpha_value: float
     search_strategy: SearchStrategy
-    alpha_reasoning: List[str]
     
-    # Supervisor Decisions
-    intent: str
-    confidence: float
-    routing_decision: str
+    # Agent decisions and reasoning
+    next_action: Optional[str]  # What the agent decides to do next
+    reasoning: Annotated[List[str], operator.add]  # Agent reasoning steps
     
     # Product Search Results
     search_results: List[Dict[str, Any]]
     search_metadata: Dict[str, Any]
+    
+    # Tool call tracking
+    pending_tool_calls: List[Dict[str, Any]]
+    completed_tool_calls: List[Dict[str, Any]]
     
     # Execution Tracking
     agent_status: Dict[str, AgentStatus]
@@ -41,8 +53,8 @@ class SearchState(TypedDict):
     
     # LangSmith Tracing
     trace_id: Optional[str]
-    span_ids: Dict[str, str]
     
     # Final Response
     final_response: Dict[str, Any]
+    should_continue: bool  # For React loops
     error: Optional[str]
