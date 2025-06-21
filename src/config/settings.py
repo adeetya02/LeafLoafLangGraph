@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     langchain_project: str = "leafandloaf-search"
     
     # Search Configuration
-    search_timeout_ms: int = 280
+    search_timeout_ms: int = 5000
     default_search_limit: int = 10
     
     # Environment
