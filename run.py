@@ -17,6 +17,6 @@ if __name__ == "__main__":
         "src.api.main:app",
         host="0.0.0.0",
         port=settings.api_port,
-        reload=False  # Auto-reload on code changes
+        reload=False, # Auto-reload on code changes
         log_level="info"
     )
