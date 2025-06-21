@@ -80,6 +80,7 @@ class ProductSearchReactAgent(BaseAgent):
             if analysis["sufficient"]:
                 # Process and store final results
                 state["search_results"] = self._merge_results(results)
+                self.logger.info(f"Set search_results in state: {len(state['search_results'])} products")
                 state["search_metadata"] = {
                     "iterations": iterations,
                     "tools_called": len(state["completed_tool_calls"]),
@@ -89,7 +90,7 @@ class ProductSearchReactAgent(BaseAgent):
             
             # Need another iteration with different strategy
             state["search_strategy"] = analysis["next_strategy"]
-        
+        self.logger.info(f"Product Search returning state with {len(state.get('search_results', []))} products")
         return state
     
     def _plan_tool_calls(self, state: SearchState, query: str, intent: str, iteration: int) -> Dict:
@@ -222,12 +223,12 @@ class ProductSearchReactAgent(BaseAgent):
         """Merge results from multiple tool calls, removing duplicates"""
         all_products = []
         seen_ids = set()
-        
+        self.logger.info(f"Merging {len(results)} tool results")
         for result in results:
             if result.get("result", {}).get("success"):
                 products = result["result"].get("products", [])
                 for product in products:
-                    product_id = product.get("productId", "")
+                    product_id = product.get("sku", "")
                     if product_id and product_id not in seen_ids:
                         seen_ids.add(product_id)
                         all_products.append(product)

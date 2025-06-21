@@ -11,7 +11,7 @@ class ResponseCompilerAgent(BaseAgent):
         
     async def _run(self, state: SearchState) -> SearchState:
         """Compile final response from all agent outputs"""
-        
+        self.logger.info(f"Response Compiler received state with {len(state.get('search_results', []))} products")    
         # Get search results
         products = state.get("search_results", [])
         search_metadata = state.get("search_metadata", {})
