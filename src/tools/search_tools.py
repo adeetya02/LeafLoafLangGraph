@@ -101,38 +101,42 @@ class GetProductDetailsTool:
             skip_init_checks=True
         )
     
-    async def run(self, product_id: str) -> Dict[str, Any]:
-        """Get detailed product information"""
+    async def run(self, query: str, limit: int = 10, filters: Optional[Dict] = None) -> Dict[str, Any]:
+        """Execute product search"""
         try:
+            # Get search configuration
+            search_config = config_manager.get_default_search_config()
+            alpha = search_config["alpha"]
+            
+            logger.info(f"Searching for: {query}, alpha: {alpha}, limit: {limit}")
+            
             # Get collection
             collection = self.client.collections.get(settings.weaviate_class_name)
             
-            # Query by product ID
-            results = collection.query.fetch_objects(
-                where=collection.filter.by_property("productId").equal(product_id),
-                limit=1
-            )
-            
-            if results.objects:
-                product = results.objects[0].properties
-                return {
-                    "success": True,
-                    "product": product
-                }
-            else:
-                return {
-                    "success": False,
-                    "error": "Product not found",
-                    "product_id": product_id
-                }
-                
-        except Exception as e:
-            logger.error(f"Get product details failed: {e}")
-            return {
-                "success": False,
-                "error": str(e),
-                "product_id": product_id
-            }
+            # Execute hybrid search on the actual properties
+            # Weaviate will search across text properties: name, searchTerms, category, etc.
+            results = collection.query.hybrid(
+                query=query,
+                alpha=alpha,
+                limit=limit
+        )
+        
+        # Process results
+        products = []
+        for item in results.objects:
+            products.append(item.properties)
+        
+        logger.info(f"Found {len(products)} products")
+        if len(products) > 0:
+            logger.info(f"First product: {products[0].get('name', 'No name')}")
+        
+        return {
+            "success": True,
+            "query": query,
+            "count": len(products),
+            "products": products,
+            "search_config": search_config
+        }
 
 # Tool instances
 product_search_tool = ProductSearchTool()
