@@ -1,6 +1,8 @@
+import weaviate
+from weaviate.auth import AuthApiKey
+import weaviate.classes as wvc
 from typing import Dict, List, Any, Optional
 from pydantic import BaseModel, Field
-import weaviate
 from src.config.settings import settings
 from src.core.config_manager import config_manager
 import structlog
@@ -26,14 +28,14 @@ class ProductSearchTool:
         self.client = self._init_weaviate_client()
         
     def _init_weaviate_client(self):
-        """Initialize Weaviate client"""
+        """Initialize Weaviate v4 client"""
         try:
-            client = weaviate.Client(
-                url=settings.weaviate_url,
-                auth_client_secret=weaviate.AuthApiKey(api_key=settings.weaviate_api_key),
-                timeout_config=(5, 15)  # (connect timeout, read timeout)
+            client = weaviate.connect_to_wcs(
+                cluster_url=settings.weaviate_url,
+                auth_credentials=AuthApiKey(settings.weaviate_api_key),
+                skip_init_checks=True
             )
-            logger.info("Weaviate client initialized successfully")
+            logger.info("Weaviate v4 client initialized successfully")
             return client
         except Exception as e:
             logger.error(f"Failed to initialize Weaviate client: {e}")
@@ -46,23 +48,20 @@ class ProductSearchTool:
             search_config = config_manager.get_default_search_config()
             alpha = search_config["alpha"]
             
-            # Build the search query
-            search_builder = (
-                self.client.query
-                .get(settings.weaviate_class_name, ["name", "description", "brand", "size", "category"])
-                .with_hybrid(query=query, alpha=alpha)
-                .with_limit(limit)
+            # Get collection
+            collection = self.client.collections.get(settings.weaviate_class_name)
+            
+            # Execute hybrid search
+            results = collection.query.hybrid(
+                query=query,
+                alpha=alpha,
+                limit=limit
             )
             
-            # Add filters if provided
-            if filters:
-                search_builder = search_builder.with_where(filters)
-            
-            # Execute search
-            results = search_builder.do()
-            
             # Process results
-            products = results.get("data", {}).get("Get", {}).get(settings.weaviate_class_name, [])
+            products = []
+            for item in results.objects:
+                products.append(item.properties)
             
             return {
                 "success": True,
@@ -96,29 +95,29 @@ class GetProductDetailsTool:
     """
     
     def __init__(self):
-        self.client = ProductSearchTool()._init_weaviate_client()
+        self.client = weaviate.connect_to_wcs(
+            cluster_url=settings.weaviate_url,
+            auth_credentials=AuthApiKey(settings.weaviate_api_key),
+            skip_init_checks=True
+        )
     
     async def run(self, product_id: str) -> Dict[str, Any]:
         """Get detailed product information"""
         try:
-            # Get product by ID
-            result = (
-                self.client.query
-                .get(settings.weaviate_class_name)
-                .with_where({
-                    "path": ["productId"],
-                    "operator": "Equal", 
-                    "valueText": product_id
-                })
-                .do()
+            # Get collection
+            collection = self.client.collections.get(settings.weaviate_class_name)
+            
+            # Query by product ID
+            results = collection.query.fetch_objects(
+                where=collection.filter.by_property("productId").equal(product_id),
+                limit=1
             )
             
-            products = result.get("data", {}).get("Get", {}).get(settings.weaviate_class_name, [])
-            
-            if products:
+            if results.objects:
+                product = results.objects[0].properties
                 return {
                     "success": True,
-                    "product": products[0]
+                    "product": product
                 }
             else:
                 return {

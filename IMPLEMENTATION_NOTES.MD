@@ -180,3 +180,60 @@ while not done:
 - ✅ Easier to add new agents
 - ✅ Better testing isolation
 - ✅ True React autonomous agents
+
+markdown## 🐛 Issues Encountered & Solutions (Dec 2024)
+
+### 1. **Weaviate Client Version**
+- **Issue**: Weaviate v3 client deprecated, v4 required
+- **Solution**: Updated to Weaviate v4 API
+  ```python
+  # OLD (v3)
+  client = weaviate.Client(url=..., auth_client_secret=...)
+  
+  # NEW (v4)
+  client = weaviate.connect_to_wcs(
+      cluster_url=...,
+      auth_credentials=AuthApiKey(...)
+  )
+2. Config File Location
+
+Issue: config/agent_priorities.yaml not found
+Solution: File must be in project root, not in src/
+
+3. Import Structure
+
+Proper imports for Weaviate v4:
+pythonimport weaviate
+from weaviate.auth import AuthApiKey
+import weaviate.classes as wvc
+
+
+📁 Final Project Structure
+LeafLoafLangGraph/
+├── config/
+│   └── agent_priorities.yaml  ← Configuration here
+├── src/
+│   ├── agents/
+│   ├── api/
+│   ├── config/
+│   ├── core/
+│   ├── models/
+│   ├── tools/
+│   └── utils/
+├── .env
+├── requirements.txt
+└── run.py
+🚀 Running the System
+
+Activate virtual environment
+Ensure .env has correct Weaviate credentials
+Run: python run.py
+Access: http://localhost:8000/docs
+
+📊 Current Status
+
+✅ LangGraph autonomous agents implemented
+✅ React pattern with tool calling
+✅ Weaviate v4 integration
+✅ FastAPI with OpenAPI docs
+✅ LangSmith tracing ready
