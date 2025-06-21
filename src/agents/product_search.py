@@ -94,81 +94,74 @@ class ProductSearchReactAgent(BaseAgent):
         return state
     
     def _plan_tool_calls(self, state: SearchState, query: str, intent: str, iteration: int) -> Dict:
-        """Plan which tools to call based on current state"""
-        tool_calls = []
-        existing_results = state.get("search_results", [])
-        
-        if iteration == 1:
-            # First iteration - cast a wide net
-            if intent == "specific_product":
-                # Parallel search: exact name + category + brand
-                tool_calls = [
-                    {
-                        "id": f"call_search_exact_{iteration}",
-                        "name": "product_search",
-                        "args": {"query": query, "limit": 5}
-                    },
-                    {
-                        "id": f"call_search_category_{iteration}",
-                        "name": "product_search", 
-                        "args": {"query": self._extract_category(query), "limit": 10}
-                    }
-                ]
-                reasoning = "Searching with multiple strategies: exact match and category search"
-                
-            elif intent == "brand_search":
-                brand = self._extract_brand(query)
-                tool_calls = [
-                    {
-                        "id": f"call_brand_products_{iteration}",
-                        "name": "product_search",
-                        "args": {"query": brand, "limit": 20}
-                    }
-                ]
-                reasoning = f"Searching for all products from brand: {brand}"
-                
-            else:  # general search
-                tool_calls = [
-                    {
-                        "id": f"call_general_search_{iteration}",
-                        "name": "product_search",
-                        "args": {"query": query, "limit": 15}
-                    }
-                ]
-                reasoning = "Performing general product search"
-                
-        elif iteration == 2:
-            # Second iteration - refine or expand
-            if len(existing_results) < 3:
-                # Too few results - broaden search
-                broad_query = self._broaden_query(query)
-                tool_calls = [
-                    {
-                        "id": f"call_broad_search_{iteration}",
-                        "name": "product_search",
-                        "args": {"query": broad_query, "limit": 10}
-                    }
-                ]
-                reasoning = f"Too few results, broadening search to: {broad_query}"
-                
-            elif len(existing_results) > 20:
-                # Too many results - get details on top items
-                top_products = existing_results[:5]
-                tool_calls = [
-                    {
-                        "id": f"call_details_{i}_{iteration}",
-                        "name": "get_product_details",
-                        "args": {"product_id": product.get("productId", "")}
-                    }
-                    for i, product in enumerate(top_products)
-                    if product.get("productId")
-                ]
-                reasoning = "Getting detailed information for top 5 products"
-                
-        return {
-            "tool_calls": tool_calls,
-            "reasoning": reasoning
-        }
+    """Plan which tools to call based on current state"""
+    tool_calls = []
+    existing_results = state.get("search_results", [])
+    
+    if iteration == 1:
+        # First iteration - cast a wide net
+        if intent == "specific_product":
+            # Get alpha from state (calculated in main.py)
+            alpha = state.get("alpha_value", 0.5)
+            
+            tool_calls = [{
+                "id": f"call_search_{iteration}",
+                "name": "product_search",
+                "args": {
+                    "query": query, 
+                    "limit": 20,
+                    "alpha": alpha
+                }
+            }]
+            reasoning = f"Performing single search with alpha={alpha}"
+            
+        elif intent == "brand_search":
+            brand = self._extract_brand(query)
+            tool_calls = [{
+                "id": f"call_brand_products_{iteration}",
+                "name": "product_search",
+                "args": {"query": brand, "limit": 20}
+            }]
+            reasoning = f"Searching for all products from brand: {brand}"
+            
+        else:  # general search
+            tool_calls = [{
+                "id": f"call_general_search_{iteration}",
+                "name": "product_search",
+                "args": {"query": query, "limit": 15}
+            }]
+            reasoning = "Performing general product search"
+            
+    elif iteration == 2:
+        # Second iteration - refine or expand
+        if len(existing_results) < 3:
+            # Too few results - broaden search
+            broad_query = self._broaden_query(query)
+            tool_calls = [{
+                "id": f"call_broad_search_{iteration}",
+                "name": "product_search",
+                "args": {"query": broad_query, "limit": 10}
+            }]
+            reasoning = f"Too few results, broadening search to: {broad_query}"
+            
+        elif len(existing_results) > 20:
+            # Too many results - get details on top items
+            top_products = existing_results[:5]
+            tool_calls = [
+                {
+                    "id": f"call_details_{i}_{iteration}",
+                    "name": "get_product_details",
+                    "args": {"product_id": product.get("productId", "")}
+                }
+                for i, product in enumerate(top_products)
+                if product.get("productId")
+            ]
+            reasoning = "Getting detailed information for top 5 products"
+    
+    return {
+        "tool_calls": tool_calls,
+        "reasoning": reasoning
+    }
     
     async def _execute_parallel_tools(self, tool_calls: List[Dict]) -> List[Dict]:
         """Execute multiple tool calls in parallel"""

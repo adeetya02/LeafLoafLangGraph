@@ -12,7 +12,7 @@ from src.models.state import SearchState, AgentStatus, SearchStrategy
 from src.utils.id_generator import generate_request_id, generate_trace_id
 import structlog
 from src.core.config_manager import config_manager
-from src.config.product_attributes import PRODUCT_ATTRIBUTES, DEFAULT_ALPHA, MIN_ALPHA, MAX_ALPHA
+from config.product_attributes import PRODUCT_ATTRIBUTES, DEFAULT_ALPHA, MIN_ALPHA, MAX_ALPHA
 
 logger = structlog.get_logger()
 
