@@ -1,11 +1,11 @@
 import uvicorn
 from src.config.settings import settings
-import structlog
 
-structlog.configure(
-    processors=[
-        structlog.dev.ConsoleRenderer()
-    ]
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 if __name__ == "__main__":
     print(f"🚀 Starting {settings.api_title} on port {settings.api_port}")
@@ -18,4 +18,5 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=settings.api_port,
         reload=False  # Auto-reload on code changes
+        log_level="info"
     )
