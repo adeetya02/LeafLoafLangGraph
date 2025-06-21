@@ -1,6 +1,12 @@
 import uvicorn
 from src.config.settings import settings
+import structlog
 
+structlog.configure(
+    processors=[
+        structlog.dev.ConsoleRenderer()
+    ]
+)
 if __name__ == "__main__":
     print(f"🚀 Starting {settings.api_title} on port {settings.api_port}")
     print(f"📊 Weaviate URL: {settings.weaviate_url}")
@@ -11,5 +17,5 @@ if __name__ == "__main__":
         "src.api.main:app",
         host="0.0.0.0",
         port=settings.api_port,
-        reload=True  # Auto-reload on code changes
+        reload=False  # Auto-reload on code changes
     )

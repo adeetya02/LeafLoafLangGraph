@@ -8,10 +8,12 @@ class Settings(BaseSettings):
     api_port: int = 8000
     
     # Weaviate Configuration
-    weaviate_url: str
-    weaviate_api_key: str
+    weaviate_url: Optional[str] = None
+    weaviate_api_key: Optional[str] = None
     weaviate_class_name: str = "Product"
-    huggingface_api_key: Optional[str] = None  # Add this line!
+    
+    # HuggingFace Configuration
+    huggingface_api_key: Optional[str] = None
     
     # LangSmith Configuration
     langchain_tracing_v2: bool = True
@@ -26,8 +28,9 @@ class Settings(BaseSettings):
     # Environment
     environment: str = "development"
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8"
+    }
 
 settings = Settings()

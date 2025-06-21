@@ -68,6 +68,10 @@ class SupervisorReactAgent(BaseAgent):
         """Analyze query intent without using tools"""
         query_lower = query.lower()
         
+        # Check for food/product queries first
+        food_terms = ["potato", "tomato", "pepper", "milk", "bread", "fruit", "vegetable"]
+        if any(term in query_lower for term in food_terms):
+            return "specific_product"
         # Product-specific queries
         if any(word in query_lower for word in ["organic", "fresh", "price", "cost", "$"]):
             return "specific_product"

@@ -15,12 +15,17 @@ class ProductSearchReactAgent(BaseAgent):
         
     async def _run(self, state: SearchState) -> SearchState:
         """Autonomous search with ability to call multiple tools"""
-        
+        self.logger.info(f"ProductSearch received state: should_search={state.get('should_search')}, next_action={state.get('next_action')}")
         # Check if we should run
         if not state.get("should_search", False):
             self.logger.info("No search requested, skipping")
             state["agent_status"][self.name] = "skipped"
             return state
+        
+        # Log what we're about to search
+        search_params = state.get("search_params", {})
+        query = search_params.get("original_query", state["query"])
+        self.logger.info(f"Executing search for: {query}")
         
         search_params = state.get("search_params", {})
         query = search_params.get("original_query", state["query"])
