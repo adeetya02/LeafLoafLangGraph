@@ -78,6 +78,9 @@ def create_initial_state(request: SearchRequest) -> SearchState:
         # Agent state
         "next_action": None,
         "reasoning": [],
+        "routing_decision": None,
+        "should_search": False,    # This too!
+        "search_params": {},       # And this!
         "search_results": [],
         "search_metadata": {},
         "pending_tool_calls": [],

@@ -35,7 +35,12 @@ class SearchState(TypedDict):
     search_strategy: SearchStrategy
     
     # Agent decisions and reasoning
+    intent: Optional[str]
     next_action: Optional[str]  # What the agent decides to do next
+    confidence: float
+    routing_decision: Optional[str]  # Add this!
+    should_search: bool  # Add this!
+    search_params: Dict[str, Any]  # Add this!
     reasoning: Annotated[List[str], operator.add]  # Agent reasoning steps
     
     # Product Search Results

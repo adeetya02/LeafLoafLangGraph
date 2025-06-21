@@ -1,5 +1,6 @@
 import uvicorn
 from src.config.settings import settings
+import logging
 
 
 # Configure logging

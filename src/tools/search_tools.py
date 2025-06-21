@@ -49,6 +49,11 @@ class ProductSearchTool:
         except Exception as e:
             logger.error(f"Failed to initialize Weaviate client: {e}")
             raise
+        def close(self):
+            """Close the Weaviate client connection"""
+            if hasattr(self, 'client') :
+                self.client.close()
+                logger.info("Weaviate client connection closed")
     
     async def run(self, query: str, limit: int = 10, filters: Optional[Dict] = None) -> Dict[str, Any]:
         """Execute product search"""

@@ -16,10 +16,13 @@ class ProductSearchReactAgent(BaseAgent):
     async def _run(self, state: SearchState) -> SearchState:
         """Autonomous search with ability to call multiple tools"""
         self.logger.info(f"ProductSearch received state: should_search={state.get('should_search')}, next_action={state.get('next_action')}")
-        # Check if we should run
-        if not state.get("should_search", False):
-            self.logger.info("No search requested, skipping")
-            state["agent_status"][self.name] = "skipped"
+        
+        # Log what routing we got
+        routing = state.get("routing_decision")
+        self.logger.info(f"Product Search - routing_decision: '{routing}'")
+        # Check if we should run- the supervisor sets routing decision
+        if routing != "product_search":
+            self.logger.info(f"Not routed to product search (routing={routing}), skipping")
             return state
         
         # Log what we're about to search
