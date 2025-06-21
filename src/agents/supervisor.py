@@ -1,140 +1,159 @@
 from typing import Dict, Any, List, Optional
 from src.agents.base import BaseAgent
 from src.models.state import SearchState, Message
-from src.tools.tool_executor import tool_executor
-import json
 
 class SupervisorReactAgent(BaseAgent):
-    """React Supervisor agent that reasons about queries and decides on actions"""
+    """Autonomous Supervisor that routes to other agents without calling tools"""
     
     def __init__(self):
         super().__init__("supervisor")
-        self.tool_executor = tool_executor
-        self.max_iterations = 3
+        self.max_iterations = 2
         
     async def _run(self, state: SearchState) -> SearchState:
-        """React loop: Reason, Act, Observe"""
+        """Analyze intent and route to appropriate agents"""
         query = state["query"]
-        iterations = 0
         
-        # Initial reasoning
+        # Add initial analysis message
         state["messages"].append({
             "role": "assistant",
-            "content": f"Analyzing query: '{query}'",
+            "content": f"Analyzing request: '{query}'",
             "tool_calls": None,
             "tool_call_id": None
         })
         
-        while iterations < self.max_iterations and state.get("should_continue", True):
-            iterations += 1
+        # REASON: Analyze the query intent
+        intent = self._analyze_intent(query)
+        confidence = self._calculate_confidence(query, intent)
+        
+        state["reasoning"].append(
+            f"Supervisor: Classified as '{intent}' with {confidence:.2f} confidence"
+        )
+        
+        # DECIDE: Which agent should handle this?
+        routing_decision = self._decide_routing(intent, confidence)
+        
+        # Update state with decisions
+        state["intent"] = intent
+        state["confidence"] = confidence
+        state["routing_decision"] = routing_decision
+        state["next_action"] = routing_decision  # Tell next agent what to do
+        
+        # Add routing message
+        state["messages"].append({
+            "role": "assistant",
+            "content": f"Routing to {routing_decision} agent for: {intent}",
+            "tool_calls": None,
+            "tool_call_id": None
+        })
+        
+        # Set flags for downstream agents
+        if routing_decision == "product_search":
+            state["should_search"] = True
+            state["search_params"] = self._create_search_params(query, intent)
+        elif routing_decision == "help":
+            state["should_help"] = True
+        elif routing_decision == "clarify":
+            state["needs_clarification"] = True
             
-            # REASON: Analyze what we need to do
-            reasoning = self._reason(state)
-            state["reasoning"].append(reasoning)
-            
-            # Decide next action
-            next_action = self._decide_action(state, reasoning)
-            state["next_action"] = next_action
-            
-            if next_action == "search":
-                # ACT: Create tool call for product search
-                tool_call = self._create_search_tool_call(query)
-                state["pending_tool_calls"].append(tool_call)
-                
-                # Add assistant message with tool call
-                state["messages"].append({
-                    "role": "assistant",
-                    "content": f"Searching for products matching: {query}",
-                    "tool_calls": [tool_call],
-                    "tool_call_id": None
-                })
-                
-                # Execute tool
-                results = await self.tool_executor.execute_tool_calls([tool_call])
-                
-                # OBSERVE: Add tool results to messages
-                for result in results:
-                    state["messages"].append({
-                        "role": "tool",
-                        "content": json.dumps(result["result"]),
-                        "tool_calls": None,
-                        "tool_call_id": result["tool_call_id"]
-                    })
-                    state["completed_tool_calls"].append(result)
-                
-                # Check if we have good results
-                if self._has_good_results(results):
-                    state["should_continue"] = False
-                    state["search_results"] = results[0]["result"].get("products", [])
-                    
-            elif next_action == "clarify":
-                # Need more information from user
-                state["messages"].append({
-                    "role": "assistant", 
-                    "content": "I need more information to help you better. Could you be more specific about what you're looking for?",
-                    "tool_calls": None,
-                    "tool_call_id": None
-                })
-                state["should_continue"] = False
-                
-            else:  # done
-                state["should_continue"] = False
+        self.logger.info(
+            "Routing decision made",
+            intent=intent,
+            confidence=confidence,
+            routing=routing_decision
+        )
         
         return state
     
-    def _reason(self, state: SearchState) -> str:
-        """Reasoning step - analyze current state"""
-        query = state["query"].lower()
-        has_results = len(state.get("search_results", [])) > 0
+    def _analyze_intent(self, query: str) -> str:
+        """Analyze query intent without using tools"""
+        query_lower = query.lower()
         
-        if not has_results:
-            if self._is_specific_query(query):
-                return "Query is specific, should search for exact products"
-            elif self._is_browse_query(query):
-                return "Query is exploratory, should search broadly"
-            else:
-                return "Query is unclear, might need clarification"
-        else:
-            return "Already have search results, should compile response"
-    
-    def _decide_action(self, state: SearchState, reasoning: str) -> str:
-        """Decide what action to take based on reasoning"""
-        if "should search" in reasoning:
-            return "search"
-        elif "need clarification" in reasoning:
-            return "clarify"
-        else:
-            return "done"
-    
-    def _is_specific_query(self, query: str) -> bool:
-        """Check if query is asking for specific products"""
-        specific_indicators = ["organic", "fresh", "pound", "lb", "oz", "brand"]
-        return any(indicator in query for indicator in specific_indicators)
-    
-    def _is_browse_query(self, query: str) -> bool:
-        """Check if query is exploratory"""
-        browse_indicators = ["dinner", "meal", "healthy", "snacks", "ideas"]
-        return any(indicator in query for indicator in browse_indicators)
-    
-    def _create_search_tool_call(self, query: str) -> Dict[str, Any]:
-        """Create a tool call for product search"""
-        return {
-            "id": f"call_{self.name}_{len(state.get('pending_tool_calls', []))}",
-            "name": "product_search",
-            "args": {
-                "query": query,
-                "limit": 10
-            }
-        }
-    
-    def _has_good_results(self, results: List[Dict]) -> bool:
-        """Check if we have good search results"""
-        if not results:
-            return False
+        # Product-specific queries
+        if any(word in query_lower for word in ["organic", "fresh", "price", "cost", "$"]):
+            return "specific_product"
         
-        result = results[0]
-        if result.get("error"):
-            return False
+        # Brand queries
+        if any(word in query_lower for word in ["brand", "from"]):
+            return "brand_search"
+        
+        # Category browsing
+        if any(word in query_lower for word in ["vegetables", "fruits", "dairy", "meat"]):
+            return "category_browse"
+        
+        # Meal planning
+        if any(word in query_lower for word in ["dinner", "lunch", "meal", "recipe", "cook"]):
+            return "meal_planning"
+        
+        # General browsing
+        if any(word in query_lower for word in ["healthy", "snacks", "ideas", "suggestions"]):
+            return "discovery"
+        
+        # Help requests
+        if any(word in query_lower for word in ["help", "how", "what can"]):
+            return "help_request"
+        
+        # Unclear
+        if len(query_lower.split()) < 2:
+            return "unclear"
             
-        products = result.get("result", {}).get("products", [])
-        return len(products) > 0
+        return "general_search"
+    
+    def _calculate_confidence(self, query: str, intent: str) -> float:
+        """Calculate confidence in the intent classification"""
+        base_confidence = 0.6
+        
+        # Longer, more specific queries get higher confidence
+        word_count = len(query.split())
+        if word_count > 4:
+            base_confidence += 0.2
+        elif word_count > 2:
+            base_confidence += 0.1
+            
+        # Specific intents get higher confidence
+        if intent in ["specific_product", "brand_search"]:
+            base_confidence += 0.2
+        elif intent == "unclear":
+            base_confidence -= 0.2
+            
+        return min(max(base_confidence, 0.2), 0.95)
+    
+    def _decide_routing(self, intent: str, confidence: float) -> str:
+        """Decide which agent should handle the request"""
+        
+        # Low confidence - need clarification
+        if confidence < 0.4:
+            return "clarify"
+        
+        # Route based on intent
+        routing_map = {
+            "specific_product": "product_search",
+            "brand_search": "product_search",
+            "category_browse": "product_search",
+            "meal_planning": "product_search",  # For now, will add meal agent later
+            "discovery": "product_search",
+            "general_search": "product_search",
+            "help_request": "help",
+            "unclear": "clarify"
+        }
+        
+        return routing_map.get(intent, "product_search")
+    
+    def _create_search_params(self, query: str, intent: str) -> Dict[str, Any]:
+        """Create parameters for the search agent"""
+        params = {
+            "original_query": query,
+            "intent": intent,
+            "search_type": "broad"  # default
+        }
+        
+        # Adjust search type based on intent
+        if intent in ["specific_product", "brand_search"]:
+            params["search_type"] = "specific"
+            params["limit"] = 5
+        elif intent in ["category_browse", "discovery"]:
+            params["search_type"] = "broad"
+            params["limit"] = 20
+        else:
+            params["limit"] = 10
+            
+        return params

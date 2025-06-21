@@ -130,3 +130,53 @@ OR "I need more info" → Loop
 2. Rebuild agents with React pattern
 3. Add conditional routing in graph
 4. Test React loops with LangSmith tracing
+## 🤖 Agent vs Tool Clarification
+
+### Definitions:
+- **Tool**: Simple function that does ONE thing (e.g., search Weaviate, get details)
+- **Agent**: Autonomous entity that reasons, decides, and calls tools
+
+### Updated Autonomous Flow:
+Supervisor Agent
+
+Analyzes query intent
+Decides which agent should handle it
+Routes to appropriate agent (doesn't call tools directly)
+
+
+Product Search Agent (Autonomous)
+
+Receives intent from Supervisor
+Calls product_search tool
+Analyzes results
+Decides if refinement needed
+Can call additional tools (filter, sort, etc.)
+Puts final curated results in state
+
+
+Response Compiler Agent
+
+Reads final results
+Formats for API response
+Adds execution transparency
+
+
+
+
+### Key Architecture Decision:
+- **Agents are autonomous**: Each agent owns its tools and decisions
+- **Clear separation**: Agents decide WHAT to do, Tools execute HOW
+- **No tool sharing**: Supervisor doesn't call search tools, that's Product Search Agent's job
+
+### React Pattern Per Agent:
+while not done:
+1. Reason: Analyze current state
+2. Act: Call appropriate tool(s)
+3. Observe: Check results
+4. Decide: Continue or done
+
+### Benefits:
+- ✅ Each agent has clear responsibility
+- ✅ Easier to add new agents
+- ✅ Better testing isolation
+- ✅ True React autonomous agents
