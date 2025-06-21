@@ -1,4 +1,6 @@
 from typing import Dict, Any, List, Optional
+
+from langsmith import traceable
 from src.agents.base import BaseAgent
 from src.models.state import SearchState, Message
 from src.tools.tool_executor import tool_executor
@@ -92,7 +94,7 @@ class ProductSearchReactAgent(BaseAgent):
             state["search_strategy"] = analysis["next_strategy"]
         self.logger.info(f"Product Search returning state with {len(state.get('search_results', []))} products")
         return state
-    
+    @traceable(name="Product Search Planning")
     def _plan_tool_calls(self, state: SearchState, query: str, intent: str, iteration: int) -> Dict:
         """Plan which tools to call based on current state"""
         tool_calls = []

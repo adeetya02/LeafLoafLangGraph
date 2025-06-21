@@ -13,6 +13,7 @@ from src.utils.id_generator import generate_request_id, generate_trace_id
 import structlog
 from src.core.config_manager import config_manager
 from config.product_attributes import PRODUCT_ATTRIBUTES, DEFAULT_ALPHA, MIN_ALPHA, MAX_ALPHA
+from langsmith import traceable
 
 logger = structlog.get_logger()
 
@@ -48,7 +49,7 @@ class SearchResponse(BaseModel):
     message: Optional[str] = None
     error: Optional[str] = None
     langsmith_trace_url: Optional[str] = None
-
+@traceable(name="calculate_dynamic_alpha")
 def calculate_dynamic_alpha(query: str) -> float:
     """Calculate alpha using product attributes config"""
     query_lower = query.lower()
