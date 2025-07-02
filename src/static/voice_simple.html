@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice - Simple Streaming</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status.disconnected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status.processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .transcript {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        
+        .transcript h3 {
+            margin-top: 0;
+            color: #495057;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .transcript-text {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #212529;
+        }
+        
+        .final-transcript {
+            background-color: #e3f2fd;
+            font-weight: 600;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #218838;
+        }
+        
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .products {
+            margin-top: 20px;
+        }
+        
+        .product {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #212529;
+        }
+        
+        .product-price {
+            color: #28a745;
+            font-weight: 600;
+        }
+        
+        .product-info {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .debug {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🥬 LeafLoaf Voice Search</h1>
+        
+        <div id="status" class="status disconnected">
+            Disconnected
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startStreaming()">Start Listening</button>
+            <button id="stopBtn" onclick="stopStreaming()" disabled>Stop Listening</button>
+        </div>
+        
+        <div class="transcript">
+            <h3>Live Transcript</h3>
+            <div id="transcript" class="transcript-text">
+                Ready to listen...
+            </div>
+        </div>
+        
+        <div id="finalTranscript" class="transcript final-transcript" style="display:none;">
+            <h3>Processing Query</h3>
+            <div id="finalText" class="transcript-text"></div>
+        </div>
+        
+        <div id="products" class="products"></div>
+        
+        <div id="debug" class="debug"></div>
+    </div>
+
+    <script>
+        let ws = null;
+        let audioContext = null;
+        let processor = null;
+        let source = null;
+        let stream = null;
+        
+        function log(message) {
+            const debug = document.getElementById('debug');
+            const time = new Date().toLocaleTimeString();
+            debug.innerHTML = `${time}: ${message}<br>` + debug.innerHTML;
+        }
+        
+        function updateStatus(status, message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = message;
+        }
+        
+        async function startStreaming() {
+            try {
+                log('Starting streaming...');
+                
+                // Get microphone access
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                log('Got microphone access');
+                
+                // Create WebSocket
+                ws = new WebSocket('ws://localhost:8080/api/v1/voice-simple/stream');
+                
+                ws.onopen = () => {
+                    log('WebSocket connected');
+                    updateStatus('connected', 'Connected - Listening...');
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                    
+                    // Start audio processing
+                    startAudioProcessing();
+                };
+                
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    log(`Received: ${data.type}`);
+                    
+                    switch(data.type) {
+                        case 'system':
+                            log(data.message);
+                            break;
+                            
+                        case 'transcript':
+                            document.getElementById('transcript').textContent = data.text;
+                            if (data.speech_final) {
+                                log(`Speech final: ${data.text}`);
+                            }
+                            break;
+                            
+                        case 'final_transcript':
+                            document.getElementById('finalTranscript').style.display = 'block';
+                            document.getElementById('finalText').textContent = data.text;
+                            log(`Final transcript: ${data.text}`);
+                            break;
+                            
+                        case 'search_start':
+                            updateStatus('processing', `Searching for: ${data.query}`);
+                            document.getElementById('products').innerHTML = '<p>Searching...</p>';
+                            break;
+                            
+                        case 'search_results':
+                            updateStatus('connected', 'Connected - Listening...');
+                            displayProducts(data.products);
+                            log(`Found ${data.count} products`);
+                            break;
+                            
+                        case 'error':
+                            log(`Error: ${data.message}`);
+                            updateStatus('connected', 'Error occurred - Still listening...');
+                            break;
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    log(`WebSocket error: ${error}`);
+                    updateStatus('disconnected', 'Connection error');
+                };
+                
+                ws.onclose = () => {
+                    log('WebSocket closed');
+                    updateStatus('disconnected', 'Disconnected');
+                    stopStreaming();
+                };
+                
+            } catch (error) {
+                log(`Error: ${error.message}`);
+                updateStatus('disconnected', 'Failed to start');
+            }
+        }
+        
+        function startAudioProcessing() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                sampleRate: 16000
+            });
+            
+            source = audioContext.createMediaStreamSource(stream);
+            processor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            processor.onaudioprocess = (e) => {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    const audioData = convertFloat32ToInt16(inputData);
+                    ws.send(audioData);
+                }
+            };
+            
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            log('Audio processing started');
+        }
+        
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const result = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                result[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            
+            return result.buffer;
+        }
+        
+        function stopStreaming() {
+            log('Stopping streaming...');
+            
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            
+            if (source) {
+                source.disconnect();
+                source = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            updateStatus('disconnected', 'Disconnected');
+        }
+        
+        function displayProducts(products) {
+            const container = document.getElementById('products');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<p>No products found</p>';
+                return;
+            }
+            
+            container.innerHTML = '<h3>Search Results</h3>' + 
+                products.map(p => `
+                    <div class="product">
+                        <div>
+                            <div class="product-name">${p.name}</div>
+                            <div class="product-info">${p.unit} • ${p.category}</div>
+                        </div>
+                        <div class="product-price">$${p.price.toFixed(2)}</div>
+                    </div>
+                `).join('');
+        }
+    </script>
+</body>
+</html>

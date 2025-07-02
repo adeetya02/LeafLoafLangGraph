@@ -1,0 +1,8 @@
+{
+  "method": "direct_https",
+  "endpoint_id": "1487855836171599872",
+  "domain": "1487855836171599872.us-central1-32905605817.prediction.vertexai.goog",
+  "url": "https://1487855836171599872.us-central1-32905605817.prediction.vertexai.goog/v1/projects/32905605817/locations/us-central1/endpoints/1487855836171599872:predict",
+  "latency_ms": 970.2479839324951,
+  "working": true
+}

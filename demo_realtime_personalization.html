@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Real-time Personalization Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+        }
+        
+        .header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2b6cb0;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .user-id {
+            font-size: 0.875rem;
+            color: #718096;
+        }
+        
+        .reset-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .reset-btn:hover {
+            background: #c53030;
+        }
+        
+        .search-section {
+            background: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .search-input:focus {
+            border-color: #2b6cb0;
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .search-btn:hover {
+            background: #2c5282;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .products-section {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .product-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .product-card.personalized {
+            border-color: #48bb78;
+            background: linear-gradient(135deg, rgba(72, 187, 120, 0.05) 0%, transparent 100%);
+        }
+        
+        .personalization-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #48bb78;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .product-category {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-price {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.75rem;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .add-to-cart-btn {
+            flex: 1;
+            background: #2b6cb0;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+        
+        .add-to-cart-btn:hover {
+            background: #2c5282;
+        }
+        
+        .view-btn {
+            background: #e2e8f0;
+            color: #2d3748;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+        
+        .view-btn:hover {
+            background: #cbd5e0;
+        }
+        
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .sidebar-section {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+        
+        .preference-label {
+            font-size: 0.875rem;
+        }
+        
+        .preference-score {
+            font-size: 0.75rem;
+            background: #edf2f7;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+        
+        .activity-icon {
+            width: 1rem;
+            height: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #718096;
+        }
+        
+        .error {
+            background: #fed7d7;
+            color: #742a2a;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #718096;
+        }
+        
+        .metrics-section {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .metric-card {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2b6cb0;
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+        
+        .sparkle {
+            display: inline-block;
+            animation: sparkle 1s ease-in-out;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        .cart-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: right 0.3s;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quantity-btn {
+            width: 2rem;
+            height: 2rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            border-radius: 0.25rem;
+        }
+        
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .checkout-btn:hover {
+            background: #38a169;
+        }
+        
+        .floating-cart-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #2b6cb0;
+            color: white;
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -0.5rem;
+            right: -0.5rem;
+            background: #e53e3e;
+            color: white;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🍃 LeafLoaf - Real-time Personalization</div>
+                <div class="user-info">
+                    <div class="user-id">User: <span id="userId">demo_user</span></div>
+                    <button class="reset-btn" onclick="resetPreferences()">Reset Preferences</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Search for groceries..."
+                    value="milk"
+                >
+                <button class="search-btn" onclick="performSearch()">Search</button>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="metrics-section">
+            <h2 class="section-title">Real-time Personalization Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="interactionCount">0</div>
+                    <div class="metric-label">User Interactions</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="personalizationScore">0%</div>
+                    <div class="metric-label">Personalization Strength</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="responseTime">0ms</div>
+                    <div class="metric-label">Response Time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="productsPersonalized">0</div>
+                    <div class="metric-label">Products Personalized</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="products-section">
+                <h2 class="section-title">
+                    Search Results
+                    <span id="resultsCount" style="font-size: 0.875rem; color: #718096;"></span>
+                </h2>
+                <div id="productsContainer">
+                    <div class="empty-state">
+                        Search for products to see real-time personalization in action!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Your Preferences</h3>
+                    <div id="preferencesContainer">
+                        <div class="empty-state" style="padding: 1rem;">
+                            Interact with products to build preferences
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3 class="sidebar-title">Recent Activity</h3>
+                    <div id="activityContainer">
+                        <div class="empty-state" style="padding: 1rem;">
+                            No activity yet
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2>Shopping Cart</h2>
+            <button onclick="toggleCart()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="empty-state">Your cart is empty</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+    
+    <button class="floating-cart-btn" onclick="toggleCart()">
+        🛒
+        <span class="cart-count" id="cartCount" style="display: none;">0</span>
+    </button>
+    
+    <script>
+        // Configuration
+        const API_BASE_URL = 'http://localhost:8000';
+        const USER_ID = 'demo_user_' + Date.now();
+        
+        // State
+        let userPreferences = {};
+        let activityLog = [];
+        let cart = [];
+        let interactionCount = 0;
+        let currentProducts = [];
+        
+        // Initialize
+        document.getElementById('userId').textContent = USER_ID;
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+        
+        // Perform initial search
+        window.onload = () => {
+            performSearch();
+        };
+        
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+            
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = '<div class="loading">Searching...</div>';
+            
+            const startTime = Date.now();
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: query,
+                        user_id: USER_ID,
+                        limit: 15
+                    })
+                });
+                
+                const data = await response.json();
+                const responseTime = Date.now() - startTime;
+                
+                if (data.success) {
+                    currentProducts = data.products;
+                    displayProducts(data.products);
+                    updateMetrics(data, responseTime);
+                    document.getElementById('resultsCount').textContent = `(${data.products.length} products)`;
+                } else {
+                    container.innerHTML = `<div class="error">Search failed: ${data.error}</div>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function displayProducts(products) {
+            const container = document.getElementById('productsContainer');
+            
+            if (!products || products.length === 0) {
+                container.innerHTML = '<div class="empty-state">No products found</div>';
+                return;
+            }
+            
+            const grid = document.createElement('div');
+            grid.className = 'product-grid';
+            
+            products.forEach((product, index) => {
+                const card = createProductCard(product, index);
+                grid.appendChild(card);
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
+        
+        function createProductCard(product, index) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            // Check if this product matches user preferences
+            const isPersonalized = checkIfPersonalized(product);
+            if (isPersonalized) {
+                card.classList.add('personalized');
+            }
+            
+            card.innerHTML = `
+                ${isPersonalized ? '<div class="personalization-badge">✨ For You</div>' : ''}
+                <div class="product-name">${product.product_name}</div>
+                <div class="product-category">${product.category}</div>
+                <div class="product-price">$${product.price.toFixed(2)}</div>
+                <div class="product-actions">
+                    <button class="add-to-cart-btn" onclick="addToCart(${index})">Add to Cart</button>
+                    <button class="view-btn" onclick="viewProduct(${index})">View</button>
+                </div>
+            `;
+            
+            // Track clicks on the card
+            card.addEventListener('click', (e) => {
+                if (!e.target.matches('button')) {
+                    trackInteraction(product, 'click');
+                }
+            });
+            
+            return card;
+        }
+        
+        function checkIfPersonalized(product) {
+            // Check if product matches user preferences
+            const category = product.category?.toLowerCase() || '';
+            const brand = product.supplier?.toLowerCase() || '';
+            const name = product.product_name?.toLowerCase() || '';
+            
+            // Check category preferences
+            if (userPreferences.categories) {
+                for (const [cat, score] of Object.entries(userPreferences.categories)) {
+                    if (category.includes(cat.toLowerCase()) && score > 0.3) {
+                        return true;
+                    }
+                }
+            }
+            
+            // Check brand preferences
+            if (userPreferences.brands) {
+                for (const [b, score] of Object.entries(userPreferences.brands)) {
+                    if (brand.includes(b.toLowerCase()) && score > 0.3) {
+                        return true;
+                    }
+                }
+            }
+            
+            // Check product preferences
+            if (userPreferences.products) {
+                for (const [p, score] of Object.entries(userPreferences.products)) {
+                    if (name.includes(p.toLowerCase()) && score > 0.3) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
+        async function trackInteraction(product, signalType) {
+            interactionCount++;
+            document.getElementById('interactionCount').textContent = interactionCount;
+            
+            // Update local preferences immediately
+            updateLocalPreferences(product, signalType);
+            
+            // Add to activity log
+            addActivity(signalType, product.product_name);
+            
+            // Send to server
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/personalization/track`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: USER_ID,
+                        product: product,
+                        signal_type: signalType,
+                        metadata: {
+                            query: document.getElementById('searchInput').value,
+                            position: currentProducts.indexOf(product)
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    // Re-search to see personalization in action
+                    setTimeout(() => performSearch(), 500);
+                }
+            } catch (error) {
+                console.error('Failed to track interaction:', error);
+            }
+        }
+        
+        function updateLocalPreferences(product, signalType) {
+            const weights = {
+                'click': 0.2,
+                'view': 0.3,
+                'add_to_cart': 0.5,
+                'purchase': 1.0
+            };
+            
+            const weight = weights[signalType] || 0.1;
+            
+            // Update category preference
+            if (product.category) {
+                if (!userPreferences.categories) userPreferences.categories = {};
+                userPreferences.categories[product.category] = 
+                    (userPreferences.categories[product.category] || 0) + weight;
+            }
+            
+            // Update brand preference
+            if (product.supplier) {
+                if (!userPreferences.brands) userPreferences.brands = {};
+                userPreferences.brands[product.supplier] = 
+                    (userPreferences.brands[product.supplier] || 0) + weight;
+            }
+            
+            // Update product preference
+            const productKey = product.product_name.split(' ')[0]; // First word
+            if (!userPreferences.products) userPreferences.products = {};
+            userPreferences.products[productKey] = 
+                (userPreferences.products[productKey] || 0) + weight;
+            
+            updatePreferencesDisplay();
+        }
+        
+        function updatePreferencesDisplay() {
+            const container = document.getElementById('preferencesContainer');
+            container.innerHTML = '';
+            
+            // Show top preferences
+            const allPrefs = [];
+            
+            // Collect all preferences
+            ['categories', 'brands', 'products'].forEach(type => {
+                if (userPreferences[type]) {
+                    Object.entries(userPreferences[type]).forEach(([name, score]) => {
+                        allPrefs.push({ type, name, score });
+                    });
+                }
+            });
+            
+            // Sort by score and show top 10
+            allPrefs.sort((a, b) => b.score - a.score);
+            const topPrefs = allPrefs.slice(0, 10);
+            
+            if (topPrefs.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 1rem;">Interact with products to build preferences</div>';
+                return;
+            }
+            
+            topPrefs.forEach(pref => {
+                const item = document.createElement('div');
+                item.className = 'preference-item';
+                item.innerHTML = `
+                    <div class="preference-label">${pref.name}</div>
+                    <div class="preference-score">${(pref.score * 100).toFixed(0)}%</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        function addActivity(type, productName) {
+            const activity = {
+                type,
+                productName,
+                timestamp: new Date()
+            };
+            
+            activityLog.unshift(activity);
+            activityLog = activityLog.slice(0, 10); // Keep last 10
+            
+            updateActivityDisplay();
+        }
+        
+        function updateActivityDisplay() {
+            const container = document.getElementById('activityContainer');
+            container.innerHTML = '';
+            
+            if (activityLog.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="padding: 1rem;">No activity yet</div>';
+                return;
+            }
+            
+            activityLog.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                
+                const icon = {
+                    'click': '👆',
+                    'view': '👁️',
+                    'add_to_cart': '🛒',
+                    'purchase': '✅'
+                }[activity.type] || '📌';
+                
+                item.innerHTML = `
+                    <span class="activity-icon">${icon}</span>
+                    <span>${activity.type.replace('_', ' ')} - ${activity.productName}</span>
+                `;
+                
+                container.appendChild(item);
+            });
+        }
+        
+        function updateMetrics(searchData, responseTime) {
+            // Update response time
+            document.getElementById('responseTime').textContent = `${responseTime}ms`;
+            
+            // Update personalization score
+            const personalizationApplied = searchData.metadata?.personalization_applied || false;
+            const personalizationScore = Math.min(100, interactionCount * 10);
+            document.getElementById('personalizationScore').textContent = `${personalizationScore}%`;
+            
+            // Update products personalized
+            const personalizedCount = currentProducts.filter(p => checkIfPersonalized(p)).length;
+            const element = document.getElementById('productsPersonalized');
+            element.textContent = personalizedCount;
+            
+            if (personalizedCount > 0) {
+                element.classList.add('sparkle');
+                setTimeout(() => element.classList.remove('sparkle'), 1000);
+            }
+        }
+        
+        function addToCart(index) {
+            const product = currentProducts[index];
+            if (!product) return;
+            
+            // Track the interaction
+            trackInteraction(product, 'add_to_cart');
+            
+            // Add to cart
+            const existingItem = cart.find(item => item.product.sku === product.sku);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ product, quantity: 1 });
+            }
+            
+            updateCartDisplay();
+            
+            // Show cart sidebar briefly
+            document.getElementById('cartSidebar').classList.add('open');
+            setTimeout(() => {
+                document.getElementById('cartSidebar').classList.remove('open');
+            }, 2000);
+        }
+        
+        function viewProduct(index) {
+            const product = currentProducts[index];
+            if (!product) return;
+            
+            trackInteraction(product, 'view');
+            
+            // In a real app, this would navigate to product details
+            alert(`Viewing: ${product.product_name}\n\nCategory: ${product.category}\nPrice: $${product.price}\n\n${product.product_description || 'No description available'}`);
+        }
+        
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<div class="empty-state">Your cart is empty</div>';
+                cartCount.style.display = 'none';
+            } else {
+                cartItems.innerHTML = '';
+                let total = 0;
+                let count = 0;
+                
+                cart.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'cart-item';
+                    div.innerHTML = `
+                        <div class="cart-item-details">
+                            <div class="product-name">${item.product.product_name}</div>
+                            <div class="product-price">$${item.product.price.toFixed(2)}</div>
+                        </div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateQuantity('${item.product.sku}', -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity('${item.product.sku}', 1)">+</button>
+                        </div>
+                    `;
+                    cartItems.appendChild(div);
+                    
+                    total += item.product.price * item.quantity;
+                    count += item.quantity;
+                });
+                
+                cartCount.textContent = count;
+                cartCount.style.display = 'flex';
+                cartTotal.textContent = `$${total.toFixed(2)}`;
+            }
+        }
+        
+        function updateQuantity(sku, change) {
+            const item = cart.find(item => item.product.sku === sku);
+            if (!item) return;
+            
+            item.quantity += change;
+            if (item.quantity <= 0) {
+                cart = cart.filter(i => i.product.sku !== sku);
+            }
+            
+            updateCartDisplay();
+        }
+        
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+        
+        async function resetPreferences() {
+            if (!confirm('This will reset all your preferences and start fresh. Continue?')) {
+                return;
+            }
+            
+            // Reset local state
+            userPreferences = {};
+            activityLog = [];
+            interactionCount = 0;
+            
+            // Update displays
+            updatePreferencesDisplay();
+            updateActivityDisplay();
+            document.getElementById('interactionCount').textContent = '0';
+            document.getElementById('personalizationScore').textContent = '0%';
+            document.getElementById('productsPersonalized').textContent = '0';
+            
+            // Perform fresh search
+            performSearch();
+        }
+    </script>
+</body>
+</html>

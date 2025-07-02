@@ -1,0 +1,32 @@
+# STABLE DEMO CONFIGURATION
+
+# Option 1: Use BM25 (keyword) search for demo
+# This works immediately but doesn't show vector capabilities
+
+# Option 2: Create new Weaviate instance
+# 1. Go to https://console.weaviate.cloud
+# 2. Create new cluster
+# 3. Choose text2vec-openai as vectorizer
+# 4. Import data with this configuration
+
+# Option 3: Fix current instance
+# Need to check Weaviate console for:
+# - Vectorizer configuration
+# - API key settings
+# - Module configuration
+
+# Current working search (BM25):
+from weaviate.classes.query import Filter
+
+def search_products_bm25(query, limit=10):
+    collection = client.collections.get("Product")
+    result = collection.query.bm25(
+        query=query,
+        limit=limit
+    )
+    return result.objects
+
+# For proper vector demo, we need:
+# 1. Working vectorizer (OpenAI/Cohere/HuggingFace)
+# 2. Proper API keys configured
+# 3. Data properly vectorized

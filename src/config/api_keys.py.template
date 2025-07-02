@@ -1,0 +1,10 @@
+# API Keys Configuration Template
+# Copy this file to api_keys.py and fill in your actual API keys
+# NEVER commit api_keys.py to version control!
+
+import os
+
+# Deepgram API Key for speech-to-text and text-to-speech
+DEEPGRAM_API_KEY = os.getenv('DEEPGRAM_API_KEY', 'your-deepgram-api-key-here')
+
+# Other API keys can be added here as needed

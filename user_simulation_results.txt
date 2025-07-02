@@ -1,0 +1,758 @@
+🚀 SIMULATING 10 USERS - REALISTIC GROCERY SHOPPING
+Timestamp: 2025-06-25T00:17:41.463286
+Target: <300ms latency
+================================================================================
+
+🔥 Warming up service...
+   Warmup 1/5 ✓
+   Warmup 2/5 ✓
+   Warmup 3/5 ✓
+   Warmup 4/5 ✓
+   Warmup 5/5 ✓
+✅ Service warmed up!
+
+📊 Testing different concurrency levels...
+
+1️⃣ SEQUENTIAL EXECUTION (1 user at a time):
+--------------------------------------------------------------------------------
+
+User 1/3:
+
+================================================================================
+👤 Sarah - Vague Shopper
+Session: sim-user_1-1750825062
+================================================================================
+
+📝 Query: 'potatoes' (vague product search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          590ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    290ms (49%) │
+   │ Weaviate Search:         128ms (22%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           172ms (29%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 590ms
+
+📝 Query: 'the organic ones' (follow-up clarification)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          636ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    296ms (46%) │
+   │ Weaviate Search:         141ms (22%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           199ms (31%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 636ms
+
+📝 Query: 'add 5 pounds' (add to cart with quantity)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          557ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    250ms (45%) │
+   │ Weaviate Search:         131ms (23%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           176ms (32%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 557ms
+
+📝 Query: 'what's in my cart?' (check cart)
+   Intent: list_order | Alpha: 0.5
+   Products: 0
+   Response: Your cart is empty...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          466ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    271ms (58%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           195ms (42%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 466ms
+
+User 2/3:
+
+================================================================================
+👤 Mike - Specific Shopper
+Session: sim-user_2-1750825066
+================================================================================
+
+📝 Query: 'bell peppers 3 count' (specific product search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          605ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    264ms (44%) │
+   │ Weaviate Search:         129ms (21%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           211ms (35%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 605ms
+
+📝 Query: 'no not the pack, individual ones' (clarification)
+   Intent: remove_from_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          449ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    246ms (55%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           203ms (45%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 449ms
+
+📝 Query: 'red bell peppers' (refined search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          650ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    302ms (46%) │
+   │ Weaviate Search:         136ms (21%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           212ms (33%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 650ms
+
+📝 Query: 'add those' (add to cart)
+   Intent: product_search | Alpha: 0.5
+   Products: 0
+   Response: No products found. Try broadening your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          579ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    245ms (42%) │
+   │ Weaviate Search:         131ms (23%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           203ms (35%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 579ms
+
+User 3/3:
+
+================================================================================
+👤 Lisa - Organic Milk Shopper
+Session: sim-user_3-1750825070
+================================================================================
+
+📝 Query: 'organic milk' (category search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          578ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    262ms (45%) │
+   │ Weaviate Search:         151ms (26%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           164ms (28%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 578ms
+
+📝 Query: 'what brands do you have?' (inquiry about options)
+   Intent: list_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          424ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    226ms (53%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           197ms (47%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 424ms
+
+📝 Query: 'horizon organic whole milk' (specific selection)
+   Intent: product_search | Alpha: 0.1
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          532ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    230ms (43%) │
+   │ Weaviate Search:         139ms (26%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           162ms (31%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 532ms
+
+📝 Query: 'add 2 of those' (add with quantity)
+   Intent: add_to_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          473ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    295ms (62%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           178ms (38%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 473ms
+
+
+3️⃣ CONCURRENT EXECUTION (3 users simultaneously):
+--------------------------------------------------------------------------------
+
+================================================================================
+👤 Tom - Quick Shopper
+Session: sim-user_4-1750825074
+================================================================================
+
+================================================================================
+👤 Emma - Exploratory Shopper
+Session: sim-user_5-1750825074
+================================================================================
+
+================================================================================
+👤 James - Brand Loyal
+Session: sim-user_6-1750825074
+================================================================================
+
+📝 Query: 'tomatoes' (vague search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          809ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    390ms (48%) │
+   │ Weaviate Search:         176ms (22%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           242ms (30%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 809ms
+
+📝 Query: 'breakfast ideas' (exploratory search)
+   Intent: product_search | Alpha: 0.8
+   Products: 1
+   Response: Found 1 product matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1028ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    534ms (52%) │
+   │ Weaviate Search:         127ms (12%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           366ms (36%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1028ms
+
+📝 Query: 'oatly barista' (brand specific)
+   Intent: product_search | Alpha: 0.1
+   Products: 9
+   Response: Found 9 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1033ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    531ms (51%) │
+   │ Weaviate Search:         136ms (13%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           365ms (35%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1033ms
+
+📝 Query: 'roma tomatoes' (specific type)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          761ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    249ms (33%) │
+   │ Weaviate Search:         146ms (19%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           366ms (48%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 761ms
+
+📝 Query: 'show me cereals' (category browse)
+   Intent: product_search | Alpha: 0.5
+   Products: 0
+   Response: No products found. Try broadening your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          781ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    427ms (55%) │
+   │ Weaviate Search:         130ms (17%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           224ms (29%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 781ms
+
+📝 Query: 'add to cart' (simple add)
+   Intent: add_to_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          783ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    571ms (73%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           211ms (27%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 783ms
+
+📝 Query: 'throw in a pound' (conversational add)
+   Intent: product_search | Alpha: 0.5
+   Products: 0
+   Response: No products found. Try broadening your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          768ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    251ms (33%) │
+   │ Weaviate Search:         130ms (17%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           386ms (50%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 768ms
+
+📝 Query: 'actually make it 3' (quantity update)
+   Intent: update_order | Alpha: 0.5
+   Products: 0
+   Response: Order processed....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          630ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    430ms (68%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           200ms (32%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 630ms
+
+📝 Query: 'any gluten free options?' (dietary filter)
+   Intent: product_search | Alpha: 0.5
+   Products: 5
+   Response: Found 5 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          785ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    455ms (58%) │
+   │ Weaviate Search:         126ms (16%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           204ms (26%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 785ms
+
+📝 Query: 'done' (finish shopping)
+   Intent: confirm_order | Alpha: 0.5
+   Products: 0
+   Response: Order processed....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          533ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    305ms (57%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           227ms (43%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 533ms
+
+📝 Query: 'add the nature's path' (specific add)
+   Intent: product_search | Alpha: 0.1
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          729ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    322ms (44%) │
+   │ Weaviate Search:         139ms (19%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           269ms (37%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 729ms
+
+📝 Query: 'checkout' (order completion)
+   Intent: confirm_order | Alpha: 0.5
+   Products: 0
+   Response: Your order has been confirmed. Thank you for shopping with Leaf and Loaf....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          887ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    418ms (47%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           469ms (53%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 887ms
+
+
+4️⃣ FULL CONCURRENT (4 users simultaneously):
+--------------------------------------------------------------------------------
+
+================================================================================
+👤 Sophia - Price Conscious
+Session: sim-user_7-1750825080
+================================================================================
+
+================================================================================
+👤 David - Meal Planner
+Session: sim-user_8-1750825080
+================================================================================
+
+================================================================================
+👤 Anna - Voice Shopper
+Session: sim-user_9-1750825080
+================================================================================
+
+================================================================================
+👤 Robert - Bulk Buyer
+Session: sim-user_10-1750825080
+================================================================================
+
+📝 Query: 'spinach' (product search)
+   Intent: product_search | Alpha: 0.5
+   Products: 5
+   Response: Found 5 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1386ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    717ms (52%) │
+   │ Weaviate Search:         137ms (10%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           532ms (38%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1386ms
+
+📝 Query: 'bananas' (simple search)
+   Intent: product_search | Alpha: 0.5
+   Products: 13
+   Response: Found 13 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1420ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    881ms (62%) │
+   │ Weaviate Search:         139ms (10%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           399ms (28%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1420ms
+
+📝 Query: 'hey I need some eggs' (conversational start)
+   Intent: add_to_order | Alpha: 0.5
+   Products: 0
+   Response: Please search for products first, then add them to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1422ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    866ms (61%) │
+   │ Response Compiler:         2ms ( 0%) │
+   │ Network/Other:           554ms (39%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1422ms
+
+📝 Query: 'ingredients for pasta' (recipe search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1424ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    882ms (62%) │
+   │ Weaviate Search:         157ms (11%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           385ms (27%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1424ms
+
+📝 Query: 'the organic free range ones' (specific type)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1719ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    602ms (35%) │
+   │ Weaviate Search:         158ms ( 9%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           959ms (56%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1719ms
+
+📝 Query: 'marinara sauce' (specific ingredient)
+   Intent: product_search | Alpha: 0.5
+   Products: 0
+   Response: No products found. Try broadening your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1717ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    771ms (45%) │
+   │ Weaviate Search:         133ms ( 8%) │
+   │ Response Compiler:         1ms ( 0%) │
+   │ Network/Other:           812ms (47%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1717ms
+
+📝 Query: 'how many in a bunch?' (quantity inquiry)
+   Intent: product_search | Alpha: 0.5
+   Products: 1
+   Response: Found 1 product matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1722ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    807ms (47%) │
+   │ Weaviate Search:         134ms ( 8%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           781ms (45%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1722ms
+
+📝 Query: 'which is cheapest?' (price inquiry)
+   Intent: product_search | Alpha: 0.5
+   Products: 0
+   Response: No products found. Try broadening your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1760ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    675ms (38%) │
+   │ Weaviate Search:         352ms (20%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           733ms (42%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1760ms
+
+📝 Query: 'add that' (simple add)
+   Intent: product_search | Alpha: 0.5
+   Products: 0
+   Response: No products found. Try broadening your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1178ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    537ms (46%) │
+   │ Weaviate Search:         128ms (11%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           513ms (44%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1178ms
+
+📝 Query: 'throw in 2 dozen' (voice-style add)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1187ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    518ms (44%) │
+   │ Weaviate Search:         140ms (12%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           528ms (45%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1187ms
+
+📝 Query: 'give me 3 bunches' (bulk add)
+   Intent: add_to_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1195ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    528ms (44%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           667ms (56%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1195ms
+
+📝 Query: 'organic spinach' (refined search)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:         1201ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    676ms (56%) │
+   │ Weaviate Search:         136ms (11%) │
+   │ Response Compiler:         1ms ( 0%) │
+   │ Network/Other:           388ms (32%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 1201ms
+
+📝 Query: 'show my order' (order review)
+   Intent: list_order | Alpha: 0.5
+   Products: 0
+   Response: You have 1 item(s) in your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          942ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    587ms (62%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           355ms (38%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 942ms
+
+📝 Query: 'I'll take 2 bunches' (conversational add)
+   Intent: add_to_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          933ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    565ms (61%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           367ms (39%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 933ms
+
+📝 Query: 'also need parmesan' (additional item)
+   Intent: product_search | Alpha: 0.5
+   Products: 15
+   Response: Found 15 products matching your search....
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          972ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    594ms (61%) │
+   │ Weaviate Search:         133ms (14%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           245ms (25%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 972ms
+
+📝 Query: 'what else is in my basket?' (conversational check)
+   Intent: list_order | Alpha: 0.5
+   Products: 0
+   Response: Added 1 item(s) to your cart...
+
+   ⏱️  LATENCY BREAKDOWN:
+   ┌─────────────────────────────────────┐
+   │ Total Request:          964ms    │
+   ├─────────────────────────────────────┤
+   │ Gemma (Intent+Alpha):    602ms (62%) │
+   │ Response Compiler:         0ms ( 0%) │
+   │ Network/Other:           362ms (38%) │
+   └─────────────────────────────────────┘
+   ❌ SLOW: 964ms
+
+================================================================================
+📈 SIMULATION SUMMARY
+================================================================================
+
+📊 Overall Statistics (40 total queries):
+   Average latency: 930ms
+   Min latency: 424ms
+   Max latency: 1760ms
+   P50 (median): 797ms
+   P95: 1722ms
+
+🧠 Gemma Performance:
+   Average: 472ms
+   Min: 226ms
+   Max: 882ms
+
+🔍 Weaviate Performance:
+   Average: 146ms
+   Min: 126ms
+   Max: 352ms
+
+✅ Success Rates:
+   Under 300ms: 0/40 (0%)
+   Under 400ms: 0/40 (0%)
+   Under 500ms: 4/40 (10%)
+
+⚡ Concurrency Impact:
+   Sequential (3 users): 12.6s total
+   3 concurrent users: 5.4s total
+   4 concurrent users: 7.3s total
+
+👥 Per-User Summary:
+   Sarah - Vague Shopper: Avg 562ms (4 queries)
+   Mike - Specific Shopper: Avg 571ms (4 queries)
+   Lisa - Organic Milk Shopper: Avg 502ms (4 queries)
+   Tom - Quick Shopper: Avg 718ms (4 queries)
+   Emma - Exploratory Shopper: Avg 831ms (4 queries)
+   James - Brand Loyal: Avg 833ms (4 queries)
+   Robert - Bulk Buyer: Avg 1320ms (4 queries)
+   Sophia - Price Conscious: Avg 1320ms (4 queries)
+   David - Meal Planner: Avg 1323ms (4 queries)
+   Anna - Voice Shopper: Avg 1323ms (4 queries)
+
+🔍 Key Insights:
+   - Vague queries (potatoes, tomatoes) trigger semantic search
+   - Specific queries (bell peppers 3ct) use keyword search
+   - Follow-up questions maintain session context
+   - Cart operations skip Weaviate (faster)
+   - System handles concurrent users well

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice - Production Streaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2e7d32;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+        }
+        
+        .status-bar {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            transition: all 0.3s;
+        }
+        
+        .status-dot.connected {
+            background: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .status-dot.listening {
+            background: #2196f3;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .transcript-panel, .results-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        
+        .panel-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .transcript-item {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .transcript-item.interim {
+            opacity: 0.6;
+            border-left-color: #ccc;
+        }
+        
+        .transcript-text {
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .confidence {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .product-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .product-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .product-price {
+            font-size: 20px;
+            color: #4caf50;
+            font-weight: 600;
+        }
+        
+        .product-unit {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .mic-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+            position: relative;
+        }
+        
+        .mic-button:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+        
+        .mic-button.listening {
+            background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+            animation: listening-pulse 1.5s infinite;
+        }
+        
+        @keyframes listening-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+        
+        .mic-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .visualizer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 50px;
+        }
+        
+        .visualizer-bar {
+            width: 4px;
+            background: #4caf50;
+            border-radius: 2px;
+            transition: height 0.1s;
+        }
+        
+        .info-message {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🥬</div>
+            <h1>LeafLoaf Voice Assistant</h1>
+            <p class="subtitle">Continuous voice-powered grocery shopping</p>
+        </div>
+        
+        <div class="status-bar">
+            <div class="connection-status">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Disconnected</span>
+            </div>
+            <div class="visualizer" id="visualizer">
+                <div class="visualizer-bar" style="height: 10px;"></div>
+                <div class="visualizer-bar" style="height: 20px;"></div>
+                <div class="visualizer-bar" style="height: 15px;"></div>
+                <div class="visualizer-bar" style="height: 25px;"></div>
+                <div class="visualizer-bar" style="height: 18px;"></div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="transcript-panel">
+                <div class="panel-title">Live Transcript</div>
+                <div id="transcriptContainer"></div>
+            </div>
+            
+            <div class="results-panel">
+                <div class="panel-title">Search Results</div>
+                <div id="resultsContainer">
+                    <p style="color: #666; text-align: center; margin-top: 50px;">
+                        Click the microphone and start speaking to search for products
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="mic-button" id="micButton" onclick="toggleListening()">
+                <span id="micIcon">🎤</span>
+            </button>
+        </div>
+        
+        <div class="info-message" id="infoMessage">
+            Click the microphone to start continuous listening
+        </div>
+        
+        <div class="error-message" id="errorMessage"></div>
+    </div>
+    
+    <script>
+        // Global state
+        let websocket = null;
+        let audioContext = null;
+        let mediaStream = null;
+        let processor = null;
+        let isListening = false;
+        let visualizerInterval = null;
+        
+        // DOM elements
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const micButton = document.getElementById('micButton');
+        const micIcon = document.getElementById('micIcon');
+        const transcriptContainer = document.getElementById('transcriptContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const infoMessage = document.getElementById('infoMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const visualizer = document.getElementById('visualizer');
+        
+        // Connect to WebSocket
+        async function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/api/v1/voice-fixed/stream`;
+            
+            try {
+                websocket = new WebSocket(wsUrl);
+                
+                websocket.onopen = () => {
+                    console.log('WebSocket connected');
+                    updateStatus('connected', 'Connected');
+                    micButton.disabled = false;
+                };
+                
+                websocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    handleServerMessage(data);
+                };
+                
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    showError('Connection error. Please refresh the page.');
+                };
+                
+                websocket.onclose = () => {
+                    console.log('WebSocket disconnected');
+                    updateStatus('disconnected', 'Disconnected');
+                    if (isListening) {
+                        stopListening();
+                    }
+                    // Attempt reconnection after 3 seconds
+                    setTimeout(connectWebSocket, 3000);
+                };
+                
+            } catch (error) {
+                console.error('Failed to connect:', error);
+                showError('Failed to connect to server');
+            }
+        }
+        
+        // Toggle listening state
+        async function toggleListening() {
+            if (isListening) {
+                stopListening();
+            } else {
+                await startListening();
+            }
+        }
+        
+        // Start listening
+        async function startListening() {
+            try {
+                // Request microphone access
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                // Create audio context at 16kHz
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                const source = audioContext.createMediaStreamSource(mediaStream);
+                
+                // Create processor for capturing audio
+                processor = audioContext.createScriptProcessor(4096, 1, 1);
+                
+                processor.onaudioprocess = (e) => {
+                    if (!isListening) return;
+                    
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    
+                    // Convert Float32 to Int16 (PCM16)
+                    const pcm16 = convertFloat32ToInt16(inputData);
+                    
+                    // Send binary audio data
+                    if (websocket && websocket.readyState === WebSocket.OPEN) {
+                        websocket.send(pcm16);
+                    }
+                    
+                    // Update visualizer
+                    updateVisualizer(inputData);
+                };
+                
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+                
+                isListening = true;
+                updateStatus('listening', 'Listening...');
+                micButton.classList.add('listening');
+                micIcon.textContent = '⏹️';
+                infoMessage.textContent = 'Listening... Speak naturally!';
+                
+                // Start visualizer animation
+                startVisualizer();
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                showError('Failed to access microphone. Please check permissions.');
+            }
+        }
+        
+        // Stop listening
+        function stopListening() {
+            isListening = false;
+            
+            // Stop audio processing
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            
+            // Update UI
+            updateStatus('connected', 'Connected');
+            micButton.classList.remove('listening');
+            micIcon.textContent = '🎤';
+            infoMessage.textContent = 'Click the microphone to start listening';
+            
+            // Stop visualizer
+            stopVisualizer();
+        }
+        
+        // Convert Float32Array to Int16Array for PCM16 format
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const result = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                result[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            
+            return result.buffer;
+        }
+        
+        // Handle messages from server
+        function handleServerMessage(data) {
+            switch (data.type) {
+                case 'system':
+                    console.log('System:', data.message);
+                    break;
+                    
+                case 'transcript':
+                    displayTranscript(data);
+                    break;
+                    
+                case 'final_transcript':
+                    displayFinalTranscript(data.text);
+                    break;
+                    
+                case 'search_start':
+                    displaySearchStart(data.query);
+                    break;
+                    
+                case 'search_results':
+                    displaySearchResults(data);
+                    break;
+                    
+                case 'error':
+                    showError(data.message);
+                    break;
+                    
+                case 'pong':
+                    // Keep-alive response
+                    break;
+            }
+        }
+        
+        // Display transcript
+        function displayTranscript(data) {
+            const item = document.createElement('div');
+            item.className = `transcript-item ${data.is_final ? '' : 'interim'}`;
+            
+            const text = document.createElement('div');
+            text.className = 'transcript-text';
+            text.textContent = data.text;
+            item.appendChild(text);
+            
+            if (data.confidence && data.is_final) {
+                const confidence = document.createElement('div');
+                confidence.className = 'confidence';
+                confidence.textContent = `Confidence: ${(data.confidence * 100).toFixed(1)}%`;
+                item.appendChild(confidence);
+            }
+            
+            // Replace or append transcript
+            if (!data.is_final) {
+                // Replace last interim
+                const interims = transcriptContainer.querySelectorAll('.interim');
+                if (interims.length > 0) {
+                    interims[interims.length - 1].replaceWith(item);
+                } else {
+                    transcriptContainer.appendChild(item);
+                }
+            } else {
+                // Remove any interim transcripts
+                transcriptContainer.querySelectorAll('.interim').forEach(el => el.remove());
+                transcriptContainer.appendChild(item);
+            }
+            
+            transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+        }
+        
+        // Display final transcript
+        function displayFinalTranscript(text) {
+            const item = document.createElement('div');
+            item.className = 'transcript-item';
+            item.style.borderLeftColor = '#4caf50';
+            
+            const textEl = document.createElement('div');
+            textEl.className = 'transcript-text';
+            textEl.innerHTML = `<strong>Complete:</strong> ${text}`;
+            item.appendChild(textEl);
+            
+            transcriptContainer.appendChild(item);
+            transcriptContainer.scrollTop = transcriptContainer.scrollHeight;
+        }
+        
+        // Display search start
+        function displaySearchStart(query) {
+            resultsContainer.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🔍</div>
+                    <div style="color: #666;">Searching for: "${query}"</div>
+                    <div class="visualizer" style="margin-top: 20px;">
+                        <div class="visualizer-bar" style="height: 20px; animation: pulse 0.5s infinite;"></div>
+                        <div class="visualizer-bar" style="height: 30px; animation: pulse 0.5s infinite 0.1s;"></div>
+                        <div class="visualizer-bar" style="height: 25px; animation: pulse 0.5s infinite 0.2s;"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Display search results
+        function displaySearchResults(data) {
+            if (data.count === 0) {
+                resultsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #666;">
+                        No products found for "${data.query}"<br>
+                        Try describing it differently!
+                    </div>
+                `;
+                return;
+            }
+            
+            resultsContainer.innerHTML = `
+                <div style="margin-bottom: 15px; color: #666;">
+                    Found ${data.count} products (${data.execution_time}ms)
+                </div>
+                <div class="product-grid">
+                    ${data.products.map(product => `
+                        <div class="product-card">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-details">
+                                <div>
+                                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                                    ${product.unit ? `<div class="product-unit">${product.unit}</div>` : ''}
+                                </div>
+                                <div style="color: ${product.in_stock ? '#4caf50' : '#f44336'};">
+                                    ${product.in_stock ? '✓ In Stock' : '✗ Out of Stock'}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        
+        // Update connection status
+        function updateStatus(state, text) {
+            statusText.textContent = text;
+            statusDot.className = 'status-dot';
+            
+            if (state === 'connected') {
+                statusDot.classList.add('connected');
+            } else if (state === 'listening') {
+                statusDot.classList.add('connected', 'listening');
+            }
+        }
+        
+        // Show error message
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Visualizer functions
+        function updateVisualizer(audioData) {
+            const bars = visualizer.querySelectorAll('.visualizer-bar');
+            const samples = audioData.length;
+            const step = Math.floor(samples / bars.length);
+            
+            bars.forEach((bar, i) => {
+                const start = i * step;
+                const end = start + step;
+                let sum = 0;
+                
+                for (let j = start; j < end; j++) {
+                    sum += Math.abs(audioData[j]);
+                }
+                
+                const average = sum / step;
+                const height = Math.min(40, average * 200);
+                bar.style.height = `${Math.max(5, height)}px`;
+            });
+        }
+        
+        function startVisualizer() {
+            visualizer.style.opacity = '1';
+        }
+        
+        function stopVisualizer() {
+            visualizer.style.opacity = '0.3';
+            const bars = visualizer.querySelectorAll('.visualizer-bar');
+            bars.forEach((bar, i) => {
+                bar.style.height = `${10 + i * 5}px`;
+            });
+        }
+        
+        // Keep connection alive
+        setInterval(() => {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.send(JSON.stringify({ type: 'ping' }));
+            }
+        }, 30000);
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            connectWebSocket();
+            micButton.disabled = true;
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (isListening) {
+                stopListening();
+            }
+            if (websocket) {
+                websocket.close();
+            }
+        });
+    </script>
+</body>
+</html>

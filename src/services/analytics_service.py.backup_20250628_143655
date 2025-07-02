@@ -1,0 +1,259 @@
+"""
+Analytics service for BigQuery event tracking
+Captures the complete flow: Gemma intent → Search → Promotions → Order
+"""
+from google.cloud import bigquery
+from typing import Dict, List, Optional, Any
+import uuid
+from datetime import datetime
+import asyncio
+import structlog
+
+logger = structlog.get_logger()
+
+class AnalyticsService:
+    """Service for tracking events to BigQuery"""
+    
+    def __init__(self):
+        self.project_id = "leafloafai"
+        self.client = bigquery.Client(project=self.project_id)
+        
+    async def track_user_event(self, event_data: Dict[str, Any]) -> None:
+        """Track a generic user event"""
+        try:
+            table_id = f"{self.project_id}.analytics.user_events"
+            
+            row = {
+                "event_id": str(uuid.uuid4()),
+                "user_id": event_data.get("user_id", "anonymous"),
+                "session_id": event_data.get("session_id", ""),
+                "event_type": event_data["event_type"],
+                "event_timestamp": datetime.now().isoformat(),
+                "event_properties": event_data.get("properties", {}),
+                "device_type": event_data.get("device_type", "web"),
+                "user_agent": event_data.get("user_agent", "")
+            }
+            
+            # Fire and forget - don't wait for insertion
+            asyncio.create_task(self._insert_rows(table_id, [row]))
+            
+        except Exception as e:
+            logger.error(f"Error tracking user event: {e}")
+    
+    async def track_intent_analysis(self, session_id: str, query: str, 
+                                  intent_result: Dict[str, Any], 
+                                  latency_ms: float) -> None:
+        """Track Gemma's intent analysis"""
+        try:
+            # Track as user event
+            await self.track_user_event({
+                "session_id": session_id,
+                "event_type": "intent_analysis",
+                "properties": {
+                    "query": query,
+                    "intent": intent_result.get("intent", "unknown"),
+                    "confidence": intent_result.get("confidence", 0),
+                    "alpha": intent_result.get("alpha", 0.5),
+                    "routing_decision": intent_result.get("routing", ""),
+                    "gemma_latency_ms": latency_ms,
+                    "enhanced_query": intent_result.get("enhanced_query", query),
+                    "entities": intent_result.get("entities", []),
+                    "attributes": intent_result.get("attributes", [])
+                }
+            })
+            
+        except Exception as e:
+            logger.error(f"Error tracking intent analysis: {e}")
+    
+    async def track_search_event(self, search_data: Dict[str, Any]) -> None:
+        """Track search event with Gemma-driven parameters"""
+        try:
+            table_id = f"{self.project_id}.analytics.search_events"
+            
+            row = {
+                "search_id": str(uuid.uuid4()),
+                "user_id": search_data.get("user_id", "anonymous"),
+                "session_id": search_data.get("session_id", ""),
+                "query": search_data["query"],
+                "alpha_value": search_data.get("alpha", 0.5),
+                "results_count": search_data.get("results_count", 0),
+                "clicked_results": search_data.get("clicked_results", []),
+                "search_timestamp": datetime.now().isoformat(),
+                "response_time_ms": search_data.get("response_time_ms", 0),
+                "search_type": self._determine_search_type(search_data.get("alpha", 0.5))
+            }
+            
+            # Also track complete search metadata
+            await self.track_user_event({
+                "session_id": search_data.get("session_id", ""),
+                "event_type": "search_executed",
+                "properties": {
+                    "query": search_data["query"],
+                    "intent": search_data.get("intent", ""),
+                    "alpha": search_data.get("alpha", 0.5),
+                    "results_count": search_data.get("results_count", 0),
+                    "categories_found": search_data.get("categories", []),
+                    "suppliers_found": search_data.get("suppliers", []),
+                    "search_latency_ms": search_data.get("response_time_ms", 0),
+                    "weaviate_latency_ms": search_data.get("weaviate_latency_ms", 0)
+                }
+            })
+            
+            # Fire and forget
+            asyncio.create_task(self._insert_rows(table_id, [row]))
+            
+        except Exception as e:
+            logger.error(f"Error tracking search event: {e}")
+    
+    async def track_cart_event(self, cart_data: Dict[str, Any]) -> None:
+        """Track cart modification event"""
+        try:
+            table_id = f"{self.project_id}.analytics.cart_events"
+            
+            row = {
+                "event_id": str(uuid.uuid4()),
+                "user_id": cart_data.get("user_id", "anonymous"),
+                "session_id": cart_data.get("session_id", ""),
+                "event_type": cart_data["event_type"],  # add, remove, update_quantity
+                "product_sku": cart_data["product_sku"],
+                "product_name": cart_data["product_name"],
+                "quantity": cart_data["quantity"],
+                "price": cart_data["price"],
+                "event_timestamp": datetime.now().isoformat(),
+                "cart_total_after": cart_data.get("cart_total_after", 0)
+            }
+            
+            # Track promotion info if available
+            if cart_data.get("promotions_applied"):
+                await self.track_user_event({
+                    "session_id": cart_data.get("session_id", ""),
+                    "event_type": "cart_promotions_calculated",
+                    "properties": {
+                        "cart_total": cart_data.get("cart_total_after", 0),
+                        "discount_total": cart_data.get("discount_total", 0),
+                        "promotions_applied": cart_data.get("promotions_applied", []),
+                        "savings_percentage": cart_data.get("savings_percentage", 0)
+                    }
+                })
+            
+            asyncio.create_task(self._insert_rows(table_id, [row]))
+            
+        except Exception as e:
+            logger.error(f"Error tracking cart event: {e}")
+    
+    async def track_order_event(self, order_data: Dict[str, Any]) -> None:
+        """Track order completion event"""
+        try:
+            table_id = f"{self.project_id}.analytics.order_events"
+            
+            # Convert products to BigQuery struct format
+            products = []
+            for item in order_data.get("products", []):
+                products.append({
+                    "sku": item["sku"],
+                    "name": item["name"],
+                    "quantity": item["quantity"],
+                    "unit_price": item["unit_price"],
+                    "total_price": item["total_price"]
+                })
+            
+            row = {
+                "order_id": order_data["order_id"],
+                "user_id": order_data.get("user_id", "anonymous"),
+                "order_timestamp": datetime.now().isoformat(),
+                "order_total": order_data["order_total"],
+                "discount_total": order_data.get("discount_total", 0),
+                "promotions_applied": order_data.get("promotions_applied", []),
+                "products": products,
+                "delivery_method": order_data.get("delivery_method", "standard"),
+                "payment_method": order_data.get("payment_method", "credit_card")
+            }
+            
+            # Track promotion usage
+            if order_data.get("promotions_applied"):
+                await self._track_promotion_usage(
+                    order_data["order_id"],
+                    order_data.get("user_id", "anonymous"),
+                    order_data.get("promotion_details", [])
+                )
+            
+            asyncio.create_task(self._insert_rows(table_id, [row]))
+            
+        except Exception as e:
+            logger.error(f"Error tracking order event: {e}")
+    
+    async def track_agent_execution(self, state: Dict[str, Any]) -> None:
+        """Track complete agent execution flow"""
+        try:
+            session_id = state.get("session_id", "")
+            query = state.get("query", "")
+            
+            # Track the complete flow
+            flow_event = {
+                "session_id": session_id,
+                "event_type": "agent_flow_complete",
+                "properties": {
+                    "query": query,
+                    "intent": state.get("intent", ""),
+                    "routing_decision": state.get("routing_decision", ""),
+                    "agents_executed": list(state.get("agent_status", {}).keys()),
+                    "total_latency_ms": sum(state.get("agent_timings", {}).values()),
+                    "agent_timings": state.get("agent_timings", {}),
+                    "search_results_count": len(state.get("search_results", [])),
+                    "has_promotions": state.get("has_promotion_info", False),
+                    "cart_discount": state.get("cart_discount_info", {}).get("total_discount", 0)
+                }
+            }
+            
+            await self.track_user_event(flow_event)
+            
+        except Exception as e:
+            logger.error(f"Error tracking agent execution: {e}")
+    
+    async def _track_promotion_usage(self, order_id: str, user_id: str, 
+                                   promotion_details: List[Dict]) -> None:
+        """Track promotion usage"""
+        try:
+            table_id = f"{self.project_id}.promotions.promotion_usage"
+            rows = []
+            
+            for promo in promotion_details:
+                row = {
+                    "usage_id": str(uuid.uuid4()),
+                    "promotion_id": promo.get("promotion_id", ""),
+                    "user_id": user_id,
+                    "order_id": order_id,
+                    "discount_amount": promo.get("discount", 0),
+                    "usage_timestamp": datetime.now().isoformat(),
+                    "products_discounted": promo.get("items", [])
+                }
+                rows.append(row)
+            
+            if rows:
+                asyncio.create_task(self._insert_rows(table_id, rows))
+                
+        except Exception as e:
+            logger.error(f"Error tracking promotion usage: {e}")
+    
+    def _determine_search_type(self, alpha: float) -> str:
+        """Determine search type from alpha value"""
+        if alpha < 0.3:
+            return "keyword"
+        elif alpha > 0.7:
+            return "semantic"
+        else:
+            return "hybrid"
+    
+    async def _insert_rows(self, table_id: str, rows: List[Dict]) -> None:
+        """Insert rows to BigQuery (async)"""
+        try:
+            errors = self.client.insert_rows_json(table_id, rows)
+            if errors:
+                logger.error(f"BigQuery insert errors for {table_id}: {errors}")
+            else:
+                logger.debug(f"Inserted {len(rows)} rows to {table_id}")
+        except Exception as e:
+            logger.error(f"Error inserting to {table_id}: {e}")
+
+# Singleton instance
+analytics_service = AnalyticsService()

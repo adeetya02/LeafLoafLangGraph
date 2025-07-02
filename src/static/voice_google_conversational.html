@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Voice Conversational - AI-Driven Voice Synthesis</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .mic-button:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .mic-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .mic-button.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .language-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        select {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            font-size: 16px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .transcript-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+        
+        .transcript-label {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .transcript {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .voice-params {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .voice-params-label {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+        
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .product-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #667eea;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .status {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 20px 0;
+        }
+        
+        .status.error {
+            color: #f44336;
+        }
+        
+        .status.success {
+            color: #4caf50;
+        }
+        
+        .examples {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .examples h3 {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .example-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .example-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .example-lang {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .example-text {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Google Voice Conversational</h1>
+        <p class="subtitle">AI-Driven Voice Synthesis with Multi-Language Support</p>
+        
+        <div class="controls">
+            <button id="micButton" class="mic-button">
+                <span id="micIcon">🎤</span>
+            </button>
+            
+            <div class="language-selector">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <optgroup label="English">
+                        <option value="en-US">English (US)</option>
+                        <option value="en-IN">English (India)</option>
+                        <option value="en-GB">English (UK)</option>
+                    </optgroup>
+                    <optgroup label="Spanish">
+                        <option value="es-US">Spanish (US)</option>
+                        <option value="es-MX">Spanish (Mexico)</option>
+                    </optgroup>
+                    <optgroup label="South Asian">
+                        <option value="hi-IN">Hindi (India)</option>
+                        <option value="bn-IN">Bengali (India)</option>
+                        <option value="pa-IN">Punjabi (India)</option>
+                        <option value="ta-IN">Tamil (India)</option>
+                        <option value="ur-PK">Urdu (Pakistan)</option>
+                    </optgroup>
+                    <optgroup label="East Asian">
+                        <option value="zh-CN">Chinese (Mandarin)</option>
+                        <option value="ja-JP">Japanese</option>
+                        <option value="ko-KR">Korean</option>
+                    </optgroup>
+                    <optgroup label="Southeast Asian">
+                        <option value="vi-VN">Vietnamese</option>
+                        <option value="tl-PH">Filipino/Tagalog</option>
+                        <option value="th-TH">Thai</option>
+                    </optgroup>
+                    <optgroup label="Middle Eastern">
+                        <option value="ar-SA">Arabic</option>
+                        <option value="fa-IR">Persian/Farsi</option>
+                    </optgroup>
+                    <optgroup label="European">
+                        <option value="fr-FR">French</option>
+                        <option value="de-DE">German</option>
+                        <option value="it-IT">Italian</option>
+                        <option value="ru-RU">Russian</option>
+                        <option value="pl-PL">Polish</option>
+                    </optgroup>
+                    <optgroup label="Others">
+                        <option value="pt-BR">Portuguese (Brazil)</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        
+        <div class="status" id="status">Click the microphone to start</div>
+        
+        <div class="transcript-container">
+            <div class="transcript-label">You said:</div>
+            <div class="transcript" id="userTranscript">...</div>
+        </div>
+        
+        <div class="transcript-container">
+            <div class="transcript-label">Assistant:</div>
+            <div class="transcript" id="assistantResponse">...</div>
+        </div>
+        
+        <div class="voice-params" id="voiceParams" style="display: none;">
+            <div class="voice-params-label">AI-Generated Voice Parameters:</div>
+            <pre id="voiceParamsContent"></pre>
+        </div>
+        
+        <div class="products-container" id="products"></div>
+        
+        <div class="examples">
+            <h3>Try these examples in different languages:</h3>
+            <div class="example-list">
+                <div class="example-item">
+                    <div class="example-lang">English</div>
+                    <div class="example-text">"I need organic milk and gluten-free bread"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Spanish</div>
+                    <div class="example-text">"Necesito tortillas y salsa verde"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Hindi</div>
+                    <div class="example-text">"मुझे बासमती चावल और घी चाहिए"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Chinese</div>
+                    <div class="example-text">"我需要豆腐和青菜"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Korean</div>
+                    <div class="example-text">"김치와 고추장 필요해요"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Vietnamese</div>
+                    <div class="example-text">"Tôi cần phở và nước mắm"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Japanese</div>
+                    <div class="example-text">"味噌と豆腐をください"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Arabic</div>
+                    <div class="example-text">"أحتاج طحينة وزعتر"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Bengali</div>
+                    <div class="example-text">"আমার চাল এবং ডাল দরকার"</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Fast & Urgent</div>
+                    <div class="example-text">"Quick! I need eggs!" (speak fast)</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-lang">Mixed Languages</div>
+                    <div class="example-text">"I need dal, kimchi, and tortillas"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let socket;
+        let isRecording = false;
+        let audioContext;
+        let isConnected = false;
+        
+        const micButton = document.getElementById('micButton');
+        const micIcon = document.getElementById('micIcon');
+        const status = document.getElementById('status');
+        const userTranscript = document.getElementById('userTranscript');
+        const assistantResponse = document.getElementById('assistantResponse');
+        const productsContainer = document.getElementById('products');
+        const languageSelect = document.getElementById('language');
+        const voiceParamsDiv = document.getElementById('voiceParams');
+        const voiceParamsContent = document.getElementById('voiceParamsContent');
+        
+        // Initialize WebSocket connection
+        async function initializeWebSocket() {
+            return new Promise((resolve, reject) => {
+                socket = new WebSocket('ws://localhost:8080/api/v1/google-voice/connect');
+                
+                socket.onopen = () => {
+                    console.log('WebSocket connected');
+                    isConnected = true;
+                    status.textContent = 'Connected - Click microphone to start';
+                    status.className = 'status success';
+                    resolve();
+                };
+                
+                socket.onmessage = async (event) => {
+                    if (event.data instanceof Blob) {
+                        // Audio data - play it
+                        await playAudio(event.data);
+                    } else {
+                        // JSON message
+                        try {
+                            const message = JSON.parse(event.data);
+                            handleMessage(message);
+                        } catch (e) {
+                            console.error('Failed to parse message:', e);
+                        }
+                    }
+                };
+                
+                socket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    status.textContent = 'Connection error';
+                    status.className = 'status error';
+                    isConnected = false;
+                    reject(error);
+                };
+                
+                socket.onclose = () => {
+                    console.log('WebSocket closed');
+                    isConnected = false;
+                    status.textContent = 'Disconnected - Refresh to reconnect';
+                    status.className = 'status error';
+                };
+            });
+        }
+        
+        // Handle different message types
+        function handleMessage(message) {
+            switch (message.type) {
+                case 'transcription':
+                    userTranscript.textContent = message.text;
+                    if (message.is_final) {
+                        status.textContent = 'Processing...';
+                    }
+                    break;
+                    
+                case 'assistant_response':
+                    assistantResponse.textContent = message.text;
+                    status.textContent = 'Assistant is speaking...';
+                    break;
+                    
+                case 'voice_params':
+                    displayVoiceParams(message.params);
+                    break;
+                    
+                case 'search_results':
+                    displayProducts(message.products);
+                    break;
+                    
+                case 'assistant_speech_end':
+                    status.textContent = 'Ready - Click microphone to speak';
+                    break;
+                    
+                case 'language_switch':
+                    status.textContent = `Switched to ${message.language}`;
+                    break;
+                    
+                case 'error':
+                    status.textContent = `Error: ${message.message}`;
+                    status.className = 'status error';
+                    break;
+            }
+        }
+        
+        // Display voice synthesis parameters
+        function displayVoiceParams(params) {
+            if (params) {
+                voiceParamsDiv.style.display = 'block';
+                voiceParamsContent.textContent = JSON.stringify(params, null, 2);
+            }
+        }
+        
+        // Display product results
+        function displayProducts(products) {
+            productsContainer.innerHTML = '';
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price}</div>
+                    ${product.brand ? `<div class="product-brand">${product.brand}</div>` : ''}
+                `;
+                productsContainer.appendChild(card);
+            });
+        }
+        
+        // Play audio response
+        async function playAudio(audioBlob) {
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            
+            audio.onended = () => {
+                URL.revokeObjectURL(audioUrl);
+            };
+            
+            try {
+                await audio.play();
+            } catch (e) {
+                console.error('Failed to play audio:', e);
+            }
+        }
+        
+        // Start recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                // Create audio context for processing
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                // Send language preference
+                socket.send(JSON.stringify({
+                    type: 'set_language',
+                    language: languageSelect.value
+                }));
+                
+                // Clear previous results
+                userTranscript.textContent = '...';
+                assistantResponse.textContent = '...';
+                productsContainer.innerHTML = '';
+                voiceParamsDiv.style.display = 'none';
+                
+                // Create media recorder
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0 && socket.readyState === WebSocket.OPEN) {
+                        socket.send(event.data);
+                    }
+                };
+                
+                mediaRecorder.start(100); // Send chunks every 100ms
+                isRecording = true;
+                
+                micButton.classList.add('listening');
+                micIcon.textContent = '🔴';
+                status.textContent = 'Listening... (click to stop)';
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                status.textContent = 'Microphone access denied';
+                status.className = 'status error';
+            }
+        }
+        
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                // Send end of audio marker
+                socket.send(JSON.stringify({ type: 'end_of_audio' }));
+            }
+            
+            isRecording = false;
+            micButton.classList.remove('listening');
+            micIcon.textContent = '🎤';
+            status.textContent = 'Processing...';
+        }
+        
+        // Microphone button click handler
+        micButton.addEventListener('click', async () => {
+            if (!isConnected) {
+                status.textContent = 'Connecting...';
+                try {
+                    await initializeWebSocket();
+                } catch (error) {
+                    return;
+                }
+            }
+            
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        });
+        
+        // Language change handler
+        languageSelect.addEventListener('change', () => {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({
+                    type: 'set_language',
+                    language: languageSelect.value
+                }));
+            }
+        });
+        
+        // Initialize on page load
+        window.addEventListener('load', async () => {
+            try {
+                await initializeWebSocket();
+            } catch (error) {
+                console.error('Failed to initialize:', error);
+            }
+        });
+    </script>
+</body>
+</html>

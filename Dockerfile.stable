@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install minimal dependencies
+RUN pip install fastapi uvicorn pydantic
+
+# Copy the stable run script
+COPY run_stable.py .
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PORT=8080
+
+# Expose port
+EXPOSE 8080
+
+# Run the application
+CMD ["python", "run_stable.py"]

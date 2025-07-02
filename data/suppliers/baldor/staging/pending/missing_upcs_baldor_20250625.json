@@ -1,0 +1,4513 @@
+{
+  "supplier": "Baldor Specialty Foods",
+  "supplier_id": "BALD001",
+  "report_date": "2025-06-25T12:30:06.214689",
+  "missing_count": 901,
+  "products": [
+    {
+      "supplier_sku": "PE64A",
+      "name": "TRI-COLOR BELL PEPPERS",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE9AB",
+      "name": "GOOSEBERRIES",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQ93E5",
+      "name": "SQUASH BUTTERNUT CHUNKS",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "URBV01",
+      "name": "PEAS ENGLISH SHELLED 6X10 OZ UR",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "URPOT1",
+      "name": "POTATOES RED CREAMERS PEE WEE C 12X24 OZ UR",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "URBV02",
+      "name": "PEAS SNAP STRINGLESS 6X8 OZ UR",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "URPOT11",
+      "name": "POTATOES RED MARBLE MINI 24X16 OZ UR",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "URBV03",
+      "name": "ZUCCHINI BABY 6X8 OZ UR",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "URPOT14",
+      "name": "POTATOES CONFETTI MARBLE MINI 24X16 OZ UR",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "URBV04",
+      "name": "CORN BABY HUSKED 6X8 OZ UR",
+      "category": "Produce/Vegetables/Corn"
+    },
+    {
+      "supplier_sku": "URPOT2",
+      "name": "POTATOES GOLD CREAMERS PEE WEE C 12X24 OZ UR",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "URBV05",
+      "name": "CARROT BABY MULTI-COLORED PEELED 6X8 OZ UR",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "URPOT22",
+      "name": "POTATOES FINGERLING 12X28 OZ UR",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "URBV06",
+      "name": "PEAS SNOW STRINGLESS 6X8 OZ UR",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "VEG17E",
+      "name": "ZUCCHINI NOODLES",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "URBV08",
+      "name": "CAULIFLORINI 6X12 OZ GUATEMALA UR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "VEG2G6",
+      "name": "BRUSSEL SPROUTS SHREDDED",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FRU02C1",
+      "name": "FRUIT SALAD",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "VEG2H6",
+      "name": "CLEANED & HALVED BRUSSEL SPROUTS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FRU05D1",
+      "name": "PINEAPPLE CHUNKS",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SALSA2",
+      "name": "SALSA VERDE 12X10 OZ UR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FRU05E1",
+      "name": "CANTALOUPE CHUNKS",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "SALSA3A",
+      "name": "HOMESTYLE SALSA",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FRU12A1",
+      "name": "HONEYDEW CHUNKS",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "SALSA4A",
+      "name": "SALSA PINEAPPLE MANGO 12X12 OZ UR",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "FRU13C1",
+      "name": "MANGO CHUNKS",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "SALSA5A",
+      "name": "HOMEMADE HOT SALSA",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FRU14A1",
+      "name": "MANGO KIWI STRAWBERRY",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "AS1",
+      "name": "ASPARAGUS LARGE 11 LB",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "BE1D",
+      "name": "STRAWBERRIES 8X1 LB DRISCOLL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AS52",
+      "name": "ASPARAGUS WHITE AAA 11 LB JBO",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "BE1DC",
+      "name": "STRAWBERRIES SWEETEST BATCH LIMITED EDITION 8X14 OZ DRISCOLL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ART4GRT",
+      "name": "ARTICHOKES PURPLE 12-18 CT OCEAN MIST",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "AP33WT",
+      "name": "APPLE WILDTWIST XF 80-88 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "POT991A",
+      "name": "POTATO 10X5 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "AP99ERT",
+      "name": "APPLE ENVY EURO 40-50 CT EURO 27LB",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "POT30",
+      "name": "POTATO GPOD 60 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "AP9LR",
+      "name": "APPLE LUCY ROSE 64-72 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "GRA9NN",
+      "name": "GRAPES CANDY SNAP 10X1 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "GRA11RT",
+      "name": "TFM GRAPE RED SEEDLESS LIMITED EDITION 19 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "CAR991",
+      "name": "CARROT CELLO BAGS 48X1 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "GRA7AF",
+      "name": "GRAPES GUM DROP 16 LB GRAPERY",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "BEA1",
+      "name": "BEANS STRING 25 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "GRA14N",
+      "name": "GRAPES CANDY HEARTS 10X1 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "LE3C",
+      "name": "LEEKS LOOSE 12 CT CANADIAN",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "OR9D",
+      "name": "ORANGES SEVILLE SOUR 18 LB RISING C",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "CAB2AF",
+      "name": "CABBAGE FLAT SWEET 8 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ME1H",
+      "name": "MELON DINO 5-6 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "POT0",
+      "name": "POTATO GPOD 90 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "OR900M",
+      "name": "ORANGE BLOOD TAROCCO 25 LB MURRAY FAMILY FARMS",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "CU5BA",
+      "name": "CUCUMBER PERSIAN 12X1 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "PL5",
+      "name": "PLUM GREENGAGE 11 LB",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "MU94",
+      "name": "MUSH CHANTERELLES 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "OR80",
+      "name": "ORANGES BLOOD MORO 20 LB",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO5D4",
+      "name": "TOMATO RED SAVORRIES SWEET STRAWBERRY 8X12 OZ",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "K5",
+      "name": "KIWI BABY KIWIBERRY 12 CT",
+      "category": "Produce/Fruit/Berries"
+    },
+    {
+      "supplier_sku": "CAB",
+      "name": "CABBAGE GREEN CASE 14-16 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PAS1",
+      "name": "PASSION FRUIT GOLDEN 1 LYR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "HE7",
+      "name": "TOMATO HEIRLOOM CHEROKEE PURPLE 10 LB 1 LYR",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "L4HA",
+      "name": "LEMONS LIMONE DI SORRENTO 8 LB",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "POT10",
+      "name": "POTATO GPOD 100 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "OR7AB",
+      "name": "SUMO CITRUS VF 18-22 CT SUNTREAT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CAR",
+      "name": "CARROT LARGE LOOSE 50 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "OR910AB",
+      "name": "MANDARIN SATSUMA STEM & LEAF 6X3 LB RISING C",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP",
+      "name": "RED DELICIOUS 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "A",
+      "name": "ARUGULA 24 BUNCHED",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "AP0",
+      "name": "HUDSON RIVER FRUIT RED DELICIOUS 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "A1",
+      "name": "ARUGULA BABY ROCKET 3 LB B&W",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "AP02",
+      "name": "RED DELICIOUS APPLES 125 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "A3C",
+      "name": "ARUGULA WILD 6X4 OZ B&W",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "AP06A",
+      "name": "LADY RED DELICIOUS 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ICE1",
+      "name": "ICEBERG CELLO 24 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP09A",
+      "name": "HUDSON RIVER FRUIT RUBYFROST APPLES 50-60 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ICE1AAA",
+      "name": "ICEBERG BABY 40 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP0912",
+      "name": "HUDSON RIVER FRUIT RUBYFROST APPLES 12 X 2 LBS",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "LET",
+      "name": "LETTUCE RED LEAF 24 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP1",
+      "name": "GOLDEN DELICIOUS 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET1",
+      "name": "LETTUCE GREEN LEAF 24 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP12",
+      "name": "HUDSON RIVER FRUIT GOLDEN DELICIOUS APPLES 80-88 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "LET11A",
+      "name": "SALAD MIX GREEN LEAF 3 LB LITTLE LEAF FARMS LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP2",
+      "name": "GRANNY SMITH 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET3AA",
+      "name": "LETTUCE BOSTON HYDRO DUO CLAMS 6X2 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP20",
+      "name": "GRANNY SMITH APPLES ( NO STICKERS) 100 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "LET3AAA",
+      "name": "LETTUCE BOSTON HYDRO 12 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP21",
+      "name": "GRANNY SMITH 100 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET4",
+      "name": "LETTUCE ARTISAN RETAIL 6X4 CT T&A",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP21AA",
+      "name": "GRANNY SMITH JUICING 38 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET4.5",
+      "name": "LETTUCE BOSTON 24 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP24A",
+      "name": "LADY GRANNY SMITH 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET451CB",
+      "name": "LETTUCE LITTLE GEM 8X4 CT CHURCH BROS",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP3",
+      "name": "MCINTOSH APPLES 80 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "LET45AB",
+      "name": "LETTUCE BOSTON ANDY BOY 24 CT DARRIGO",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP33",
+      "name": "PINK LADY 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET4A",
+      "name": "LETTUCE ARTISAN FOOD SERVICE 8 LB T&A",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP34AA",
+      "name": "HONEYCRISP APPLES 100 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "LET4SH",
+      "name": "LITTLE GEM SWEET HEARTS 60 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP34ALCL",
+      "name": "HESS BROTHER'S FRUIT COMPANY HONEYCRISP APPLES 64-72 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "AP34B12",
+      "name": "HUDSON RIVER FRUIT SNAP DRAGON APPLES 2 X 2 LBS",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "MES11E",
+      "name": "MESCLUN 6X2 LB LITTLE LEAF FARMS LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP34D",
+      "name": "HONEYCRISP 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MES12",
+      "name": "SALAD MIX ARCADIAN HARVEST 3 LB MANN PACKING",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP34RT",
+      "name": "HUNNYZ APPLES 64-72 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "MES13",
+      "name": "SALAD MIX ARCADIAN HARVEST 4X3 LB MANN PACKING",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP38",
+      "name": "HUDSON RIVER FRUIT EVERCRISP APPLES 72-80 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "MES13A",
+      "name": "VEGGIE POWER BLEND 4X2 LB MANN PACKING",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP40",
+      "name": "HUDSON RIVER FRUIT ROME APPLES 80-88 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ROM",
+      "name": "ROMAINE CARDBOARD 24 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP4A",
+      "name": "HUDSON RIVER FRUIT SNAP DRAGON APPLES 50-65 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ROM2",
+      "name": "ROMAINE HEARTS 12X3 CT",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP4D",
+      "name": "GALA 100 CT HUDSON RIVER FRUIT LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ROM2.OM",
+      "name": "ROMAINE HEARTS 12X3 LB OCEAN MIST",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP4DD",
+      "name": "GALA 18X2 LB HUDSON RIVER FRUIT LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "RROMAB",
+      "name": "ROMAINE HEARTS ANDY BOY RETAIL 12X3 CT DARRIGO",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP5",
+      "name": "FUJI APPLES 100 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SALAD101",
+      "name": "MIX SPRING CLAM 8X4 OZ LITTLE LEAF",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP50",
+      "name": "FUJI 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SALAD10A",
+      "name": "LEAF GREEN CRISPY CLAM 8X4 OZ LITTLE LEAF",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP51B",
+      "name": "LADY FUJI 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SALAD10A1",
+      "name": "LEAF MIX RED GREEN CLAM 8X4 OZ LITTLE LEAF",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP6F",
+      "name": "GALA APPLES 100 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SALAD19",
+      "name": "SALAD MIX SPECIAL PREMIUM BLEND 4X3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP6F1",
+      "name": "GALA 100-113 CT NO STICKERS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SALADGG1",
+      "name": "ROMAINE 12X4.5 OZ GOTHAM GREENS LCL",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP7",
+      "name": "GALA 80-88 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SALADGG2",
+      "name": "LETTUCE BUTTERHEAD BABY BOWL 12X1 EA GOTHAM GREENS LCL",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP7D",
+      "name": "LOCAL SWEETANGO APPLES 56-64 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SALADGG3",
+      "name": "BROOKLYN CRUNCH 12X4.5 OZ GOTHAM GREENS LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AP8A",
+      "name": "LADY GALA 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SALADGG5",
+      "name": "LETTUCE BUTTERHEAD LEAVES 12X4.5 OZ GOTHAM GREENS LCL",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "AP81",
+      "name": "FIRST FRUITS OPAL APPLES 50- 60 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SALADSF01",
+      "name": "MESCLUN CLAMSHELL 12X5 OZ SATUR LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SALADSF04",
+      "name": "SPINACH BABY CLAMSHELL 12X5 OZ SATUR LCL",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "AP995A",
+      "name": "HUDSON RIVER FUIT EMPIRE APPLES 80-88 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SALADSF06",
+      "name": "ARUGULA WILD CLAMSHELL 12X5 OZ SATUR LCL",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "SP",
+      "name": "SPINACH FLAT LEAF CALIFORNIA 24 BU",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ART",
+      "name": "ARTICHOKES BABY 20 LB",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "SP4",
+      "name": "SPINACH FLAT-LEAF WASHED CELLO 12X10 OZ",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ART0",
+      "name": "OCEAN MIST FARMS 20 LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SP6BW1",
+      "name": "SPINACH BABY 2X2 LB B&W",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ART01",
+      "name": "BABY ARTICHOKES 12 X 2 LBS",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "SP93",
+      "name": "SPINACH TRIPLE WASHED 4X2.5 LB",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ART2A",
+      "name": "ARTICHOKES 12 CT",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "ART1",
+      "name": "ARTICHOKES 24 CT",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "ART2",
+      "name": "ARTICHOKES 18 CT",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "ART3",
+      "name": "OCEAN MIST FARMS 30-36 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MA",
+      "name": "MANGO 6-9 CT",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "ARTP24",
+      "name": "PURPLE ARTICHOKES 24 CT",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "MA5C",
+      "name": "MANGO CHUNKS 2X5 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "ART5",
+      "name": "SUNCHOKES 5 LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MA5R",
+      "name": "MANGO SPEARS 4 LB",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ART6A",
+      "name": "SUNCHOKES 20 LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MA6",
+      "name": "MANGO RIPE 6-9 CT",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "ART7",
+      "name": "OCEAN MIST FARMS LONG STEM ARTICHOKES 14 CT",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "ART60",
+      "name": "EUROPEAN HEIRLOOM SUNCHOKES 11LBS",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "FRU05A1",
+      "name": "WATERMELON CHUNKS NO LABEL 6X10 OZ",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AS",
+      "name": "ASPARAGUS STANDARD 11 LB",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "FRU8",
+      "name": "CANTALOUPE CHUNKS 2X6 LB",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AS2",
+      "name": "ASPARAGUS JUMBO 11 LB",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "ME02",
+      "name": "CANTALOUPE 9 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AS3",
+      "name": "ASPARAGUS PENCIL 11 LB",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "ME03",
+      "name": "CANTALOUPE 12 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AS7",
+      "name": "CALIFORNIA PREMIIUM STANDARD ASPARAGUS 11 LB",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "ME1",
+      "name": "HONEYDEW 5 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AS72",
+      "name": "CALIFORNIA PREMIUM LARGE ASPARAGUS 11 LB",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "ME10",
+      "name": "HONEYDEW 6 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "ME2D",
+      "name": "WATERMELON SEEDLESS CARTON 4-5 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AS51",
+      "name": "WHITE ASPARAGUS 11 LBS",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "ME9G",
+      "name": "MELONS KIWANO 1 LYR",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "ME9H",
+      "name": "MELONS PEPINO 1 LYR",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AV1PR",
+      "name": "AVOCADO RIPE 48 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "AV",
+      "name": "AVOCADO HASS FIRM 48 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "ME9I",
+      "name": "WATERMELON BABY SEEDLESS 6 CT",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "AV2",
+      "name": "AVOCADOS FROM MEXICO RIPE NO.2 HASS AVOCADOS 48 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "AV3AAA",
+      "name": "AVOCADO FROM MEXICO FIRM HASS AVOCADOS 60 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU",
+      "name": "MUSH SHIITAKE B 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AV2A1",
+      "name": "AVOCADO HASS FIRM BAG 15X4 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU2",
+      "name": "MUSH SHIITAKE A 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AV4",
+      "name": "RIPE #2 HASS AVOCADOS 70 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU2CRI",
+      "name": "MUSH BELLA BABY CREMINI SLICED 12X8 OZ PHILIPS MUSHROOM",
+      "category": "Produce/Vegetables/Mushrooms"
+    },
+    {
+      "supplier_sku": "AV5A",
+      "name": "AVOCADO FROM MEXICO 60 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU2GP",
+      "name": "MUSH BABY BELLA STUFFED GARLIC PARMESAN 4X8.5 OZ",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "AV7B",
+      "name": "BERNARD RANCHES HASS AVOCADOS",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU2LRT1",
+      "name": "MUSH WHITE SLICED RTL 6X8 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AV2PR",
+      "name": "AVOCADO RIPE 36 CT",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU2NRT1",
+      "name": "MUSH WHITE WHOLE 6X8 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "AVP",
+      "name": "AVOCADO PULP 6X2 LB",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "MU3",
+      "name": "MUSH SHIITAKE XLG 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MU3AAA",
+      "name": "MUSH SHIITAKE OAKWOOD 5 LB RI MUSH LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA",
+      "name": "BANANA BOX SINGLES 10 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU4",
+      "name": "MUSH PORTOBELLO LG 5 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA1",
+      "name": "BANANA READY TO GO NO 6 40 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU5",
+      "name": "MUSH PORTOBELLO MED 5 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA2",
+      "name": "BANANA GREEN TIPS NO 5 40 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU5A",
+      "name": "MUSH PORTOBELLO CAP 3.5 15-18 CT 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA3",
+      "name": "BANANA TWO DAYS AWAY NO 4 40 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU5B",
+      "name": "MUSH PORTOBELLO CAP 4.5 11-14 CT 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA4",
+      "name": "BANANA GREEN 40 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU6",
+      "name": "MUSH CREMINI 5 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA6",
+      "name": "PLANTAINS YELLOW 40 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU6A",
+      "name": "MUSH CREMINI 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA7",
+      "name": "PLANTAINS GREEN 40 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU7",
+      "name": "MUSH OYSTER 5 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA65",
+      "name": "YELLOW PLANTAINS 10 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU7A",
+      "name": "MUSH OYSTER YELLOW 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA9",
+      "name": "BABY BANANAS 15 LBS",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU9",
+      "name": "MUSH SILVER DOLLAR WHITE 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA91",
+      "name": "RED BANANAS 20 LBS",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU90",
+      "name": "MUSH SILVER DOLLARS WHITE 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA80",
+      "name": "FROZEN BANANAS LEAVES 16 X 1 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU92",
+      "name": "MUSH BUT WHITE GRADE 1 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BA80B",
+      "name": "BANANA SLICED IQF 20 LB",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "MU93AB",
+      "name": "MUSH EXOTIC BLEND OYSTER CRIMINI SHITAKE SLCD 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEA",
+      "name": "BEAN FRENCH HARICOT VERT 5 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "MU97",
+      "name": "MUSH MAITAKE/HEN OF THE WOODS 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MU97.1",
+      "name": "MUSH MAITAKE 3 LB RI MUSH LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEA1RCS",
+      "name": "BEANS WASHED SNIPPED 12X12 OZ PERO FAMILY FARMS",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "MU990A",
+      "name": "MUSH HON SHIMEJI BROWN 3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEA20",
+      "name": "BEANS WAX 25 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "MU9920",
+      "name": "MUSH TRUMPET ROYAL 11 LB ASIAN",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEA3",
+      "name": "BEANS FAVA 10 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "MU994Z",
+      "name": "MUSH SLICED WHITE 12X8 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEA8B",
+      "name": "BEANS FRENCH SNIPPED ONE END 5 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "MU995",
+      "name": "MUSH WHITE CELLO PACKS 12X8 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEA8Y",
+      "name": "BEANS STRING SNIPPED 2 END CUT 2X5 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "BEA92",
+      "name": "BEANS STRING SNIPPED 2X5 LB",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "G1SC",
+      "name": "GARLIC SUPER COLOSSAL 30 LB USA",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "BEA9D",
+      "name": "BEANS FLAT DUTCH RUNNER",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "ON",
+      "name": "ONION SPANISH 50 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS",
+      "name": "PEAS SNOW 10 LB",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON1",
+      "name": "ONION YELLOW MEDIUM 50 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS1",
+      "name": "PEAS SUGAR SNAP 10 LB",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON5",
+      "name": "ONION RED MEDIUM 25 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS1RT",
+      "name": "PEAS ENGLISH RTL 6X6 OZ PERO FAMILY FARMS",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON5A",
+      "name": "ONION RED JUMBO 25 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS2A",
+      "name": "PEAS SUGAR SNAP STRINGLESS 10 LB CALIFORNIA",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON5B",
+      "name": "ONIONS RED JUMBO XFCY RTL 40 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS3",
+      "name": "PEAS ENGLISH IN SHELL 10 LB",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON9",
+      "name": "ONION PEARL RED 12 CT",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS3P",
+      "name": "PER FAMILY FARMS SUGAR SNAP PEAS 6 X 8 OZ",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON94",
+      "name": "ONION CIPOLLINI 10 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS3I",
+      "name": "IMPORTED ITALIAN ENGLISH PEAS 6.6 LB",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON96",
+      "name": "ONION SPRING WITH TOPS 24 CT",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS1A1",
+      "name": "SNIPPED SNOW PEAS 5 LB",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON98BRT",
+      "name": "ONIONS SWEET BAG 12X3 LB SHUMAN",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS2R",
+      "name": "PERO FAMILY FARMS SNOW PEAS 6 X 6OZ",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ON992B",
+      "name": "ONION SPANISH SUPER COLOSSAL 50 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "PS31C",
+      "name": "PEAS ENGLISH SHELLED 6X6 OZ PERO FAMILY FARMS",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "SC1D",
+      "name": "SCALLIONS ICELESS 24 CT",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "SC2A",
+      "name": "SCALLIONS ICELESS 48 CT (4X12 CT)",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "SH",
+      "name": "SHALLOTS 5 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "BE0",
+      "name": "DRISCOLL'S RAINBOW PACK BERRIES 8 X 7 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SH1",
+      "name": "SHALLOTS 10 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "BE1D2",
+      "name": "STRAWBERRIES 4 X 1 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BE",
+      "name": "STRAWBERRIES 8X1 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PR0",
+      "name": "PEARS BARTLETT 70 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "PR01",
+      "name": "PEARS BARTLETT 80 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "BE2A",
+      "name": "STEMBERRIES 4X1 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PR2",
+      "name": "PEARS ANJOU 80 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "BE2B",
+      "name": "RASPBERRIES 12X6 OZ DRISCOLL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PR20A",
+      "name": "PEARS RED 1/2 CTN",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "BE2BB",
+      "name": "RASPBERRIES 12X6 OZ CALIFORNIA GIANT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PR4",
+      "name": "PEARS BOSC 100 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "BE3A",
+      "name": "BLUEBERRIES 12X6 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PR40",
+      "name": "PEARS BOSC 70-80 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "BE3A2",
+      "name": "BLUEBERRIES 6 X 6 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BE3AA",
+      "name": "BLUEBERRIES JUMBO 12X9.8 OZ FAMILY TREE FARMS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PR7",
+      "name": "PEARS ASIAN 14-16 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "BE4WF",
+      "name": "PINEBERRRIES 6 X 10OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BE5",
+      "name": "BLUEBERRIES 12X1 PT DRISCOLL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE",
+      "name": "PEPPER RED GREENHOUSE 11 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE6AB",
+      "name": "BLACKBERRIES SWEETEST BATCH LIMITED ED 12X10 OZ DRISCOLL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE1",
+      "name": "PEPPER RED 15 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE3A3",
+      "name": "LIMITED EDITION SWEETE BATCH JUMBO BLUE BERRIES 8 X 11OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE2",
+      "name": "PEPPER RED BU 1-1/9",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE7",
+      "name": "BLACKBERRIES 12X6 OZ DRISCOLL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE3",
+      "name": "PEPPER YELLOW GREENHOUSE 11 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE7A1",
+      "name": "DRISCOLL'S BLACKBERRIES 6 X 6 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE3A",
+      "name": "PEPPER ORANGE GREENHOUSE 11 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE2B2",
+      "name": "DRISCOLL'S RASPBERRIES 6 X 6 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE5",
+      "name": "PEPPER YELLOW BU 1-1/9",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "FRU6",
+      "name": "WATERMELON CHUNKS 2X6 LB",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "PE6",
+      "name": "PEPPER GREEN BU 1-1/9",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE7CG",
+      "name": "BLACKBERRIES 12X6 OZ CALIFORNIA GIANT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE60",
+      "name": "PEPPERS GREEN X-FANCY MIN 45 CT",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE9A",
+      "name": "CAPE GOOSEBERRIES 12 X 3.5 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BE996E",
+      "name": "GREEN UNRIPE STRAWBERRIES 8 X 1LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE7C",
+      "name": "PEPPER MIXED VEGGIE SWEET 12X1 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE997",
+      "name": "RED CURRANTS 12 X 6 OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE8A",
+      "name": "PEPPER JALAPENO 10 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE1OB",
+      "name": "OISHII KOYO BERRIES 12 X 20 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE8AA",
+      "name": "PEPPER JALAPENO 1 1/9 BSH",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BE1O",
+      "name": "OISHI KOYO BERRIES 12 X 8-11 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE91",
+      "name": "PEPPER SERRANO 10 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "PE92",
+      "name": "PEPPER POBLANO 10 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ASP",
+      "name": "BROCCOLINI 3X2 LB MANNS PACKING",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE92A",
+      "name": "PEPPER HABANERO RED 8 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ASP0",
+      "name": "BROCCOLINI TRAY PACK 6X6 OZ MANN PACKING",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE93",
+      "name": "PEPPER HABANERO ORANGE 8 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ASP1",
+      "name": "BROCCOLINI ICED 18 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE96A",
+      "name": "PEPPER CHERRY RED HOT 1/2 BSH",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR",
+      "name": "BROCCOLI 14 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE970",
+      "name": "PEPPER ANAHEIM 10 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR2",
+      "name": "BROCCOLI RABE 20 CT ANDY BOY",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "BR2AA",
+      "name": "BROCCOLI CROWNS 20 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE994",
+      "name": "PEPPER CHILI RED THAI BIRD 1 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR2AAB",
+      "name": "BROCOLLI CROWNS ICELESS 20LB ANDY BOY",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE994A",
+      "name": "PEPPERS SHISHITO 1/2 BSH",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR2B",
+      "name": "SMITH'S FARM STAG BRAND BROCCOLI CROWNS 20 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE994ART",
+      "name": "PEPPER SHISHITO RTL BAG 8X8 OZ BAILEY",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR8",
+      "name": "TANIMURA & ANTLE BROCCOFLOWER 12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PE9991A",
+      "name": "PEPPER LONG HOT ITALIAN BSH",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR9VM",
+      "name": "PERO FAMILY FARMSBROCCOLI CARROTS CAULIFLOWER MEDLEY 6 X12 OZ",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PE9993",
+      "name": "PEPPER FRESNO RED 10 LB",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "BR91",
+      "name": "CHINESE BROCCOLI / GAI LON 25 LBS",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "BR90",
+      "name": "MANN PACKING BROCCOLI FLORETS 6 X 12 OZ",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "BR9",
+      "name": "BROCCOLI FLORETS 4 X 3LBS",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "FRU5D",
+      "name": "PINEAPPLES GOLDEN CHUNKS 2X6 LB",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "BR9P",
+      "name": "PERO FAMILY FARMS BROCCOLI FLORETS",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI3A",
+      "name": "PINEAPPLE GOLDEN 7 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "BR9M",
+      "name": "BROCCOLI SLAW 4X3 LB MANN",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI3H2",
+      "name": "PINEAPPLE PINK PINKGLOW 6 CT DEL MONTE",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "PI6",
+      "name": "PINEAPPLES GOLDEN 5 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SPR10",
+      "name": "BRUSSELS SPROUTS LOOSE 22 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI61",
+      "name": "PINEAPPLES GOLDEN 6 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SPR10A",
+      "name": "BRUSSELS SPROUTS ON THE STALK 9 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI6AA",
+      "name": "PINEAPPLES 5-6 CT DEL MONTE",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SPR10AA",
+      "name": "BRUSSELS SPROUTS 24X1 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI7B",
+      "name": "PINEAPPLE GOLDEN CROWNLESS 6-8 CT",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SPR10P",
+      "name": "PPERO FAMILY FARMS BRUSSELS SPROUTS 6 X 8OZ",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI9",
+      "name": "PINEAPPLE HONEY GLOW 6 CT DEL MONTE",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SPR11",
+      "name": "BABY BRUSSELS SPROUTS 6 X 12 OZ",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "PI9A",
+      "name": "PINEAPPLE MINI HONEYGLOW 8 CT DEL MONTE",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "SPR11A",
+      "name": "BRUSSELS SPROUTS CLEANED 4X3 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "SPR1A",
+      "name": "BRUSSELS SPROUTS JUMBO LOOSE 25 LB HITCHCOCK FARMS",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "FI1F",
+      "name": "POTATO FINGERLING RUSSIAN MEDIUM 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "FI5N",
+      "name": "POTATO RAINBOW PEE WEE 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "POT",
+      "name": "POTATO 90 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB1",
+      "name": "CABBAGE RED 14-16 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "CAB2",
+      "name": "CABBAGE SAVOY 40 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "POT2",
+      "name": "POTATO 80 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB2A",
+      "name": "CARAFLEX CABBAGE 8 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "POT20",
+      "name": "POTATO GPOD 80 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB10",
+      "name": "TANIMURA & ANTLE ARTISAN DEW DROP CABBAGE 20-24 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "POT3",
+      "name": "POTATO 60 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB3",
+      "name": "CABBAGE NAPA 30 LB",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "CAB5",
+      "name": "BOK CHOY 30 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POT4",
+      "name": "POTATO 70 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB5A",
+      "name": "BOK CHOY BABY 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POT40",
+      "name": "POTATO GPOD 70 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB5B",
+      "name": "BOK CHOY BABY MASTER 25 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POT5",
+      "name": "POTATO 50 CT 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB5C",
+      "name": "ULTRA BABY BOK CHOY 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POT7",
+      "name": "POTATO WHITE CHEF 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAB5CC",
+      "name": "ULTRA BABY BOK CHOY 20 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POT8",
+      "name": "POTATO RED BLISS B 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "KO2",
+      "name": "KOHLRABI 12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POT8B",
+      "name": "POTATO RED A 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "POT8C",
+      "name": "POTATO RED A XFCY 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "POT9",
+      "name": "YAMS JUMBO 40 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR.25",
+      "name": "CARROT JUMBO CALIFORNIA 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT90",
+      "name": "YAMS XFCY 40 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR0",
+      "name": "CARROT LOOSE XFCY 50 LB CALIFORNIA",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT90A",
+      "name": "YAMS MEDIUM 40 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR1",
+      "name": "CARROT FRENCH BABY 24 CT CALIFORNIA",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT92",
+      "name": "POTATO YUKON YELLOW FLESH LARGE A 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR3",
+      "name": "CARROT FRESH BUNCHED 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT92A",
+      "name": "POTATO YUKON YELLOW FLESH MEDIUM B 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR5",
+      "name": "BABE FAMR BABY THUMBELINA CARROTS 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT94",
+      "name": "POTATO RED CREAMERS C 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR9",
+      "name": "CARROT BABY PEELED PREMIER 30X1 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT96",
+      "name": "POTATO YUKON BABY C 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR10",
+      "name": "LARGE CARROTS 10 LBS",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT99",
+      "name": "POTATOES RUSSET NO 2 BAKERS BAGS 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "POT990",
+      "name": "POTATO YUKON B XFCY 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR991D",
+      "name": "CARROT BABY MIXED COLOR 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT9901",
+      "name": "POTATO YUKON A XFCY 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR992",
+      "name": "CARROT RAINBOW 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT990A",
+      "name": "POTATO YUKON CHEF 50 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAR99A",
+      "name": "CARROT STICKS RTL 12 CT GRIMMWAY",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "POT991C",
+      "name": "POTATO YUKON 10X5 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAU",
+      "name": "CAULIFLOWER 12 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "POT993C",
+      "name": "POTATO SWEET OKINAWA 30 LB",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "CAU016",
+      "name": "CAULIFOWER 16 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CAU2E",
+      "name": "CAULIFLOWER STEAK 16 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "RA20",
+      "name": "RADISH PURPLE NINJA 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CAU2P",
+      "name": "PERO FAMILY FARMS CAULIFLOWER FLORETS 6 X 10 OZ",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "RA4",
+      "name": "RADISH BUNCHED 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CAU3",
+      "name": "CAULIFLOWER ORANGE 9-12 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "RA5",
+      "name": "RADISH FRENCH BREAKFAST 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CAU4",
+      "name": "CAULIFLOWER ROMANESCO 9-12 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "RA9",
+      "name": "RADISH WATERMELON 10 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CAU5",
+      "name": "CAULIFLOWER PURPLE 9-12 CT",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "RA9B",
+      "name": "RADISH CELLO 14X1 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CAU7",
+      "name": "CAULIFLOWER TRI COLOR 6 CT SALAD SAVOY",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "CAULILINI",
+      "name": "CAULILINI SWEET STEM 3X2 LB MANN",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FLORENTINOAB",
+      "name": "FLORENTINO 18 CT ANDY BOY",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEE2",
+      "name": "BEETS RED BABY 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CE",
+      "name": "CELERY 24 CT",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "BEE20",
+      "name": "BEETS BABY MIXED COLOR 24 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CE10",
+      "name": "CELERY SLEEVED 30 CT",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "BEE21B",
+      "name": "BEETS COOKED READY TO EAT 12X500 GR",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CE2",
+      "name": "CELERY KNOB ROOT 20 LB",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "BEE3",
+      "name": "BEETS RED LARGE 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "CE6",
+      "name": "CELERY HEARTS 18X2 CT",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "BEE3A",
+      "name": "BEETS RED JUMBO 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "BEE4A",
+      "name": "BEETS GOLD LG 22 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "DAN",
+      "name": "DANDELION 12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEE6",
+      "name": "BEETS RED BUNCHED WITH TOPS 12 CT",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "DAN3AA",
+      "name": "ITALIAN CIMATA PUNTARELLA 11 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEE7A",
+      "name": "BEETS CANDY CANE LARGE 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "EN",
+      "name": "ENDIVE BELGIAN 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "H",
+      "name": "HORSERADISH 5 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "EN1",
+      "name": "RED ENDIVE 6.6 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "J",
+      "name": "JICAMA 20 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "EN1B",
+      "name": "RETAIL WHITE BELGIAN ENDIVE 12 X 3 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PAR",
+      "name": "PARSNIPS XFCY 20 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "FR2A",
+      "name": "FRISELINE 5.5 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PAR5",
+      "name": "PARSNIPS CELLO 12X1 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "FR2AA",
+      "name": "IMPORTED ITALIAN FRISEE 6.6 LLB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TU",
+      "name": "TURNIPS WHITE 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "FR1",
+      "name": "FRISEE BLANCHED 12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TU3A",
+      "name": "TURNIPS RUTABAGA UNWAXED 25 LB",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "FR2",
+      "name": "FRISEE ITALIAN STYLE 6.6 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "FR3",
+      "name": "FRISEE CIRCUS FULL BLANCHED 12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "APCOT00",
+      "name": "TREE RIPENED APRICOTS 1 LAYER",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "LET90",
+      "name": "ESCAROLE 1-1/9 BU",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET90AA",
+      "name": "BLANCHED ITALIAN ESCAROLE 4.4 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "N1A",
+      "name": "YELLOW NECTARINES 2 LAYERS",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "ON7",
+      "name": "ONION PEARL WHITE 12 CT",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "N20",
+      "name": "WHITE NECTARINES 2 LAYERS",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "LET91",
+      "name": "CHICORY 1-1/9 BU",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "R",
+      "name": "RADICCHIO 9 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PCH2A",
+      "name": "WHITE PEACHES 2 LAYERS",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "R1",
+      "name": "TREVISANO 10-12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PL2B",
+      "name": "SUGAR PLUM 20 LBS",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "R2",
+      "name": "ITALIAN TARDIVO 2.2 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "PL2A",
+      "name": "BLACK PLUMS 2 LAYERS",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "R3",
+      "name": "ITALIAN ROSA DI GORIZIA RADICCHIO 2.2 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CHR7",
+      "name": "FROZEN RED SOUR PITTED CHERRIES 40LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "R3C",
+      "name": "J.MARCHINI FARMS ROSA RADICCHIO",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CHR10",
+      "name": "EXTRA LARGE/JUMBO RED CHERRIES 11 LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "R3M",
+      "name": "IMPORTED ITALIAN RADICCHIO MIX 6 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "R4",
+      "name": "RADICCHIO CASTELFRANCO FRANCO 12 CT J MARCHINI",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQ",
+      "name": "ZUCCHINI MEDIUM 18 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "R5C",
+      "name": "ITALIAN ROSA DEL VENETO RADICCHIO 6.6 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQ0",
+      "name": "ZUCCHINI FCY 18 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "R51A",
+      "name": "ITALIAN CASTELFRANCO RADICCHIO 2.5 KG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQ2",
+      "name": "SQUASH YELLOW MED 18 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "SQ20",
+      "name": "SQUASH YELLOW FCY CS",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "R20",
+      "name": "ITALIAN GRUMOLO RADICCHIO 5.3 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQ8",
+      "name": "SQUASH PATTY PAN YELLOW BABY 5 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "GR",
+      "name": "GRAPEFRUIT RED 23 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "SQ9",
+      "name": "SQUASH PATTY PAN GREEN BABY 5 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "GR01",
+      "name": "GRAPEFRUIT RED 27 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "SQ91",
+      "name": "ZUCCHINI BABY 5 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "GR01D",
+      "name": "BERNARD RANCHES STAR RUBY GRAPEFRUIT 38 LB",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "SQ93",
+      "name": "SQUASH BUTTERNUT 35 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "GR10",
+      "name": "GRAPEFRUIT RED 48-56 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "SQ94",
+      "name": "SQUASH ACORN 35 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "GR1",
+      "name": "GRAPEFRUIT 40 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "SQ95",
+      "name": "SQUASH SPAGHETTI 35 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "KU0",
+      "name": "KUMQUATS 10 LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQUASH030325",
+      "name": "SQUASH CHAYOTE 20 CT",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "KU1BR",
+      "name": "BERBARD RANCHES KUMQUATS 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "SQUASH030330",
+      "name": "SQUASH KABOCHA 35 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "L",
+      "name": "LEMONS CHOICE 165 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "L0",
+      "name": "LEMONS 165 CT SUNKIST",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "HE",
+      "name": "TOMATO HEIRLOOM SINGLE 10 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "L1",
+      "name": "LEMONS CHOICE 140 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "HE1A",
+      "name": "TOMATO CHERRY MIX 12X1 PT",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "L30",
+      "name": "LEMONS CHOICE 200 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "HE4",
+      "name": "TOMATO HEIRLOOM KUMATO 10X1 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "L4",
+      "name": "LEMONS CHOICE 95 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO",
+      "name": "TOMATO PLUM X LARGE RED RIPE 25 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "L40",
+      "name": "LEMONS 95 CT FANCY SUNKIST",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO1",
+      "name": "TOMATO 5X6 25 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "L4B",
+      "name": "LEMONS MEYER 10 LB",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO1BA",
+      "name": "TOMATO 4X5 2 LYR",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI",
+      "name": "LIMES PONY 54 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO1C",
+      "name": "TOMATO 4x4 VINE RIPENED",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI0",
+      "name": "WHOLE BLACK DRIED LIMES 20 X 4 OZ",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO3C",
+      "name": "TOMATO BEEFSTEAK LARGE 1 LYR 15 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI1",
+      "name": "LIMES PONY 48 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO4",
+      "name": "TOMATO GRAPE SUGAR BOMBS 8X12 OZ SUNSET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI1A",
+      "name": "PERSIAN LIMES 36 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO4A",
+      "name": "TOMATO CHERRY HONEY BOMBS 8X12 OZ SUNSET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI1D",
+      "name": "PERSIAN LIMES 110 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO4BBB",
+      "name": "BAHAMA BOMBS CHERRY TOMATOES ON THE VINE 8 X 12 OZ",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI2",
+      "name": "LIMES BIG BOX 175 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO4C",
+      "name": "TOMATO CHERRY LOLLI BOMBS 8X12 OZ SUNSET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI2A",
+      "name": "LIMES BIG BOX 200-230 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO5",
+      "name": "TOMATO ON VINE MEDIUM 11 LB BACKYARD LCL",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI3AA",
+      "name": "MAKRUT (KAFFIR) LIMES 10 LBS",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO5D",
+      "name": "BACKYAD FARMS COCKTAIL ON THE VINE 12 X 10OZ",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TO5C",
+      "name": "TOMATO ON VINE 11 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO5D1",
+      "name": "TOMATO CHERRY ON VINE LOOSE 10 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI7",
+      "name": "LIMES KEY 12X1 LB",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO5I",
+      "name": "TOMATO CAMPARI 10X1 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "LI91S",
+      "name": "LIMES FINGER 5 OZ SHANLEY FARMS\nBERNARD RANCHES LISBON LEMONS 12 X 2 LBS",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO5NS",
+      "name": "TOMATO CHERRY ON THE VINE D'VINES 12X9 OZ NATURESWEET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO6",
+      "name": "TOMATO CHERRY RED 12X1 PT",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR1",
+      "name": "FANCY NAVEL ORANGES 56 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO6AA",
+      "name": "TOMATO RED CHERRY GLORYS 15X10 OZ NATURESWEET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR3",
+      "name": "FANCY NAVEL ORANGES 88 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO6F",
+      "name": "TOMATO GRAPE RED 12X1 PT",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR5B2",
+      "name": "CLEMENTINES 10X3 LB",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO6FAA",
+      "name": "TOMATO GRAPE YELLOW 12 CT",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR6",
+      "name": "ORANGES JUICING 100 SIZE",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO6FAAA",
+      "name": "TOMATO GRAPE BULK 20 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR62RT",
+      "name": "ORANGES NAVEL FCY 40-48 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO6FAAS",
+      "name": "TOMATO RED GRAPE ANGEL SWEET 15X1 PT SUNSET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR61A",
+      "name": "NAVEL ORANGES 10 X 4 LB\nMANDARIN HALO 10X3 LB\nMANDA ROSERED MANDARINS 15 X 2LB\nWONDERFUL HALO MANDARINS 4 X 5LBS\nMANDA ROSE RED MANDARIN 64-72 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "TO6FNS",
+      "name": "TOMATO YELLOW GRAPE COMETS 15X10 OZ NATURESWEET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO6K",
+      "name": "TOMATO MEDLEY MIX 12X8 OZ",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO6K2",
+      "name": "TOMATO CONSTELLATION 15X10 OZ NATURESWEET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO6NS",
+      "name": "TOMATO RED GRAPE CHERUBS 15X10 OZ NATURESWEET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO6OS",
+      "name": "TOMATO CHERRY RED ONE SWEET 15X1PT SUNSET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR6AM",
+      "name": "YOSEMITE GOLD MANDARINS 25LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TO7NS",
+      "name": "TOMATO GRAPE BROWN TWILIGHTS 15X10 OZ NATURESWEET",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR7AAAA",
+      "name": "SUNTREAT SUMO CITRUS 12 X 2 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TO8",
+      "name": "TOMATO BEEFSTEAK YELLOW 1 LYR 10 LB",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO94CRT",
+      "name": "TOMATO SENSATIONAL SARA 8X1 LB VILLAGE FARMS",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "TO993",
+      "name": "TOMATO BEEFSTEAK GREEN 1 LYR",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "OR8G1",
+      "name": "TANGO MANDARINS STEM & LEAF 23 LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TOM",
+      "name": "TOMATILLO 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TOM00",
+      "name": "TOMATILLO W/HUSK 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "TOM1",
+      "name": "TOMATILLO MASTER BOX 1 1/9 BU",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "OR910",
+      "name": "PAGE MANDARINS STEM & LEAF 23LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "OR8G",
+      "name": "RISING C RANCHES TANGO MANDARINS 22LBS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ORO1",
+      "name": "ORO BLANCO GRAPEFRUIT 35 LBS",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "CHER",
+      "name": "CHERIMOYA(SUGAR APPLE)",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "PO",
+      "name": "POMELO 10-12 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "DA3B",
+      "name": "DATES MEDJOOL 11 LB CALIFORNIA",
+      "category": "Produce/Fruit/Dates"
+    },
+    {
+      "supplier_sku": "PO2",
+      "name": "VALENTINE POMELO 27 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "DA4",
+      "name": "DATES MEDJOOL LARGE 11 LB",
+      "category": "Produce/Fruit/Dates"
+    },
+    {
+      "supplier_sku": "DRAGON",
+      "name": "DRAGON FRUIT PINK FLESH 8.8 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CO1",
+      "name": "CORN YELLOW 48 CT",
+      "category": "Produce/Vegetables/Corn"
+    },
+    {
+      "supplier_sku": "DRAGON1",
+      "name": "DRAGON FRUIT WHITE FLESH 10 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CO",
+      "name": "BABY CORN IN THE HUSK 5 LB",
+      "category": "Produce/Vegetables/Corn"
+    },
+    {
+      "supplier_sku": "DRAGON3",
+      "name": "DRAGON FRUIT YELLOW SKIN WITH FLESH 5 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CO1F",
+      "name": "CORN BABY HUSKED GUATEMALA 5 LB",
+      "category": "Produce/Vegetables/Corn"
+    },
+    {
+      "supplier_sku": "FRU",
+      "name": "STAR FRUIT 1 LYR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CO2A",
+      "name": "CORN BI COLOR 48 CT",
+      "category": "Produce/Vegetables/Corn"
+    },
+    {
+      "supplier_sku": "CO2ART",
+      "name": "CORN BI COLOR 12X4 CT",
+      "category": "Produce/Vegetables/Corn"
+    },
+    {
+      "supplier_sku": "FRU13FD2",
+      "name": "MANGO SPEARS 18X8 OZ FD",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "CU",
+      "name": "CUCUMBERS HOT HOUSE 12 CT",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "JACK",
+      "name": "JACKFRUIT 35 LB",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU01",
+      "name": "CUCUMBERS SUPER SELECT BSH",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "K",
+      "name": "KIWI 1 LYR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU02",
+      "name": "CUCUMBERS HOT HOUSE LARGE 12 CT",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "K1D",
+      "name": "KIWI GREEN 54-66 CT VF",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU1",
+      "name": "CUCUMBERS SELECT 1 BSH",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "K4",
+      "name": "KIWI BULK 117 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU1P",
+      "name": "SUPER SELCET CUCUMBERS",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "CU4BB",
+      "name": "CUCUMBER COCKTAIL 12X9 OZ",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "NU7",
+      "name": "COCONUT 40 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU5",
+      "name": "CUCUMBERS KIRBY 1 BSH",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "NU8",
+      "name": "COCONUTS YOUNG 9 CT",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU50",
+      "name": "CUCUMBERS KIRBY 1/2 BSH",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "OK",
+      "name": "OKRA CS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "CU5A",
+      "name": "CUCUMBERS PERSIAN LOOSE 20 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "PA",
+      "name": "PAPAYA HAWAIIAN 9 CT",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "CU6",
+      "name": "JAPANESE CUCUMBERS 10 LB",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "PA3A",
+      "name": "PAPAYA MARADOL 9-12 CT",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "PAS",
+      "name": "PASSION FRUIT 1 LYR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "POM6",
+      "name": "POMEGRANATE SEEDS 12X125 GR",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "EGG",
+      "name": "EGGPLANT 20 LB",
+      "category": "Produce/Vegetables/Nightshades"
+    },
+    {
+      "supplier_sku": "ROO7A",
+      "name": "TURMERIC 10 LB",
+      "category": "Produce/Vegetables/Roots"
+    },
+    {
+      "supplier_sku": "EGG2",
+      "name": "EGGPLANT JAPANESE 10 LB",
+      "category": "Produce/Vegetables/Nightshades"
+    },
+    {
+      "supplier_sku": "EGG4",
+      "name": "EGGPLANT HOLLAND STYLE 11 LB PURPLE PRIDE",
+      "category": "Produce/Vegetables/Nightshades"
+    },
+    {
+      "supplier_sku": "SPFR1F",
+      "name": "DATES PITTED DEGLET NOOR BOX 5 LB",
+      "category": "Produce/Fruit/Dates"
+    },
+    {
+      "supplier_sku": "EGG91A",
+      "name": "EGGPLANT GRAFFITI 11 LB",
+      "category": "Produce/Vegetables/Nightshades"
+    },
+    {
+      "supplier_sku": "AN",
+      "name": "FENNEL 24 CT",
+      "category": "Produce/Vegetables/Fennel"
+    },
+    {
+      "supplier_sku": "BGG1",
+      "name": "BASIL GOTHAM 12X1.25 OZ GOTHAM GREENS LCL",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "CI2",
+      "name": "CILANTRO CRATE 30 CT",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "CI21",
+      "name": "CILANTRO 2.2 LB",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "CI21E",
+      "name": "CILANTRO CLEANED 4X1 LB",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "D2",
+      "name": "DILL XFCY 24 CT",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "FL90A",
+      "name": "SQUASH BLOSSOMS 25 CT FRESH ORIGINS",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "MIC99MM",
+      "name": "MICRO RED MUSTARD 8 OZ FRESH ORIGINS",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MICAF27",
+      "name": "MICRO RAINBOW MIX 6X2 OZ AEROF LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MICAF28",
+      "name": "MICRO SUPER MIX 6X2 OZ AEROF LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MICAF29",
+      "name": "MICRO SPICY MIX 6X2 OZ AEROF LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "MICAF32",
+      "name": "MICRO BROCCOLI 6X2 OZ AEROF LCL",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "MICAF33",
+      "name": "MICRO WASABI MUSTARD 6X2 OZ AEROFARMS LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ON99",
+      "name": "ONION WHITE 50 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "P2",
+      "name": "PARSLEY ITALIAN 60CT BSH",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "P2A",
+      "name": "PARSLEY ITALIAN 30 CT 1/2 BSH",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "P3",
+      "name": "PARSLEY CURLY 60CT BSH",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "CIDER0",
+      "name": "CIDER APPLE 4X1 GAL RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "CIDER3",
+      "name": "CIDER APPLE 9X1/2 GAL RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JU10",
+      "name": "JUICE LIME NATURAL STRENGTH CONCENTRATE 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU12B",
+      "name": "JUICE PINEAPPLE ORANGE 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JU12C1",
+      "name": "JUICE MANGO ORANGE 6X12OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "JU141",
+      "name": "JUICE TANGERINE 6X12 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU14A",
+      "name": "JUICE TANGERINE 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU14H",
+      "name": "JUICE LEMON 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU14J",
+      "name": "JUICE LIME 6X32 OZ NOT FROM CONCENTRATE ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU14K",
+      "name": "JUICE LIME 4X1 GAL ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU14FF1",
+      "name": "JUICE LEMONADE 6X56 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU17",
+      "name": "JUICE LEMON 4X1 GAL ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU18C1",
+      "name": "JUICE ORANGE BLOOD 6X16 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU18D",
+      "name": "JUICE ORANGE BLOOD 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU18F1",
+      "name": "JUICE CARROT GINGER 6X12 OZ ORCHID ISLAND",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "JU18FF",
+      "name": "JUICE CARROT GINGER 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "JU18J1",
+      "name": "JUICE ORANGE 12X12 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU1A",
+      "name": "JUICE ORANGE 25X8 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU1CAB",
+      "name": "JUICE ORANGE 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU1DAB1",
+      "name": "JUICE ORANGE 6X56 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU20AA1",
+      "name": "JUICE GRAPEFRUIT 12X12 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU20BA",
+      "name": "JUICE GRAPEFRUIT 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU21AB1",
+      "name": "JUICE GRAPEFRUIT 6X56 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JU23A",
+      "name": "JUICE POMEGRANATE 6X16 OZ POM WONDERFUL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "JU24",
+      "name": "JUICE MARGARITA MIX 6X32 OZ NATALIES ORCHID ISLAND",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "JU26B",
+      "name": "JUICE ORANGE MANGO 6X32 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "JUICE",
+      "name": "JUICE ORANGE W/ PULP NFC 4X1 GAL FLORIDA'S NATURAL",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE0",
+      "name": "JUICE ORANGE 4X1 GAL ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE1",
+      "name": "JUICE GRAPEFRUIT 4X1 GAL ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE11",
+      "name": "JUICE APPLE FUJI 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE13",
+      "name": "CIDER APPLE 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE13B1",
+      "name": "LEMONADE STRAWBERRY 6X56 OZ ORCHID ISLAND",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE14",
+      "name": "JUICE APPLE GRAPE 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE16",
+      "name": "JUICE APPLE FUJI 8X32 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE18",
+      "name": "JUICE APPLE STRAWBERRY 8X32 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE19",
+      "name": "LEMONADE JOESS NY 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE2",
+      "name": "JUICE LEMON 6X1 LT ORCHID ISLAND FZ",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE23",
+      "name": "JUICE APPLE RASPBERRY 8X32 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE26",
+      "name": "JUICE APRICOT STOMP 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "JUICE27",
+      "name": "JUICE TART CHERRY STOMP 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Stone Fruit"
+    },
+    {
+      "supplier_sku": "JUICE29",
+      "name": "JUICE APPLE FUJI 9X1/2 GAL RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "JUICE3",
+      "name": "JUICE LIME 6X1 LT ORCHID ISLAND FZ",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "JUICE8G",
+      "name": "JUICE POMEGRANATE 6X48 OZ POM WONDERFUL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "JUICE9",
+      "name": "JUICE APPLE STRAWBERRY 6X12 OZ RED JACKET LCL",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "GI1",
+      "name": "GINGER 30 LB",
+      "category": "Produce/Vegetables/Roots"
+    },
+    {
+      "supplier_sku": "GRA",
+      "name": "GRAPES RED SEEDLESS MED LG 18 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "GRA1",
+      "name": "GRAPES RED XFCY LG 16-18 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "GRA2",
+      "name": "GRAPES WHITE/GREEN SEEDLESS MED/LG 16-18 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "GRA3",
+      "name": "GRAPES WHITE/GREEN SEEDLESS XFCY XLG 16-18 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "GRA7",
+      "name": "GRAPES BLACK SEEDLESS LG 16-18 LB",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "KA",
+      "name": "KALE DECORATIVE 24 CT SALAD SAVOY",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "KA1",
+      "name": "KALE GREEN 12 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "KA2",
+      "name": "KALE LACINATO 12 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "KA24",
+      "name": "KALE GREEN 24 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "LET5AA",
+      "name": "MACHE RETAIL 6 CT LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LET92",
+      "name": "COLLARD GREENS 12 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "SW",
+      "name": "SWISS CHARD GREEN 12 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "SW1",
+      "name": "SWISS CHARD RED 12 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "SW5A",
+      "name": "SWISS CHARD RAINBOW BRIGHT LIGHTS 12 CT",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "W",
+      "name": "WATERCRESS FRESH BUNCHED 24 CT B&W",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "W10A",
+      "name": "WATERCRESS RETAIL 6X4 OZ B&W",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "LE1",
+      "name": "LEEKS 12 CT",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "LE3",
+      "name": "LEEKS HOLLAND STYLE 11 LB",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZURPOT01",
+      "name": "POTATOES RED CREAMERS PEE WEE C 12X24 OZ UR ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCAR126",
+      "name": "ORGANIC CARROT STICKS",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZURPOT02",
+      "name": "POTATO GOLD CREAMERS PEE WEE C 12X24 OZ UR ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZVEG16",
+      "name": "ORGANIC CARROTCELERY STICKS",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZURPOT03",
+      "name": "POTATOES CONFETTI CREAMERS PEE WEE C 12X24 OZ UR ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCE3A6",
+      "name": "ORGANIC CELERY STICKS",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "ZURBV01",
+      "name": "BEANS FRENCH SNIPPED 6X8 OZ UR ORG",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "ZON98G6",
+      "name": "ORGANIC DICED ONIONS",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR116",
+      "name": "ORGANIC SHREDDED CARROTS",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZON98J6",
+      "name": "ORGANIC DICED RED ONIONS",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR16",
+      "name": "DICED ORGANIC CARROTS",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZSQ93D6",
+      "name": "ORGANIC BUTTERNUT SQUASH CUBES",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZCE36",
+      "name": "ORGANIC DICED CELERY",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "ZVEG116",
+      "name": "ORGANIC MIREPOIX",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZBE5",
+      "name": "BLUEBERRIES 12X1 PT DRISCOLL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZCAB1",
+      "name": "CABBAGE RED 45 LB ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZBE6",
+      "name": "BLACKBERRIES 12X6 OZ DRISCOLL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZCAB",
+      "name": "CABBAGE GREEN 45 LB ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZBE2A",
+      "name": "RASPBERRIES 12X6 OZ DRISCOLL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZLE1",
+      "name": "LEEKS 12 CT ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZPI3",
+      "name": "PINEAPPLES 8 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZMU97M",
+      "name": "MUSH MAITAKE FRONDOSA 6 LB MYCOPIA ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZKU0GG",
+      "name": "KUMQUATS MEIWA 10 LB GARCIA ORG FARM ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZON",
+      "name": "ONION YELLOW 40 LB ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZGRA",
+      "name": "GRAPES RED 18 LB ORG",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "ZCAR3D1",
+      "name": "CARROT RAINBOW MIX 25 LB NORWICH ORG LCL",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZGRA1",
+      "name": "GRAPES GREEN 18 LB ORG",
+      "category": "Produce/Fruit/Grapes"
+    },
+    {
+      "supplier_sku": "ZCAR0B",
+      "name": "CARROT ORANGE 25 LB NORWICH ORG LCL",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZAP80",
+      "name": "APPLES OPAL 55 CT FIRST FRUIT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZCAR30",
+      "name": "CARROT 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZAP33C",
+      "name": "APPLE PINK LADY 12X2 LB ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZCAR3A",
+      "name": "CARROT RAINBOW 24 CT ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZAP7",
+      "name": "APPLE GALA 12X2 LB ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZCAR0",
+      "name": "CARROT JUMBO 25 LB CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZAP5CRT",
+      "name": "APPLE FUJI 12X2 LB ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZKA1C",
+      "name": "KALE SPIGARIELLO 12 CT COUNTY LINE ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZOR912",
+      "name": "MANDARINS TDE TRIPLE CROSS 25 LB BUCK BRAND ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZCAR32DD",
+      "name": "CARROT KYOTO 10 LB NORWICH ORG LCL",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZOR94A",
+      "name": "MANDARIN PAGE 25 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZFI2N1",
+      "name": "POTATO FINGERLING MEDLEY 10 LB NORWICH MEADOWS ORG LCL",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZOR3B",
+      "name": "ORANGE NAVELS HEIRLOOM 56-72 CT BUCK BRAND ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPOT99U2",
+      "name": "POTATO UPSTATE ABUNDANCE ROW 7 SEED 50 LB ORG LCL",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "zgr4",
+      "name": "GRAPEFRUIT 48 CT ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZTU5A",
+      "name": "TURNIPS HINONA KABU 12 CT COUNTY LINE ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZAP2A",
+      "name": "APPLE GRANNY SMITH 80-88 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZA6A4",
+      "name": "ARUGULA WILD BABY 4 LB ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZAP2G",
+      "name": "APPLE GRANNY SMITH 100 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZICE1",
+      "name": "ICEBERG 12 CT ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZAP33",
+      "name": "APPLE PINK LADY 80-88 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZLET",
+      "name": "LETTUCE RED LEAF 24 CT ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZLET1",
+      "name": "LETTUCE GREEN LEAF 24 CT ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZAP34A",
+      "name": "APPLE HONEYCRISP 80-88 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZMES",
+      "name": "SALAD MIX MESCLUN/ SPRING 3 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZAP34B",
+      "name": "APPLE HONEYCRISP 12X2 LB ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZMES13",
+      "name": "SALAD MIX ARCADIAN HARVEST 4X3 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZAP50",
+      "name": "APPLE FUJI 80-88 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZOG",
+      "name": "SPINACH BABY 6X5 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZAP51",
+      "name": "APPLE FUJI 100 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZOG1",
+      "name": "SALAD MIX BABY SPRING 6X5 OZ ORG GIRL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZAP6",
+      "name": "APPLE GALA 80 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZOG10",
+      "name": "SPINACH BABY 6X10 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZAP61",
+      "name": "APPLE GALA 100 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZOG11",
+      "name": "SALAD MIX BABY SPRING 6X10 OZ ORG GIRL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZOG13",
+      "name": "ROMAINE HEARTS 3 PACK 14X12 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZOG2",
+      "name": "SALAD MIX 50/50 6X5 OZ ORG GIRL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZART1",
+      "name": "ARTICHOKES 24 CT ORG",
+      "category": "Produce/Vegetables/Artichokes"
+    },
+    {
+      "supplier_sku": "ZOG2RT",
+      "name": "SALAD MIX 50/50 6X10 OZ ORGGIRL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZOG3",
+      "name": "LETTUCE SUPERGREENS 6X5 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZAS",
+      "name": "ASPARAGUS STANDARD 11 LB ORG",
+      "category": "Produce/Vegetables/Asparagus"
+    },
+    {
+      "supplier_sku": "ZOG31",
+      "name": "LETTUCE LITTLE GEMS 6X5 OZ ORGGIRL ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZOG41",
+      "name": "SPRING MIX KALE BABY BLEND 6X5 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZAV1",
+      "name": "AVOCADO 48 CT ORG",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "ZOG5",
+      "name": "SPINACH SUPER 6X5 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZAV3",
+      "name": "AVOCADO 32-36 CT ORG",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "ZOG6",
+      "name": "ARUGULA BABY 6X5 OZ ORGGIRL ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZAV4",
+      "name": "AVOCADO 60 CT ORG",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "ZOG8",
+      "name": "LETTUCE BUTTER PLUS 6X4 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZAV4C",
+      "name": "AVOCADO HASS 12X4 CT BAG ORG",
+      "category": "Produce/Fruit/Avocados"
+    },
+    {
+      "supplier_sku": "ZOG9",
+      "name": "ROMAINE HEARTS TRUE 6X7 OZ ORG GIRL ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZOGRT",
+      "name": "SPINACH ARUGULA BABY 6X5 OZ ORGGIRL ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZBA2",
+      "name": "BANANA TWO DAYS AWAY NO 4 40LB ORG",
+      "category": "Produce/Fruit/Tropical"
+    },
+    {
+      "supplier_sku": "ZROM",
+      "name": "ROMAINE 24 CT ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZROM2",
+      "name": "ROMAINE HEARTS 12X3 CT ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZBEA12B",
+      "name": "BEAN GREEN 12X12 OZ ORG",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "ZRROMAB",
+      "name": "ROMAINE HEART 12X3 CT ANDY BOY ORG",
+      "category": "Produce/Vegetables/Lettuce"
+    },
+    {
+      "supplier_sku": "ZBEA5",
+      "name": "BEAN FRENCH 5 LB ORG",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "ZSP",
+      "name": "SPINACH 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZPS1A",
+      "name": "PEAS SUGAR SNAP 12X8 OZ ORG",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ZSP5",
+      "name": "SPINACH TRIPLE WASHED 4X2.5 LB ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZSP6A",
+      "name": "SPINACH BABY 4 LB ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZBE1D",
+      "name": "STRAWBERRIES 8X1 LB DRISCOLL ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZME3",
+      "name": "ORGANIC MINI SEEDLESS WATERMELONS",
+      "category": "Produce/Fruit/Melons"
+    },
+    {
+      "supplier_sku": "ZMU",
+      "name": "MUSH SHIITAKE 3 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU0",
+      "name": "MUSH SHIITAKE CELLO WHOLE 6X3.5 OZ ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU2",
+      "name": "MUSH LIONS MANE 6X3.5 OZ MOTHER EARTH ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU2CRT1",
+      "name": "MUSH KING OYSTER SLICED 6X6 OZ RI MUSH ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZABBR2",
+      "name": "BROCCOLI RABE ANDY BOY 26 CT DARRIGO ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU5",
+      "name": "MUSH PORTOBELLO 5 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZASP1",
+      "name": "BROCCOLINI ICED 18 CT MANN PACKING ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU5A",
+      "name": "MUSH PORTOBELLO CELLO WHOLE CAP 6X6 OZ ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZBR",
+      "name": "BROCCOLI 14 CT ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU6",
+      "name": "MUSH CREMINI CELLO WHOLE 6X8 OZ MOTHER EARTH ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZBR1A",
+      "name": "BROCCOLI CROWNS 20 LB ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU6A",
+      "name": "MUSH CREMINI WHOLE 5 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZBR9",
+      "name": "BROCCOLI BROCCOLETTE BABY 18 CT ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU7",
+      "name": "MUSH OYSTER 5 LB RI MUSH ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU7A",
+      "name": "MUSH OYSTER 6X3.5 ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZSPR10",
+      "name": "BRUSSELS SPROUTS 10 LB ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU90",
+      "name": "MUSH CELLO WHITE 12X8 OZ MOTHER EARTH ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZSPR11",
+      "name": "BRUSSELS SPROUTS 8X1 LB ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZMU91",
+      "name": "MUSH WHITE MEDIUM 10 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU97",
+      "name": "MUSH MAITAKE 12X3.5 ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZCAB5A",
+      "name": "BOK CHOY LOOSE CALO ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU97.3",
+      "name": "MUSH MAITAKE 24X100 GR ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZCAB6",
+      "name": "BOK CHOY BABY 20 LB ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZMU971C",
+      "name": "MUSH TRUMPET KING 10X300 GR ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZOG20",
+      "name": "BOK CHOY BABY CLAMSHELL 6X5 OZ ORGGIRL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZG",
+      "name": "GARLIC WHOLE 10 LB ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZG3B",
+      "name": "GARLIC PEEL 12X6 OZ CHRISTOPHER RANCH ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZG3C",
+      "name": "GARLIC PEEL 5 LB CHRISTOPHER RANCH ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZG4A",
+      "name": "GARLIC BULB SLEEVED 24X3 CT CHRISTOPHER RANCH LLC ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR3D",
+      "name": "CARROT RAINBOW MIX 25 LB ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZCAR3E",
+      "name": "CARROT RAINBOW 24X2 LB CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZON5",
+      "name": "ONION RED 40 LB ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR3L",
+      "name": "CARROT SHREDDED RTL 12X10 OZ GRIMMWAY FARMS ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZON97",
+      "name": "SCALLION JAPANESE NEGI 3 BU NORWICH ORG LCL",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR5",
+      "name": "CARROT CHIPS RAINBOW 12X12 OZ CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZON991",
+      "name": "ONION YELLOW 16X3 LB ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR6",
+      "name": "CARROT JUICING 50 LB ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZON991A",
+      "name": "ONION RED 16X3 LB ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR9",
+      "name": "CARROT BABY PEELED 30X1 LB ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZSC1",
+      "name": "SCALLIONS 48 CT ORG",
+      "category": "Produce/Vegetables/Onions"
+    },
+    {
+      "supplier_sku": "ZCAR91C",
+      "name": "CARROT BABY RAINBOW 12X12 OZ ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZCAR990",
+      "name": "CARROT CELLO 10X5 LB CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZPR4",
+      "name": "PEARS BOSC PEARS 70-80 CT",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ZPR41",
+      "name": "PEARS BOSC 100 CT ORG",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ZCAR991",
+      "name": "CARROT CELLO 48X1 LB ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZPE",
+      "name": "PEPPER RED 11 LB ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZCAR992",
+      "name": "CARROT CELLO 24X2 LB ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZPE3",
+      "name": "PEPPER YELLOW 11 LB ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZPE6",
+      "name": "PEPPER GREEN 25 LB ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZPE7",
+      "name": "PEPPER ORANGE 11 LB ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZCE",
+      "name": "CELERY SLEEVED 30 CT ORG",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "ZPE9",
+      "name": "PEPPER SWEET MEDLEY 12X1 LB ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZCE6",
+      "name": "CELERY HEARTS 18X2 CT ORG",
+      "category": "Produce/Vegetables/Celery"
+    },
+    {
+      "supplier_sku": "ZPE9P",
+      "name": "PEPPER MINI SWEET 12X8 OZ PERO ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZPEEA03",
+      "name": "PEPPER RED ORANGE 2 PK 6X10 OZ E&A ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZDAN2",
+      "name": "DANDELION RED 24 CT ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZPEEA04",
+      "name": "PEPPER RED 2 PK 6X10 OZ E&A ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZPEEA05",
+      "name": "PEPPER RED YELLOW 2 PK 6X10 OZ E&A ORG",
+      "category": "Produce/Vegetables/Peppers"
+    },
+    {
+      "supplier_sku": "ZGR32",
+      "name": "GRAPEFRUIT 32 CT ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPI2",
+      "name": "PINEAPPLES 7 CT ORG",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZGR4A",
+      "name": "GRAPEFRUIT FCY 40 CT ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZL",
+      "name": "LEMONS 18X2 LB ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZL10",
+      "name": "LEMONS 115 CT FANCY ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZFI2B",
+      "name": "YAMS GARNET BABY 10 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZPOT2",
+      "name": "POTATO RUSSET 80 CT ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZL40",
+      "name": "LEMONS 95 CT FANCY ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPOT8A",
+      "name": "POTATO RED A 50 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZLI",
+      "name": "LIMES 40 LB ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPOT8F",
+      "name": "POTATO SWEET PURPLE 15 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZOR",
+      "name": "ORGANIC NAVEL ORANGES 56 CT",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPOT9",
+      "name": "YAMS GARNET #1 40 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZLI1",
+      "name": "LIMES 10 LB ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPOT90",
+      "name": "YAMS JEWEL 40 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZOR50",
+      "name": "ORANGES VALENCIA 113 CT ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZPOT90A",
+      "name": "YAMS ORIENTAL 40 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZPOT90C",
+      "name": "POTATO SWEET WHITE NO 1 HANNAH SWEET 40 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCU",
+      "name": "CUCUMBERS 1/2 BSH ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZPOT90RT",
+      "name": "YAMS JEWEL 20 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCU2A",
+      "name": "CUCUMBERS PERSIAN 12X1 LB ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZPOT93",
+      "name": "POTATO YUKON A 50 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCU3",
+      "name": "CUCUMBERS ENGLISH 12-14 CT ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZPOT99A",
+      "name": "POTATO RUSSET 10X5 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCUEA01",
+      "name": "CUCUMBER MINI 12X12 OZ E&A ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZPOT99B",
+      "name": "POTATO RED 10X5 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZCUEA01B",
+      "name": "CUCUMBER MINI BAG 12X12 OZ E&A ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZPOT99C",
+      "name": "POTATO YUKON 10X5 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZPOT9B",
+      "name": "YAMS GARNET JUMBO 40 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZEGG",
+      "name": "EGGPLANT 25 LB ORG",
+      "category": "Produce/Vegetables/Nightshades"
+    },
+    {
+      "supplier_sku": "ZPOT90I",
+      "name": "COVINGTON SWEET POTATO",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "ZAN",
+      "name": "FENNEL 12 CT ORG",
+      "category": "Produce/Vegetables/Fennel"
+    },
+    {
+      "supplier_sku": "ZPOT9RT",
+      "name": "YAMS GARNET #1 20 LB ORG",
+      "category": "Produce/Vegetables/Potatoes"
+    },
+    {
+      "supplier_sku": "BMA02",
+      "name": "FLOWERS EDIBLE MIX 50 CT BLUE MOON ACRES ORG LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "WHEAT",
+      "name": "WHEATGRASS TRAY PERFECT FOODS NY ORG LCL",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZRA1A",
+      "name": "RADISH BUNCHED 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZB1",
+      "name": "BASIL 1 LB ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZRA3",
+      "name": "RADISH DAIKON 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZCI2",
+      "name": "CILANTRO 30 CT ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZRA8",
+      "name": "RADISH EASTER EGG 24 CT ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZD1",
+      "name": "DILL 24 CT ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZRA8C",
+      "name": "RADISH RAINBOW RTL 12 CT CAL-O ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZD1A",
+      "name": "DILL BUNCH 12 CT CAL-O ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZSPR",
+      "name": "SPROUT BEAN MUNG 6X7 OZ ORG",
+      "category": "Produce/Vegetables/Beans"
+    },
+    {
+      "supplier_sku": "ZSPR2",
+      "name": "SPROUT ALFAFA 6X4 OZ ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZSPR3",
+      "name": "SPROUT BROCCOLI 6X4 OZ ORG",
+      "category": "Produce/Vegetables/Brassicas"
+    },
+    {
+      "supplier_sku": "ZSPR3B",
+      "name": "SPROUT MUNCHIN MIX BAG 6X4 OZ ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZSPR3C",
+      "name": "PEA SHOOT 6X6 OZ ORG",
+      "category": "Produce/Vegetables/Peas"
+    },
+    {
+      "supplier_sku": "ZBEE2",
+      "name": "BEETS RED RTL 12 CT ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZBEE3",
+      "name": "BEETS RED 25 LB ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZBEE3D1",
+      "name": "BEETS RED 24 CT ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZROO7",
+      "name": "TURMERIC 25 LB ORG",
+      "category": "Produce/Vegetables/Roots"
+    },
+    {
+      "supplier_sku": "ZROO7B",
+      "name": "TURMERIC 5 LB ORG",
+      "category": "Produce/Vegetables/Roots"
+    },
+    {
+      "supplier_sku": "ZSQ",
+      "name": "ZUCCHINI MEDIUM 18-22 LB ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZSQ20",
+      "name": "SQUASH YELLOW FCY 1/2 BSH ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZMI1",
+      "name": "MINT 1 LB ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZSQ93",
+      "name": "SQUASH BUTTERNUT 35 LB ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZP2",
+      "name": "PARSLEY ITALIAN 30 CT ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZSQEA01",
+      "name": "ZUCCHINI 12X14 OZ E&A ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "ZP3",
+      "name": "PARSLEY CURLY 30 CT ORG",
+      "category": "Produce/Herbs/Fresh Herbs"
+    },
+    {
+      "supplier_sku": "ZSQO1",
+      "name": "ZUCCHINI FCY 22 LB ORG",
+      "category": "Produce/Vegetables/Cucurbits"
+    },
+    {
+      "supplier_sku": "JU18G",
+      "name": "JUICE ORANGE 6X32 OZ ORCHID ISLAND ORG",
+      "category": "Produce/Fruit/Citrus"
+    },
+    {
+      "supplier_sku": "ZHE2",
+      "name": "TOMATO HEIRLOOM MINI 12X12 OZ ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "ZTO03",
+      "name": "TOMATO PLUM ROMA 12X1 LB ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9D",
+      "name": "LIVING JUICE Organic Green Vitality Juice",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZTO1",
+      "name": "TOMATO BEEFSTEAK LARGE 1 LYR ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9E",
+      "name": "LIVING JUICE Organic Fresh Start",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZTO3LW",
+      "name": "TOMATO RED BEEFSTEAK 1 LYR 10 LB LONG WIND FARM ORG LCL",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9F",
+      "name": "LIVING JUICE Organic Carrot Kick Juice",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZTO3RT",
+      "name": "TOMATO RED BEEFSTEAK 12X2 CT ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9G",
+      "name": "LIVING JUICE Organic Red Radiance Juice",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZTO5C",
+      "name": "TOMATO ON VINE 11 LB ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9H",
+      "name": "LIVING JUICE Organic Pineapple Punch",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZTO5LW",
+      "name": "TOMATO COCKTAIL CHERRY MIX 12X1 PT LONG WIND FARM ORG LCL",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9DD",
+      "name": "LIVING JUICE Organic Green Vitality Juice Mini",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZTO6",
+      "name": "TOMATO CHERRY 12 CT ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9EE",
+      "name": "LIVING JUICE Organic Fresh Start Juice Mini",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZTO6F",
+      "name": "TOMATO GRAPE 12 X 1 PT ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9FF",
+      "name": "LIVING JUICE Organic Carrot Kick Juice Mini",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZTO93",
+      "name": "TOMATOES CAMPARI 10X12 OZ SUNSET ORG",
+      "category": "Produce/Vegetables/Tomatoes"
+    },
+    {
+      "supplier_sku": "BEV9GG",
+      "name": "LIVING JUICE Organic Red Radiance Juice Mini",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "BEV9HH",
+      "name": "LIVING JUICE Organic Pineapple Punch Juice Mini",
+      "category": "Produce/Fruit/Apples"
+    },
+    {
+      "supplier_sku": "ZDA1",
+      "name": "DATES MEDJOOL 11 LB (Bio 5kg) ORG",
+      "category": "Produce/Fruit/Dates"
+    },
+    {
+      "supplier_sku": "ZGI1",
+      "name": "GINGER 10 LB ORG",
+      "category": "Produce/Vegetables/Roots"
+    },
+    {
+      "supplier_sku": "ZBEE01",
+      "name": "GOLDEN BEETS 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Root Vegetables"
+    },
+    {
+      "supplier_sku": "ZGI3",
+      "name": "GINGER 30 LB PERU ORG",
+      "category": "Produce/Vegetables/Roots"
+    },
+    {
+      "supplier_sku": "ZKA0",
+      "name": "KALE RED 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZKA1",
+      "name": "KALE GREEN 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZKA2",
+      "name": "KALE LACINATO 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZDAN01",
+      "name": "DANDELION GREEN 12 CT CALO ORG",
+      "category": "Produce/Other"
+    },
+    {
+      "supplier_sku": "ZKA2B",
+      "name": "KALE LACINATO SLICED 4X2.5 LB ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZKA11",
+      "name": "KALE GREEN 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZLET92A",
+      "name": "COLLARD GREENS 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZKA21",
+      "name": "KALE LACINATO 24 CT CALO ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZSALAD8A",
+      "name": "KALE BABY GREEN 3 LB ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZSW",
+      "name": "SWISS CHARD GREEN 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZSW1",
+      "name": "SWISS CHARD RED 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZSW6",
+      "name": "SWISS CHARD RAINBOW 24 CT ORG",
+      "category": "Produce/Vegetables/Leafy Greens"
+    },
+    {
+      "supplier_sku": "ZLE3",
+      "name": "LEEKS LOOSE 20 LB ORG",
+      "category": "Produce/Vegetables/Onions"
+    }
+  ]
+}

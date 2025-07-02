@@ -1,0 +1,218 @@
+{
+  "success": true,
+  "query": "I need organic vegetables and rice for a party of 20",
+  "results": null,
+  "products": [
+    {
+      "product_id": "81c8e2a7-e4f3-4aab-87bf-762efeeee9af",
+      "sku": "129",
+      "product_name": "5Ris7 Lx. South Indian Rice Flour 20X2 Lb (Non-Gmo)",
+      "product_description": "",
+      "price": 65.0,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "46c43b82-19b0-4251-94bd-da2da755ba0f",
+      "sku": "CF_MIXED_VEG",
+      "product_name": "Organic Mixed Vegetables",
+      "product_description": "",
+      "price": 8.7,
+      "supplier": "Cascadian Farm",
+      "category": "Frozen",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "4eb35a23-9293-4ff1-b5a1-12072ab15828",
+      "sku": "127",
+      "product_name": "5Ri6 Lx. Rice Flour 10X4 Lb (Non-Gmo)",
+      "product_description": "",
+      "price": 62.5,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "5282f98f-c6f9-4e89-810e-71f132799167",
+      "sku": "213",
+      "product_name": "Ggsp22 G.G. Roasted Poha Chiwda 20X285 Gm (Np)",
+      "product_description": "",
+      "price": 73.8,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "4506f914-a9f1-4dce-af3b-3ceca43775fa",
+      "sku": "128",
+      "product_name": "5Ris6 Lx. South Indian Rice Flour 10X4 Lb (Non-Gmo)",
+      "product_description": "",
+      "price": 62.5,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "44182c6d-011b-4ca4-9719-b2a976e5432f",
+      "sku": "VS_RICE_IDLI_10",
+      "product_name": "Vistar Idli Rice",
+      "product_description": "",
+      "price": 30.0,
+      "supplier": "Vistar",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "2eb905b3-1376-441c-9123-f99d49e60315",
+      "sku": "VS_RICE_SONA_20",
+      "product_name": "Vistar Sona Masoori Rice",
+      "product_description": "",
+      "price": 62.5,
+      "supplier": "Vistar",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "a76f0c75-5c7b-49ae-b365-22315d542af8",
+      "sku": "126",
+      "product_name": "5Ri39 Lx. Freshly Milled Rice Flour 4X10 Lb",
+      "product_description": "",
+      "price": 61.2,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "389b796f-5d96-4669-8996-c00ff335bc3b",
+      "sku": "10",
+      "product_name": "Arsm0 Ak. Sona Masoori Rice",
+      "product_description": "",
+      "price": 57.5,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "4d51a105-065a-42a8-b50d-14b99d492307",
+      "sku": "BALDOR_ZCAR116",
+      "product_name": "Organic Shredded Carrots",
+      "product_description": "",
+      "price": 60.0,
+      "supplier": "Baldor Specialty Foods",
+      "category": "Produce/Vegetables/Root Vegetables",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "b28b8e30-a4d9-483e-a173-f813a7142e6f",
+      "sku": "BALDOR_PR20A",
+      "product_name": "Pears Red 1/2",
+      "product_description": "",
+      "price": 85.0,
+      "supplier": "Baldor Specialty Foods",
+      "category": "Produce/Vegetables/Peas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "2a2b8349-9f8d-44a1-8f9f-345c9239702e",
+      "sku": "BALDOR_PR40",
+      "product_name": "Pears Bosc 70-80 Ct",
+      "product_description": "",
+      "price": 186.2,
+      "supplier": "Baldor Specialty Foods",
+      "category": "Produce/Vegetables/Peas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "5e396319-2643-46aa-849d-820c1b294100",
+      "sku": "BALDOR_ZVEG16",
+      "product_name": "Organic Carrotcelery Sticks",
+      "product_description": "",
+      "price": 130.0,
+      "supplier": "Baldor Specialty Foods",
+      "category": "Produce/Vegetables/Root Vegetables",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "66482587-073c-491e-b172-92a145be15c6",
+      "sku": "82",
+      "product_name": "1Mus6 Lx. Mustard Seed Small 20X400 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 76.2,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "e9742a86-3cd1-4895-aca5-50d76dd2c745",
+      "sku": "BALDOR_TO5I",
+      "product_name": "Tomato Campari 10X1 Lb",
+      "product_description": "",
+      "price": 55.0,
+      "supplier": "Baldor Specialty Foods",
+      "category": "Produce/Vegetables/Tomatoes",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    }
+  ],
+  "metadata": {
+    "total_count": 15,
+    "categories": [],
+    "brands": [],
+    "search_config": {
+      "alpha": 0.5
+    }
+  },
+  "execution": {
+    "total_time_ms": 661.5875460011011,
+    "agent_timings": {
+      "supervisor": 152.8048910004145,
+      "product_search": 502.2054740002204,
+      "response_compiler": 0.2150089967472013
+    },
+    "reasoning_steps": [
+      "Analysis (153ms) - Intent: product_search, Alpha: 0.5"
+    ],
+    "agents_run": [],
+    "timeout_ms": 10000
+  },
+  "conversation": {
+    "intent": "product_search",
+    "confidence": 0.6,
+    "response": "Found 15 products matching your search."
+  },
+  "message": "Found 15 products matching your search.",
+  "error": null,
+  "langsmith_trace_url": "https://smith.langchain.com/public/d534c016-fdb2-4c04-a0a9-aae1656bf8ee/r",
+  "suggestions": null,
+  "order": null
+}

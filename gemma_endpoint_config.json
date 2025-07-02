@@ -1,0 +1,7 @@
+{
+  "recommended_method": "generative_ai",
+  "endpoint_url": null,
+  "use_dedicated_endpoint": false,
+  "fallback_model": "gemini-1.5-flash",
+  "expected_latency_ms": 50
+}

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Promotion Manager</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #229954;
+        }
+        .promotion-list {
+            margin-top: 30px;
+        }
+        .promotion-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+        }
+        .promotion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .promotion-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .promotion-code {
+            background-color: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .promotion-details {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        .test-section {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .result.error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .api-info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 LeafLoaf Promotion Manager</h1>
+    
+    <div class="api-info">
+        <strong>API Endpoint:</strong> <span id="apiUrl">http://localhost:8000</span>
+        <button onclick="updateApiUrl()" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;">Change</button>
+    </div>
+
+    <div class="container">
+        <h2>Create New Promotion</h2>
+        <form id="promotionForm">
+            <div class="form-group">
+                <label>Promotion Name</label>
+                <input type="text" id="promotionName" placeholder="e.g., Summer Sale 20% Off" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Promotion Type</label>
+                <select id="promotionType" required>
+                    <option value="percentage_off">Percentage Off</option>
+                    <option value="dollar_off">Dollar Off</option>
+                    <option value="bogo">Buy One Get One (BOGO)</option>
+                    <option value="bundle">Bundle Deal</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Discount Value</label>
+                <input type="number" id="discountValue" step="0.01" placeholder="e.g., 20 for 20% or $20" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Promo Code (optional)</label>
+                <input type="text" id="promoCode" placeholder="e.g., SUMMER20">
+            </div>
+            
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="description" rows="3" placeholder="Describe the promotion..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Days Valid</label>
+                <input type="number" id="daysValid" value="30" min="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Minimum Purchase ($)</label>
+                <input type="number" id="minimumPurchase" step="0.01" value="0" min="0">
+            </div>
+            
+            <div class="form-group">
+                <label>Maximum Discount ($) - Optional</label>
+                <input type="number" id="maximumDiscount" step="0.01" placeholder="Leave empty for no limit">
+            </div>
+            
+            <div class="form-group">
+                <label>Usage Limit Per User - Optional</label>
+                <input type="number" id="usageLimit" min="1" placeholder="Leave empty for unlimited">
+            </div>
+            
+            <div class="form-group">
+                <label>Applicable Categories</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_dairy" value="Dairy">
+                        <label for="cat_dairy">Dairy</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_meat" value="Meat">
+                        <label for="cat_meat">Meat</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_seafood" value="Seafood">
+                        <label for="cat_seafood">Seafood</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_bakery" value="Bakery">
+                        <label for="cat_bakery">Bakery</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_frozen" value="Frozen">
+                        <label for="cat_frozen">Frozen</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_beverages" value="Beverages">
+                        <label for="cat_beverages">Beverages</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_snacks" value="Snacks">
+                        <label for="cat_snacks">Snacks</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_pantry" value="Pantry">
+                        <label for="cat_pantry">Pantry</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit">Create Promotion</button>
+            <button type="button" onclick="loadPromotions()">Refresh List</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+    </div>
+    
+    <div class="container">
+        <h2>Test Promotion Code</h2>
+        <div class="test-section">
+            <div class="form-group">
+                <label>Promo Code</label>
+                <input type="text" id="testPromoCode" placeholder="e.g., SUMMER20">
+            </div>
+            <div class="form-group">
+                <label>Cart Total ($)</label>
+                <input type="number" id="testCartTotal" step="0.01" value="50.00">
+            </div>
+            <button onclick="testPromotion()">Test Code</button>
+            <div id="testResult" class="result"></div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>Active Promotions</h2>
+        <div id="promotionList" class="promotion-list">
+            Loading promotions...
+        </div>
+    </div>
+
+    <script>
+        let API_URL = localStorage.getItem('apiUrl') || 'http://localhost:8000';
+        document.getElementById('apiUrl').textContent = API_URL;
+        
+        function updateApiUrl() {
+            const newUrl = prompt('Enter API URL:', API_URL);
+            if (newUrl) {
+                API_URL = newUrl;
+                localStorage.setItem('apiUrl', API_URL);
+                document.getElementById('apiUrl').textContent = API_URL;
+                loadPromotions();
+            }
+        }
+        
+        document.getElementById('promotionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const categories = [];
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+                categories.push(cb.value);
+            });
+            
+            const promotion = {
+                promotion_name: document.getElementById('promotionName').value,
+                promotion_type: document.getElementById('promotionType').value,
+                discount_value: parseFloat(document.getElementById('discountValue').value),
+                days_valid: parseInt(document.getElementById('daysValid').value),
+                applicable_categories: categories,
+                minimum_purchase: parseFloat(document.getElementById('minimumPurchase').value),
+                description: document.getElementById('description').value
+            };
+            
+            const promoCode = document.getElementById('promoCode').value;
+            if (promoCode) promotion.promo_code = promoCode;
+            
+            const maxDiscount = document.getElementById('maximumDiscount').value;
+            if (maxDiscount) promotion.maximum_discount = parseFloat(maxDiscount);
+            
+            const usageLimit = document.getElementById('usageLimit').value;
+            if (usageLimit) promotion.usage_limit_per_user = parseInt(usageLimit);
+            
+            try {
+                const response = await fetch(`${API_URL}/promotions/create`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(promotion)
+                });
+                
+                const result = await response.json();
+                const resultDiv = document.getElementById('result');
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Promotion Created!</strong><br>
+                        ID: ${result.promotion_id}<br>
+                        ${result.promo_code ? `Code: ${result.promo_code}` : 'No code required'}
+                    `;
+                    resultDiv.style.display = 'block';
+                    document.getElementById('promotionForm').reset();
+                    loadPromotions();
+                } else {
+                    throw new Error(result.detail || 'Failed to create promotion');
+                }
+            } catch (error) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+                resultDiv.style.display = 'block';
+            }
+        });
+        
+        async function loadPromotions() {
+            try {
+                const response = await fetch(`${API_URL}/promotions/list`);
+                const promotions = await response.json();
+                
+                const listDiv = document.getElementById('promotionList');
+                
+                if (promotions.length === 0) {
+                    listDiv.innerHTML = '<p>No active promotions found.</p>';
+                    return;
+                }
+                
+                listDiv.innerHTML = promotions.map(promo => `
+                    <div class="promotion-item">
+                        <div class="promotion-header">
+                            <div class="promotion-title">${promo.promotion_name}</div>
+                            ${promo.promo_code ? `<div class="promotion-code">${promo.promo_code}</div>` : ''}
+                        </div>
+                        <div class="promotion-details">
+                            <strong>Type:</strong> ${promo.promotion_type}<br>
+                            <strong>Value:</strong> ${promo.discount_value}${promo.promotion_type === 'percentage_off' ? '%' : '$'}<br>
+                            <strong>Description:</strong> ${promo.description}<br>
+                            <strong>Valid until:</strong> ${new Date(promo.end_date).toLocaleDateString()}<br>
+                            <strong>ID:</strong> ${promo.promotion_id}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                document.getElementById('promotionList').innerHTML = 
+                    `<p style="color: red;">Error loading promotions: ${error.message}</p>`;
+            }
+        }
+        
+        async function testPromotion() {
+            const code = document.getElementById('testPromoCode').value;
+            const total = parseFloat(document.getElementById('testCartTotal').value);
+            
+            if (!code) {
+                alert('Please enter a promo code');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/promotions/test/${code}?cart_total=${total}`);
+                const result = await response.json();
+                
+                const resultDiv = document.getElementById('testResult');
+                
+                if (result.valid) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Valid Promotion!</strong><br>
+                        ${result.promotion_name}<br>
+                        Discount: $${result.discount_amount}<br>
+                        Final Total: $${result.final_total}<br>
+                        ${result.message}
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `<strong>❌ Invalid:</strong> ${result.message}`;
+                }
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                const resultDiv = document.getElementById('testResult');
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+                resultDiv.style.display = 'block';
+            }
+        }
+        
+        // Load promotions on page load
+        loadPromotions();
+    </script>
+</body>
+</html>

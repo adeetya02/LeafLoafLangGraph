@@ -1,0 +1,218 @@
+{
+  "success": true,
+  "query": "show me dal under $25",
+  "results": null,
+  "products": [
+    {
+      "product_id": "b6f4dadb-98c9-4ca3-9d2c-2730ed33d4fb",
+      "sku": "149",
+      "product_name": "6U5 Lx. Urad Dal 5X8 Lb",
+      "product_description": "",
+      "price": 115.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "288a5ff3-996c-4c3f-b961-a34a5ed91449",
+      "sku": "151",
+      "product_name": "6U7 Lx. Urad Dal 20X2 Lb",
+      "product_description": "",
+      "price": 120.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "0d58f9c3-a2bb-47a7-8343-694ad022d8f8",
+      "sku": "150",
+      "product_name": "6U6 Lx. Urad Dal 10X4 Lb",
+      "product_description": "",
+      "price": 115.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "b72b3c07-e2c4-4817-89f2-e44151546e8f",
+      "sku": "6CN7",
+      "product_name": "Lx. Chana Dal 20X2 Lb",
+      "product_description": "",
+      "price": 95.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "37201249-e1f2-4226-bb34-5a16ec41ce97",
+      "sku": "144",
+      "product_name": "6Mr7 Lx. Masoor Dal 20X2 Lb",
+      "product_description": "",
+      "price": 92.5,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "0d4fdf6d-de84-4cef-b53c-1f5c6021d938",
+      "sku": "140",
+      "product_name": "6M5 Lx. Moong Dal 5X8 Lb",
+      "product_description": "",
+      "price": 115.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "5e40dd0d-053d-440b-8ebc-db1381d1dbd3",
+      "sku": "141",
+      "product_name": "6M6 Lx. Moong Dal 10X4 Lb",
+      "product_description": "",
+      "price": 115.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "53827900-d3fe-4312-a064-c92f8ff936d2",
+      "sku": "143",
+      "product_name": "6Mr6 Lx. Masoor Dal 10X4 Lb",
+      "product_description": "",
+      "price": 87.5,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "f41e8b42-f643-496a-b109-23dd3348e77d",
+      "sku": "137",
+      "product_name": "6Cn5 Lx. Chana Dal 5X8 Lb",
+      "product_description": "",
+      "price": 90.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "5e749e70-59f8-40c2-90b0-13ecd1c5a7a5",
+      "sku": "142",
+      "product_name": "6Mr5 Lx. Masoor Dal 5X8 Lb",
+      "product_description": "",
+      "price": 86.2,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "af3f4780-c98b-4c54-899b-2481d8e2958a",
+      "sku": "152",
+      "product_name": "6Us6 Lx. Urad Dal Split 10X4 Lb",
+      "product_description": "",
+      "price": 112.5,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "691ece7b-0c7f-421e-bbb3-55ce729af7fe",
+      "sku": "138",
+      "product_name": "6Cn6 Lx. Chana Dal 10X4 Lb",
+      "product_description": "",
+      "price": 92.5,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "e52158fb-94ff-4012-b5ab-f34c93df4071",
+      "sku": "145",
+      "product_name": "6Ms6 Lx. Moong Dal Split (W/ Skin) 10X4 Lb",
+      "product_description": "",
+      "price": 115.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "08816f7e-deea-4285-9f90-71485f9fa147",
+      "sku": "148",
+      "product_name": "6Tp7 Lx. Vsd Madhi Toor Dal Plain 20X2 Lb",
+      "product_description": "",
+      "price": 135.0,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "2fa53513-630e-458b-97f4-70ada5415ea3",
+      "sku": "136",
+      "product_name": "6Cn2 Lx. Chana Dal Blk",
+      "product_description": "",
+      "price": 117.5,
+      "supplier": "Laxmi",
+      "category": "Dal & Lentils",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    }
+  ],
+  "metadata": {
+    "total_count": 15,
+    "categories": [],
+    "brands": [],
+    "search_config": {
+      "alpha": 0.5
+    }
+  },
+  "execution": {
+    "total_time_ms": 664.2134479989181,
+    "agent_timings": {
+      "supervisor": 152.84143700046116,
+      "product_search": 504.3249670015939,
+      "response_compiler": 0.24843699793564156
+    },
+    "reasoning_steps": [
+      "Analysis (153ms) - Intent: product_search, Alpha: 0.5"
+    ],
+    "agents_run": [],
+    "timeout_ms": 10000
+  },
+  "conversation": {
+    "intent": "product_search",
+    "confidence": 0.6,
+    "response": "Found 15 products matching your search."
+  },
+  "message": "Found 15 products matching your search.",
+  "error": null,
+  "langsmith_trace_url": "https://smith.langchain.com/public/bba5ad21-f663-49cc-94f8-d650c5f6e225/r",
+  "suggestions": null,
+  "order": null
+}

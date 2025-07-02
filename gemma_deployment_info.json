@@ -1,0 +1,9 @@
+{
+  "project_id": "leafloafai",
+  "location": "us-central1",
+  "endpoint_id": "6438719201535328256",
+  "endpoint_resource_name": "projects/32905605817/locations/us-central1/endpoints/6438719201535328256",
+  "endpoint_display_name": "gemma2-9b-it-mg-one-click-deploy",
+  "model_size": "27B",
+  "tested_at": "2025-06-24T23:32:51.588265"
+}

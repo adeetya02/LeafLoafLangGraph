@@ -1,0 +1,93 @@
+{
+  "supplier_id": "BALD001",
+  "supplier_name": "Baldor Specialty Foods",
+  "supplier_code": "baldor",
+  "update_frequency": "weekly",
+  "file_types": [
+    "excel",
+    "pdf"
+  ],
+  "attribute_mappings": {
+    "organic": [
+      "organic",
+      "org",
+      "certified organic"
+    ],
+    "gluten_free": [
+      "gluten free",
+      "gf",
+      "no gluten"
+    ],
+    "vegan": [
+      "vegan",
+      "plant based",
+      "plant-based"
+    ],
+    "local": [
+      "local",
+      "locally grown",
+      "regional"
+    ]
+  },
+  "column_mappings": {
+    "product_name": [
+      "name",
+      "product",
+      "item",
+      "description"
+    ],
+    "sku": [
+      "sku",
+      "item_code",
+      "product_code",
+      "code"
+    ],
+    "upc": [
+      "upc",
+      "barcode",
+      "gtin",
+      "ean"
+    ],
+    "price": [
+      "price",
+      "wholesale_price",
+      "cost",
+      "unit_price"
+    ],
+    "unit": [
+      "unit",
+      "uom",
+      "unit_of_measure",
+      "size"
+    ],
+    "pack_size": [
+      "pack",
+      "case_size",
+      "case_qty",
+      "pack_size"
+    ],
+    "category": [
+      "category",
+      "dept",
+      "department",
+      "group"
+    ]
+  },
+  "price_rules": {
+    "markup": 2.5,
+    "round_to": 0.09,
+    "minimum_margin": 0.2
+  },
+  "processing_rules": {
+    "skip_discontinued": true,
+    "minimum_price": 0.01,
+    "maximum_price": 9999.99,
+    "required_fields": [
+      "sku",
+      "name",
+      "price"
+    ]
+  },
+  "created_at": "2025-06-25T11:59:13.177081",
+  "updated_at": "2025-06-25T11:59:13.177098"
+}

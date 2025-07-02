@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepgram Voice Agent Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            padding: 15px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        #startBtn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        #stopBtn {
+            background: #f44336;
+            color: white;
+        }
+        
+        #clearBtn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        #status {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        #log {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .conversation {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            border-left-color: #2196F3;
+        }
+        
+        .agent-message {
+            background: #f3e5f5;
+            border-left-color: #9c27b0;
+        }
+        
+        .function-call {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            font-family: monospace;
+            font-size: 11px;
+        }
+        
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        
+        .audio-visualizer {
+            width: 100%;
+            height: 60px;
+            background: #000;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Deepgram Voice Agent Test</h1>
+        <p>Test the Deepgram Voice Agent API with function calling for grocery shopping</p>
+        
+        <div>
+            <button id="startBtn" onclick="startVoiceAgent()">Start Voice Agent</button>
+            <button id="stopBtn" onclick="stopVoiceAgent()" disabled>Stop Voice Agent</button>
+            <button id="clearBtn" onclick="clearLog()">Clear Log</button>
+        </div>
+        
+        <div id="status">Ready to connect to Voice Agent</div>
+        
+        <div class="audio-visualizer" id="audioVisualizer">
+            🎵 Audio Visualization (Microphone/Speaker Activity)
+        </div>
+        
+        <div id="conversation"></div>
+        
+        <div id="log"></div>
+    </div>
+    
+    <script>
+        let websocket = null;
+        let audioContext = null;
+        let micStream = null;
+        let isRecording = false;
+        
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const className = type;
+            logEl.innerHTML += `<div class="${className}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('conversation').innerHTML = '';
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = type;
+        }
+        
+        function addConversationMessage(role, content, extra = {}) {
+            const conversationEl = document.getElementById('conversation');
+            const messageEl = document.createElement('div');
+            messageEl.className = `conversation ${role}-message`;
+            
+            let icon = role === 'user' ? '👤' : role === 'agent' ? '🤖' : '⚙️';
+            let title = role === 'user' ? 'You' : role === 'agent' ? 'Agent' : 'Function';
+            
+            messageEl.innerHTML = `
+                <strong>${icon} ${title}:</strong> ${content}
+                ${extra.details ? `<br><small>${extra.details}</small>` : ''}
+            `;
+            
+            conversationEl.appendChild(messageEl);
+            conversationEl.scrollTop = conversationEl.scrollHeight;
+        }
+        
+        async function startVoiceAgent() {
+            try {
+                updateStatus('Requesting microphone access...', 'info');
+                
+                // Get microphone access
+                micStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                log('Microphone access granted', 'success');
+                updateStatus('Connecting to Voice Agent...', 'info');
+                
+                // Connect to Voice Agent WebSocket
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/api/v1/voice-agent/connect`;
+                
+                log(`Connecting to: ${wsUrl}`, 'info');
+                websocket = new WebSocket(wsUrl);
+                
+                websocket.onopen = () => {
+                    log('Connected to Voice Agent!', 'success');
+                    updateStatus('Voice Agent Connected - Speak now!', 'success');
+                    startAudioRecording();
+                    
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                };
+                
+                websocket.onmessage = (event) => {
+                    handleWebSocketMessage(event);
+                };
+                
+                websocket.onerror = (error) => {
+                    log(`WebSocket error: ${error}`, 'error');
+                    updateStatus('Connection error', 'error');
+                };
+                
+                websocket.onclose = (event) => {
+                    log(`Connection closed: Code ${event.code}, Reason: ${event.reason}`, 'info');
+                    updateStatus('Connection closed', 'warning');
+                    stopVoiceAgent();
+                };
+                
+            } catch (error) {
+                log(`Error starting voice agent: ${error.message}`, 'error');
+                updateStatus('Failed to start voice agent', 'error');
+            }
+        }
+        
+        function handleWebSocketMessage(event) {
+            if (event.data instanceof ArrayBuffer) {
+                // Received audio from agent - play it
+                playAudioBuffer(event.data);
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(event.data);
+                log(`Received: ${data.type}`, 'info');
+                
+                switch (data.type) {
+                    case 'session_started':
+                        log(`Session started: ${data.session_id}`, 'success');
+                        addConversationMessage('agent', data.message);
+                        break;
+                        
+                    case 'conversation':
+                        if (data.role === 'user') {
+                            addConversationMessage('user', data.content);
+                        } else if (data.role === 'assistant') {
+                            addConversationMessage('agent', data.content);
+                        }
+                        break;
+                        
+                    case 'user_speaking':
+                        if (data.status === 'started') {
+                            updateStatus('🎙️ Listening...', 'info');
+                        } else {
+                            updateStatus('Processing...', 'info');
+                        }
+                        break;
+                        
+                    case 'agent_speaking':
+                        if (data.status === 'started') {
+                            updateStatus('🔊 Agent speaking...', 'info');
+                        } else {
+                            updateStatus('Voice Agent ready - speak now!', 'success');
+                        }
+                        break;
+                        
+                    case 'agent_thinking':
+                        updateStatus('🤔 Agent thinking...', 'info');
+                        break;
+                        
+                    case 'function_executed':
+                        const funcName = data.function;
+                        const result = data.result;
+                        addConversationMessage('function', 
+                            `Called: ${funcName}`, 
+                            { details: `Result: ${JSON.stringify(result, null, 2)}` }
+                        );
+                        break;
+                        
+                    case 'error':
+                        log(`Agent error: ${data.message}`, 'error');
+                        updateStatus(`Error: ${data.message}`, 'error');
+                        break;
+                }
+                
+            } catch (e) {
+                log(`Failed to parse message: ${e.message}`, 'error');
+            }
+        }
+        
+        function startAudioRecording() {
+            try {
+                // Create audio context for processing
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                // Create audio processing for 16-bit PCM
+                const source = audioContext.createMediaStreamSource(micStream);
+                const processor = audioContext.createScriptProcessor(1024, 1, 1);
+                
+                processor.onaudioprocess = (event) => {
+                    if (websocket?.readyState === WebSocket.OPEN) {
+                        const inputBuffer = event.inputBuffer;
+                        const inputData = inputBuffer.getChannelData(0);
+                        
+                        // Convert float32 to 16-bit PCM
+                        const pcmData = new Int16Array(inputData.length);
+                        for (let i = 0; i < inputData.length; i++) {
+                            // Clamp and convert to 16-bit
+                            const sample = Math.max(-1, Math.min(1, inputData[i]));
+                            pcmData[i] = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                        }
+                        
+                        // Send as raw PCM bytes
+                        websocket.send(pcmData.buffer);
+                    }
+                };
+                
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+                
+                isRecording = true;
+                
+                log('Audio recording started', 'success');
+                
+            } catch (error) {
+                log(`Audio recording error: ${error.message}`, 'error');
+            }
+        }
+        
+        function playAudioBuffer(buffer) {
+            try {
+                if (audioContext) {
+                    audioContext.decodeAudioData(buffer.slice(), (audioBuffer) => {
+                        const source = audioContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.connect(audioContext.destination);
+                        source.start();
+                        
+                        log('Playing agent audio response', 'info');
+                    });
+                }
+            } catch (error) {
+                log(`Audio playback error: ${error.message}`, 'error');
+            }
+        }
+        
+        function stopVoiceAgent() {
+            isRecording = false;
+            
+            if (micStream) {
+                micStream.getTracks().forEach(track => track.stop());
+                micStream = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            updateStatus('Voice agent stopped', 'warning');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            
+            log('Voice agent stopped', 'info');
+        }
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            stopVoiceAgent();
+        });
+    </script>
+</body>
+</html>

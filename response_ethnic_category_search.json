@@ -1,0 +1,218 @@
+{
+  "success": true,
+  "query": "indian spices",
+  "results": null,
+  "products": [
+    {
+      "product_id": "799fdd27-22e8-4cfa-ae23-9ecee1eac018",
+      "sku": "46",
+      "product_name": "1Chwk5 Lx. Kashmiri Chili Whole 20X200 Gm",
+      "product_description": "",
+      "price": 167.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "ae3ed92d-f160-47da-853f-e145d57c9f6e",
+      "sku": "89",
+      "product_name": "1Sf1O Lx. Sun Saffron In",
+      "product_description": "",
+      "price": 155.0,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "b4453773-a16a-47a6-a36e-5c28719ce5dd",
+      "sku": "47",
+      "product_name": "1Chwr6 Lx. Round Chili 20X200 Gm",
+      "product_description": "",
+      "price": 142.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "9439fe63-6872-4498-a85e-ba938f6e81bb",
+      "sku": "107",
+      "product_name": "Lxsc0 Lx. 3 In 1 Spice Combo(Ctc) 10X600 Gm",
+      "product_description": "",
+      "price": 106.2,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "f80d7fa5-0c09-4d3a-9395-5ff594ad29cf",
+      "sku": "88",
+      "product_name": "1Sf1 Lx. Sun Saffron 12X1 Gm In",
+      "product_description": "",
+      "price": 77.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "fb638aeb-eff9-475f-939d-42c74e987852",
+      "sku": "32",
+      "product_name": "1Ca5 Lx. Kalonji 20X200 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 86.2,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "8a5338ff-da69-457f-ba9c-702de3b5fcaf",
+      "sku": "90",
+      "product_name": "1Sf2 Lx. Sun Saffron 12X2 Gm In",
+      "product_description": "",
+      "price": 152.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "dfad561d-440f-45c7-ba34-25489c7cf124",
+      "sku": "3",
+      "product_name": "Lfnt1 Lx. Tandoori Plain Naan Blk 8X16X85 Gm",
+      "product_description": "",
+      "price": 102.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "b5211253-fae8-41b6-8904-483ed9ef6385",
+      "sku": "73",
+      "product_name": "1Gm4 Lx. Garam Masala 6X4 Lb Cs (Non-Gmo)",
+      "product_description": "",
+      "price": 232.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "86728094-a8c1-4872-a9e2-71cb3df16878",
+      "sku": "41",
+      "product_name": "1Chk4 Lx. Kashmiri Chili Powder 20X400 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 227.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "b458954c-3365-41a8-ab6b-a5b0fe4a11bc",
+      "sku": "19",
+      "product_name": "Lfbtr Lx. Tandoori Roti Blk 8X16X60 Gm",
+      "product_description": "",
+      "price": 72.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "ab2625c5-7e7a-46f9-94e5-440eafdf3f68",
+      "sku": "65",
+      "product_name": "1Cu42 Lx. Cumin Seed 10X800 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 202.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "f2d18b42-1971-43d4-babb-1a456a7ad6ee",
+      "sku": "42",
+      "product_name": "1Chk5 Lx. Kashmiri Chili Powder 10X800 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 222.5,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "a05e5fc2-efe8-462f-9da9-a90da5989a28",
+      "sku": "40",
+      "product_name": "1Chk3 Lx. Kashmiri Chili Powder 20X200 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 116.2,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "bffc9d5a-6409-4104-9225-e3a74c2692aa",
+      "sku": "52",
+      "product_name": "1Ci51 Lx. Cinnamon Stick Round 20X200 Gm (Non-Gmo)",
+      "product_description": "",
+      "price": 145.0,
+      "supplier": "Laxmi",
+      "category": "Spices & Masalas",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    }
+  ],
+  "metadata": {
+    "total_count": 15,
+    "categories": [],
+    "brands": [],
+    "search_config": {
+      "alpha": 0.5
+    }
+  },
+  "execution": {
+    "total_time_ms": 650.8547459998226,
+    "agent_timings": {
+      "supervisor": 153.44885800004704,
+      "product_search": 490.22957399938605,
+      "response_compiler": 0.25581799854990095
+    },
+    "reasoning_steps": [
+      "Analysis (153ms) - Intent: product_search, Alpha: 0.5"
+    ],
+    "agents_run": [],
+    "timeout_ms": 10000
+  },
+  "conversation": {
+    "intent": "product_search",
+    "confidence": 0.6,
+    "response": "Found 15 products matching your search."
+  },
+  "message": "Found 15 products matching your search.",
+  "error": null,
+  "langsmith_trace_url": "https://smith.langchain.com/public/5e21a95b-c022-416f-b540-e7f6415bdec2/r",
+  "suggestions": null,
+  "order": null
+}

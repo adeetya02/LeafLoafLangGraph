@@ -1,0 +1,18 @@
+KNOWLEDGE_BASE.md
+CLAUDE.md
+README.md
+DEMO_SUMMARY.md
+requirements.txt
+.env.yaml
+.env.production.yaml
+docs/REALTIME_PERSONALIZATION_DEMO.md
+docs/DATA_FLOW_ARCHITECTURE.md
+docs/API_COMPARISON.md
+docs/OPENAPI_SPEC_V3.yaml
+EOF
+
+echo "Essential files preserved:"
+cat keep_list.txt
+
+echo "Archive complete. Old docs moved to docs/archive/2025-06-28/"
+rm keep_list.txt

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .voice-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: none;
+            background: #3498db;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+        .voice-button:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+        .voice-button.recording {
+            background: #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+        .emotion {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background: #27ae60;
+            color: white;
+            margin: 5px;
+        }
+        .transcript {
+            font-style: italic;
+            margin: 10px 0;
+        }
+        .response {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff;
+            border-left: 4px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍃 LeafLoaf Voice Assistant</h1>
+        
+        <div class="status" id="status">Click the button and speak your order</div>
+        
+        <button class="voice-button" id="voiceButton" onclick="toggleRecording()">
+            🎤 Start Speaking
+        </button>
+        
+        <div class="results" id="results">
+            <p>Examples to try:</p>
+            <ul>
+                <li>"I need organic milk"</li>
+                <li>"Add 2 pounds of bananas to my cart"</li>
+                <li>"Show me what's in my order"</li>
+                <li>"I'm looking for gluten-free bread"</li>
+            </ul>
+        </div>
+        
+        <audio id="audioPlayer" style="display: none;"></audio>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let sessionId = null;
+        const API_BASE = 'http://localhost:8080';
+        
+        // Initialize voice session
+        async function initSession() {
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/voice/session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: 'test_user' })
+                });
+                const data = await response.json();
+                sessionId = data.session_id;
+                console.log('Voice session created:', sessionId);
+            } catch (error) {
+                console.error('Failed to create session:', error);
+            }
+        }
+        
+        // Initialize on page load
+        initSession();
+        
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await processAudio(audioBlob);
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                
+                document.getElementById('voiceButton').textContent = '⏹️ Stop';
+                document.getElementById('voiceButton').classList.add('recording');
+                document.getElementById('status').textContent = 'Listening...';
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                document.getElementById('status').textContent = 'Error: Cannot access microphone';
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                
+                document.getElementById('voiceButton').textContent = '🎤 Start Speaking';
+                document.getElementById('voiceButton').classList.remove('recording');
+                document.getElementById('status').textContent = 'Processing...';
+            }
+        }
+        
+        let currentResults = null;
+        let currentOrder = null;
+        
+        async function processAudio(audioBlob) {
+            try {
+                // Convert to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+                    
+                    // For demo, use Web Speech API for transcription
+                    const transcript = await mockTranscribe();
+                    
+                    // Send to API with conversation context
+                    const response = await fetch(`${API_BASE}/api/v1/voice/process`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            session_id: sessionId,
+                            audio_data: base64Audio,
+                            is_final: true,
+                            current_results: currentResults,
+                            current_order: currentOrder
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    // Update context for next turn
+                    if (data.maintain_results && data.current_results) {
+                        currentResults = data.current_results;
+                    } else if (!data.maintain_results) {
+                        currentResults = data.current_results || null;
+                    }
+                    
+                    if (data.text_response && data.text_response.current_order) {
+                        currentOrder = data.text_response.current_order;
+                    }
+                    
+                    displayResults(transcript, data);
+                };
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                document.getElementById('status').textContent = 'Error processing audio';
+            }
+        }
+        
+        // Mock transcription for demo (replace with actual STT)
+        async function mockTranscribe() {
+            return new Promise((resolve) => {
+                // For testing - just prompt user for input
+                const userInput = prompt("What would you like to say? (or click Cancel to use voice)");
+                if (userInput !== null) {
+                    resolve(userInput);
+                    return;
+                }
+                
+                // Use Web Speech API if user cancelled prompt
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    resolve(transcript);
+                };
+                
+                recognition.onerror = (error) => {
+                    console.error('Speech recognition error:', error);
+                    resolve("hello"); // Better fallback
+                };
+                
+                // Start recognition
+                recognition.start();
+                
+                // Stop after 5 seconds
+                setTimeout(() => recognition.stop(), 5000);
+            });
+        }
+        
+        function displayResults(transcript, data) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `
+                <h3>You said:</h3>
+                <p class="transcript">"${transcript}"</p>
+            `;
+            
+            if (data.voice_analysis) {
+                html += `
+                    <div>
+                        <span class="emotion">Emotion: ${data.voice_analysis.emotion}</span>
+                        <span class="emotion">Tone: ${data.voice_analysis.tone}</span>
+                    </div>
+                `;
+            }
+            
+            if (data.conversation_state) {
+                html += `
+                    <div style="margin: 10px 0; color: #666;">
+                        Conversation state: ${data.conversation_state.state} | Turn: ${data.conversation_state.turn_count}
+                    </div>
+                `;
+            }
+            
+            // Show what the system will say
+            if (data.voice_text) {
+                html += `
+                    <div class="response">
+                        <h4>Assistant:</h4>
+                        <p>${data.voice_text}</p>
+                    </div>
+                `;
+            }
+            
+            // Show search results if any
+            if (data.current_results && data.current_results.length > 0) {
+                html += `
+                    <div style="margin-top: 20px; padding: 15px; background: #f9f9f9; border-radius: 5px;">
+                        <h4>Current Results:</h4>
+                        <ol>
+                `;
+                data.current_results.slice(0, 5).forEach((product, index) => {
+                    html += `<li>${product.name}</li>`;
+                });
+                html += `
+                        </ol>
+                        <p style="font-size: 14px; color: #666;">Say "add the first one" or "tell me more about organic options"</p>
+                    </div>
+                `;
+            }
+            
+            // Show cart status
+            if (currentOrder && currentOrder.items && currentOrder.items.length > 0) {
+                html += `
+                    <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 5px;">
+                        <h4>Cart (${currentOrder.items.length} items):</h4>
+                        <ul>
+                `;
+                currentOrder.items.forEach(item => {
+                    html += `<li>${item.quantity} x ${item.name}</li>`;
+                });
+                html += `
+                        </ul>
+                        <p style="font-size: 14px; color: #666;">Say "confirm order" or "what else do you have?"</p>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+            
+            // Play voice response
+            if (data.voice_response && data.voice_response.audio) {
+                playAudioResponse(data.voice_response.audio);
+            } else if (data.voice_text) {
+                speakText(data.voice_text);
+            }
+            
+            document.getElementById('status').textContent = 'Ready for next command';
+        }
+        
+        function playAudioResponse(base64Audio) {
+            const audio = document.getElementById('audioPlayer');
+            audio.src = 'data:audio/mp3;base64,' + base64Audio;
+            audio.play();
+        }
+        
+        function speakText(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 1.0;
+            speechSynthesis.speak(utterance);
+        }
+    </script>
+</body>
+</html>

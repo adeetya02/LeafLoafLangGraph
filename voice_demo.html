@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .voice-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+        }
+        
+        .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .voice-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .voice-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+        
+        .voice-button.listening {
+            animation: pulse 1.5s infinite;
+            background: #ff4444;
+        }
+        
+        .voice-button.listening svg {
+            fill: white;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .voice-button svg {
+            width: 50px;
+            height: 50px;
+            fill: #333;
+        }
+        
+        .status {
+            font-size: 18px;
+            margin-bottom: 20px;
+            height: 30px;
+        }
+        
+        .transcript {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 100px;
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+        
+        .response {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 150px;
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: left;
+        }
+        
+        .products {
+            display: grid;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .product {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .product-name {
+            font-weight: bold;
+        }
+        
+        .product-price {
+            color: #4CAF50;
+            font-size: 18px;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="voice-container">
+        <div class="logo">🍃</div>
+        <h1>LeafLoaf Voice Assistant</h1>
+        <p class="subtitle">Tap the microphone and speak naturally</p>
+        
+        <button class="voice-button" id="voiceButton">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+        </button>
+        
+        <div class="status" id="status">Click microphone to start</div>
+        
+        <div class="transcript" id="transcript">
+            Your speech will appear here...
+        </div>
+        
+        <div class="response" id="response">
+            <strong>Assistant:</strong> Hi! I'm your LeafLoaf shopping assistant. Try saying:<br>
+            • "I need organic milk"<br>
+            • "Add 2 bananas to my cart"<br>
+            • "Show my cart"<br>
+            • "What's my usual order?"
+        </div>
+        
+        <div class="instructions">
+            💡 Works best in Chrome/Edge. Allow microphone access when prompted.
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:8000' 
+            : 'https://leafloaf-v2srnrkkhq-uc.a.run.app';
+        
+        // State
+        let recognition = null;
+        let isListening = false;
+        let sessionId = 'voice_demo_' + Date.now();
+        let userId = 'demo_voice_user';
+        
+        // Elements
+        const voiceButton = document.getElementById('voiceButton');
+        const status = document.getElementById('status');
+        const transcript = document.getElementById('transcript');
+        const response = document.getElementById('response');
+        
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = () => {
+                    isListening = true;
+                    voiceButton.classList.add('listening');
+                    status.textContent = '🎤 Listening...';
+                    transcript.textContent = '';
+                };
+                
+                recognition.onresult = (event) => {
+                    const result = event.results[event.results.length - 1];
+                    transcript.textContent = result[0].transcript;
+                    
+                    if (result.isFinal) {
+                        status.textContent = '🤔 Processing...';
+                        processVoiceInput(result[0].transcript);
+                    }
+                };
+                
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    status.textContent = '❌ Error: ' + event.error;
+                    stopListening();
+                };
+                
+                recognition.onend = () => {
+                    stopListening();
+                };
+            } else {
+                status.textContent = '❌ Speech recognition not supported';
+                voiceButton.disabled = true;
+            }
+        }
+        
+        // Start/stop listening
+        voiceButton.addEventListener('click', () => {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        });
+        
+        function stopListening() {
+            isListening = false;
+            voiceButton.classList.remove('listening');
+            if (!status.textContent.includes('Processing')) {
+                status.textContent = 'Click microphone to speak';
+            }
+        }
+        
+        // Process voice input
+        async function processVoiceInput(text) {
+            try {
+                // Call our API
+                const apiResponse = await fetch(`${API_URL}/api/v1/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: text,
+                        user_id: userId,
+                        session_id: sessionId,
+                        source: 'voice'
+                    })
+                });
+                
+                const data = await apiResponse.json();
+                
+                // Display response
+                displayResponse(data);
+                
+                // Speak response using browser TTS
+                speakResponse(data);
+                
+                status.textContent = 'Click microphone to speak';
+                
+            } catch (error) {
+                console.error('API error:', error);
+                status.textContent = '❌ Failed to process request';
+                response.innerHTML = '<strong>Error:</strong> Could not connect to server';
+            }
+        }
+        
+        // Display response
+        function displayResponse(data) {
+            let html = '<strong>Assistant:</strong> ';
+            
+            if (data.message) {
+                html += data.message;
+            } else if (data.success && data.products && data.products.length > 0) {
+                html += `I found ${data.products.length} products for you:<div class="products">`;
+                
+                data.products.slice(0, 5).forEach(product => {
+                    html += `
+                        <div class="product">
+                            <div>
+                                <div class="product-name">${product.product_name}</div>
+                                <div>${product.category}</div>
+                            </div>
+                            <div class="product-price">₹${product.price}</div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            } else if (data.order) {
+                html += 'Your cart has been updated. ';
+                if (data.order.items && data.order.items.length > 0) {
+                    html += `You have ${data.order.items.length} items totaling ₹${data.order.total || 0}.`;
+                }
+            } else {
+                html += "I couldn't find what you're looking for. Try asking for specific products like 'organic milk' or 'fresh bananas'.";
+            }
+            
+            response.innerHTML = html;
+        }
+        
+        // Text to speech
+        function speakResponse(data) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
+                let text = '';
+                if (data.message) {
+                    text = data.message;
+                } else if (data.success && data.products && data.products.length > 0) {
+                    text = `I found ${data.products.length} products. `;
+                    text += data.products.slice(0, 3).map(p => p.product_name).join(', ');
+                } else if (data.order) {
+                    text = 'Your cart has been updated.';
+                } else {
+                    text = "I couldn't find what you're looking for.";
+                }
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                utterance.volume = 1.0;
+                
+                // Try to use a female voice
+                const voices = speechSynthesis.getVoices();
+                const femaleVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Samantha'));
+                if (femaleVoice) {
+                    utterance.voice = femaleVoice;
+                }
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initSpeechRecognition();
+            
+            // Load voices
+            if ('speechSynthesis' in window) {
+                speechSynthesis.getVoices();
+            }
+        });
+        
+        // Demo shortcuts (for testing)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1') {
+                transcript.textContent = "I need organic milk";
+                processVoiceInput("I need organic milk");
+            } else if (e.key === '2') {
+                transcript.textContent = "Add 2 bananas to my cart";
+                processVoiceInput("Add 2 bananas to my cart");
+            } else if (e.key === '3') {
+                transcript.textContent = "Show my cart";
+                processVoiceInput("Show my cart");
+            }
+        });
+    </script>
+</body>
+</html>

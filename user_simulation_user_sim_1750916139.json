@@ -1,0 +1,535 @@
+{
+  "session_id": "user_sim_1750916139",
+  "user_id": "john_doe_123",
+  "timestamp": "2025-06-26T01:35:48.102800",
+  "interactions": [
+    {
+      "step": 1,
+      "name": "First Search",
+      "query": "I need organic milk",
+      "outputs": {
+        "user_query": "I need organic milk",
+        "timestamp": "2025-06-26T01:35:39.989580",
+        "supervisor": {
+          "intent": "product_search",
+          "confidence": 0.9,
+          "routing": "product_search",
+          "alpha": 0.5,
+          "reasoning": "Partial cache (0ms) - Intent: product_search, Alpha: 0.5",
+          "latency_ms": 0.08893013000488281
+        },
+        "search": {
+          "products_found": 10,
+          "products": [
+            {
+              "name": "Organic 2% Milk",
+              "price": 16.2,
+              "brand": "",
+              "sku": "OV_MILK_2P_GAL"
+            },
+            {
+              "name": "Organic Whole Milk",
+              "price": 17.5,
+              "brand": "",
+              "sku": "OV_MILK_WH"
+            },
+            {
+              "name": "Organic Chocolate Milk",
+              "price": 12.5,
+              "brand": "",
+              "sku": "HO_MILK_CHOC"
+            }
+          ],
+          "latency_ms": 232.23280906677246
+        },
+        "graphiti": {
+          "entities_extracted": 4,
+          "relationships": 0,
+          "temporal_patterns": [],
+          "context": {
+            "session_products": [
+              "Organic 2% Milk",
+              "Organic Chocolate Milk",
+              "milk",
+              "Organic Whole Milk"
+            ],
+            "user_preferences": [],
+            "shopping_pattern": "exploring"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "[Routing to product_search]",
+          "response_type": "search_results",
+          "latency_ms": 0.39505958557128906
+        },
+        "performance": {
+          "total_latency_ms": 1085.5340957641602,
+          "breakdown": {
+            "supervisor": 0.08893013000488281,
+            "product_search": 232.23280906677246,
+            "response_compiler": 0.39505958557128906
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 2,
+      "name": "Brand Specific",
+      "query": "Show me Amul products",
+      "outputs": {
+        "user_query": "Show me Amul products",
+        "timestamp": "2025-06-26T01:35:41.576598",
+        "supervisor": {
+          "intent": "product_search",
+          "confidence": 0.6,
+          "routing": "product_search",
+          "alpha": 0.5,
+          "reasoning": "Analysis (151ms) - Intent: product_search, Alpha: 0.5",
+          "latency_ms": 151.4890193939209
+        },
+        "search": {
+          "products_found": 0,
+          "products": [],
+          "latency_ms": 218.9640998840332
+        },
+        "graphiti": {
+          "entities_extracted": 1,
+          "relationships": 1,
+          "temporal_patterns": [],
+          "context": {
+            "session_products": [],
+            "user_preferences": [
+              "organic"
+            ],
+            "shopping_pattern": "exploring"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "[Routing to product_search]",
+          "response_type": "order_operation",
+          "latency_ms": 0.13899803161621094
+        },
+        "performance": {
+          "total_latency_ms": 713.8721942901611,
+          "breakdown": {
+            "supervisor": 151.4890193939209,
+            "product_search": 218.9640998840332,
+            "response_compiler": 0.13899803161621094
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 3,
+      "name": "Add to Cart",
+      "query": "Add 2 packets of Amul milk",
+      "outputs": {
+        "user_query": "Add 2 packets of Amul milk",
+        "timestamp": "2025-06-26T01:35:42.792043",
+        "supervisor": {
+          "intent": "add_to_order",
+          "confidence": 0.9,
+          "routing": "order_agent",
+          "alpha": 0.5,
+          "reasoning": "Order iteration 1: Adding items to cart based on: 'Add 2 packets of Amul milk'",
+          "latency_ms": 0.33092498779296875
+        },
+        "order": {
+          "action": "add_to_order",
+          "current_order": {},
+          "items_count": 0,
+          "latency_ms": 1.293182373046875
+        },
+        "graphiti": {
+          "entities_extracted": 2,
+          "relationships": 1,
+          "temporal_patterns": [],
+          "context": {
+            "session_products": [
+              "milk"
+            ],
+            "user_preferences": [
+              "organic",
+              "brand:Amul"
+            ],
+            "shopping_pattern": "exploring"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "{\"success\": true, \"message\": \"Added 1 item(s) to your cart\", \"items_added\": 1, \"order\": {\"items\": [{\"product_id\": \"OV_MILK_2P_GAL\", \"sku\": \"OV_MILK_2P_GAL\", \"name\": \"Organic 2% Milk\", \"quantity\": 2, \"unit\": \"\", \"price\": 16.2, \"added_at\": \"2025-06-26T05:35:42.799103\"}]}, \"total_items\": 1}",
+          "response_type": "order_operation",
+          "latency_ms": 0.3390312194824219
+        },
+        "performance": {
+          "total_latency_ms": 144.03891563415527,
+          "breakdown": {
+            "supervisor": 0.33092498779296875,
+            "order_agent": 1.293182373046875,
+            "response_compiler": 0.3390312194824219
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 4,
+      "name": "Contextual Query",
+      "query": "I also need bread",
+      "outputs": {
+        "user_query": "I also need bread",
+        "timestamp": "2025-06-26T01:35:43.437889",
+        "supervisor": {
+          "intent": "product_search",
+          "confidence": 0.6,
+          "routing": "product_search",
+          "alpha": 0.5,
+          "reasoning": "Analysis (152ms) - Intent: product_search, Alpha: 0.5",
+          "latency_ms": 152.00281143188477
+        },
+        "search": {
+          "products_found": 7,
+          "products": [
+            {
+              "name": "Powerseed Bread",
+              "price": 16.2,
+              "brand": "",
+              "sku": "DKB_POWER"
+            },
+            {
+              "name": "21 Whole Grains Bread",
+              "price": 15.0,
+              "brand": "",
+              "sku": "DKB_BREAD"
+            },
+            {
+              "name": "Gluten Free White Bread",
+              "price": 17.5,
+              "brand": "",
+              "sku": "CB_GF_BREAD"
+            }
+          ],
+          "latency_ms": 244.77291107177734
+        },
+        "graphiti": {
+          "entities_extracted": 3,
+          "relationships": 0,
+          "temporal_patterns": [
+            {
+              "type": "frequent_search",
+              "product": "milk",
+              "frequency": "high"
+            }
+          ],
+          "context": {
+            "session_products": [
+              "21 Whole Grains Bread",
+              "Gluten Free White Bread",
+              "Powerseed Bread"
+            ],
+            "user_preferences": [
+              "organic",
+              "brand:Amul"
+            ],
+            "shopping_pattern": "exploring"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "[Routing to product_search]",
+          "response_type": "search_results",
+          "latency_ms": 0.3669261932373047
+        },
+        "performance": {
+          "total_latency_ms": 798.1038093566895,
+          "breakdown": {
+            "supervisor": 152.00281143188477,
+            "product_search": 244.77291107177734,
+            "response_compiler": 0.3669261932373047
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 5,
+      "name": "View Cart",
+      "query": "What's in my cart?",
+      "outputs": {
+        "user_query": "What's in my cart?",
+        "timestamp": "2025-06-26T01:35:44.737747",
+        "supervisor": {
+          "intent": "list_order",
+          "confidence": 0.9,
+          "routing": "order_agent",
+          "alpha": 0.5,
+          "reasoning": "Cart contents displayed",
+          "latency_ms": 0.5030632019042969
+        },
+        "order": {
+          "action": "list_order",
+          "current_order": {
+            "items": [
+              {
+                "product_id": "OV_MILK_2P_GAL",
+                "sku": "OV_MILK_2P_GAL",
+                "name": "Organic 2% Milk",
+                "quantity": 2,
+                "unit": "",
+                "price": 16.2,
+                "added_at": "2025-06-26T05:35:42.799103"
+              }
+            ]
+          },
+          "items_count": 1,
+          "latency_ms": 0.8730888366699219
+        },
+        "graphiti": {
+          "entities_extracted": 0,
+          "relationships": 1,
+          "temporal_patterns": [
+            {
+              "type": "frequent_search",
+              "product": "milk",
+              "frequency": "high"
+            }
+          ],
+          "context": {
+            "session_products": [],
+            "user_preferences": [
+              "organic",
+              "brand:Amul"
+            ],
+            "shopping_pattern": "exploring"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "{\"success\": true, \"message\": \"You have 1 item(s) in your cart\", \"order\": {\"items\": [{\"product_id\": \"OV_MILK_2P_GAL\", \"sku\": \"OV_MILK_2P_GAL\", \"name\": \"Organic 2% Milk\", \"quantity\": 2, \"unit\": \"\", \"price\": 16.2, \"added_at\": \"2025-06-26T05:35:42.799103\"}]}, \"cart_summary\": {\"total_items\": 1, \"total_quantity\": 2, \"estimated_total\": 32.4, \"items\": [{\"name\": \"Organic 2% Milk\", \"quantity\": 2, \"unit\": \"\", \"price\": 16.2, \"subtotal\": 32.4}]}}",
+          "response_type": "order_operation",
+          "latency_ms": 0.32711029052734375
+        },
+        "performance": {
+          "total_latency_ms": 109.15589332580566,
+          "breakdown": {
+            "supervisor": 0.5030632019042969,
+            "order_agent": 0.8730888366699219,
+            "response_compiler": 0.32711029052734375
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 6,
+      "name": "Past Purchase",
+      "query": "What did I buy last week?",
+      "outputs": {
+        "user_query": "What did I buy last week?",
+        "timestamp": "2025-06-26T01:35:45.348660",
+        "supervisor": {
+          "intent": "product_search",
+          "confidence": 0.8,
+          "routing": "product_search",
+          "alpha": 0.8,
+          "reasoning": "Pattern match (0ms) - Intent: product_search, Alpha: 0.8",
+          "latency_ms": 0.7779598236083984
+        },
+        "search": {
+          "products_found": 0,
+          "products": [],
+          "latency_ms": 296.1459159851074
+        },
+        "graphiti": {
+          "entities_extracted": 0,
+          "relationships": 0,
+          "temporal_patterns": [
+            {
+              "type": "frequent_search",
+              "product": "milk",
+              "frequency": "high"
+            }
+          ],
+          "context": {
+            "session_products": [],
+            "user_preferences": [
+              "organic",
+              "brand:Amul"
+            ],
+            "shopping_pattern": "exploring"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "[Routing to product_search]",
+          "response_type": "order_operation",
+          "latency_ms": 0.3190040588378906
+        },
+        "performance": {
+          "total_latency_ms": 624.8719692230225,
+          "breakdown": {
+            "supervisor": 0.7779598236083984,
+            "product_search": 296.1459159851074,
+            "response_compiler": 0.3190040588378906
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 7,
+      "name": "Recommendation",
+      "query": "What goes well with milk?",
+      "outputs": {
+        "user_query": "What goes well with milk?",
+        "timestamp": "2025-06-26T01:35:46.475279",
+        "supervisor": {
+          "intent": "product_search",
+          "confidence": 0.9,
+          "routing": "product_search",
+          "alpha": 0.5,
+          "reasoning": "Partial cache (0ms) - Intent: product_search, Alpha: 0.5",
+          "latency_ms": 0.335693359375
+        },
+        "search": {
+          "products_found": 4,
+          "products": [
+            {
+              "name": "Organic 2% Milk",
+              "price": 16.2,
+              "brand": "",
+              "sku": "OV_MILK_2P_GAL"
+            },
+            {
+              "name": "Organic Whole Milk",
+              "price": 17.5,
+              "brand": "",
+              "sku": "OV_MILK_WH"
+            },
+            {
+              "name": "Organic Chocolate Milk",
+              "price": 12.5,
+              "brand": "",
+              "sku": "HO_MILK_CHOC"
+            }
+          ],
+          "latency_ms": 211.46678924560547
+        },
+        "graphiti": {
+          "entities_extracted": 4,
+          "relationships": 0,
+          "temporal_patterns": [],
+          "context": {
+            "session_products": [
+              "Organic 2% Milk",
+              "Organic Chocolate Milk",
+              "milk",
+              "Organic Whole Milk"
+            ],
+            "user_preferences": [
+              "organic",
+              "brand:Amul"
+            ],
+            "shopping_pattern": "regular"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "[Routing to product_search]",
+          "response_type": "search_results",
+          "latency_ms": 0.15211105346679688
+        },
+        "performance": {
+          "total_latency_ms": 518.1248188018799,
+          "breakdown": {
+            "supervisor": 0.335693359375,
+            "product_search": 211.46678924560547,
+            "response_compiler": 0.15211105346679688
+          }
+        }
+      },
+      "success": true
+    },
+    {
+      "step": 8,
+      "name": "Checkout",
+      "query": "Checkout my order",
+      "outputs": {
+        "user_query": "Checkout my order",
+        "timestamp": "2025-06-26T01:35:47.494350",
+        "supervisor": {
+          "intent": "confirm_order",
+          "confidence": 0.95,
+          "routing": "order_agent",
+          "alpha": 0.5,
+          "reasoning": "Cart contents displayed",
+          "latency_ms": 0.3342628479003906
+        },
+        "order": {
+          "action": "confirm_order",
+          "current_order": {
+            "items": [
+              {
+                "product_id": "OV_MILK_2P_GAL",
+                "sku": "OV_MILK_2P_GAL",
+                "name": "Organic 2% Milk",
+                "quantity": 2,
+                "unit": "",
+                "price": 16.2,
+                "added_at": "2025-06-26T05:35:42.799103"
+              }
+            ]
+          },
+          "items_count": 1,
+          "latency_ms": 0.7638931274414062
+        },
+        "graphiti": {
+          "entities_extracted": 0,
+          "relationships": 1,
+          "temporal_patterns": [
+            {
+              "type": "frequent_search",
+              "product": "milk",
+              "frequency": "high"
+            }
+          ],
+          "context": {
+            "session_products": [],
+            "user_preferences": [
+              "organic",
+              "brand:Amul"
+            ],
+            "shopping_pattern": "regular"
+          },
+          "graph_updated": true,
+          "processing_time_ms": 15
+        },
+        "response": {
+          "final_response": "{\"success\": true, \"message\": \"You have 1 item(s) in your cart\", \"order\": {\"items\": [{\"product_id\": \"OV_MILK_2P_GAL\", \"sku\": \"OV_MILK_2P_GAL\", \"name\": \"Organic 2% Milk\", \"quantity\": 2, \"unit\": \"\", \"price\": 16.2, \"added_at\": \"2025-06-26T05:35:42.799103\"}]}, \"cart_summary\": {\"total_items\": 1, \"total_quantity\": 2, \"estimated_total\": 32.4, \"items\": [{\"name\": \"Organic 2% Milk\", \"quantity\": 2, \"unit\": \"\", \"price\": 16.2, \"subtotal\": 32.4}]}}",
+          "response_type": "order_operation",
+          "latency_ms": 0.2999305725097656
+        },
+        "performance": {
+          "total_latency_ms": 106.34112358093262,
+          "breakdown": {
+            "supervisor": 0.3342628479003906,
+            "order_agent": 0.7638931274414062,
+            "response_compiler": 0.2999305725097656
+          }
+        }
+      },
+      "success": true
+    }
+  ]
+}

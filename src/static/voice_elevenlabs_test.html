@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevenLabs Natural Voice Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
+        }
+        
+        #startBtn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        #stopBtn {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        #clearBtn {
+            background: linear-gradient(45deg, #2196F3, #1976d2);
+            color: white;
+        }
+        
+        #status {
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border-left: 5px solid #2196F3;
+            font-weight: 500;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .conversation {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-left: 5px solid #2196F3;
+            margin-left: 40px;
+        }
+        
+        .assistant-message {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-left: 5px solid #4CAF50;
+            margin-right: 40px;
+        }
+        
+        .transcript-message {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-left: 5px solid #ff9800;
+            font-style: italic;
+            opacity: 0.8;
+            margin-left: 40px;
+        }
+        
+        .function-message {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            border-left: 5px solid #9c27b0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .message-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+        
+        .message-content {
+            line-height: 1.6;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #27ae60;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .product-supplier {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        
+        .cart-summary {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .audio-visualizer {
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audio-wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0.3) 50%, 
+                rgba(255,255,255,0.1) 100%);
+            animation: wave 2s ease-in-out infinite;
+            transform: translateX(-100%);
+        }
+        
+        @keyframes wave {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .audio-wave.active {
+            animation-duration: 1s;
+        }
+        
+        .instructions {
+            background: linear-gradient(135deg, #e8f4fd, #b3e5fc);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #03a9f4;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #0277bd;
+            font-size: 1.3em;
+        }
+        
+        .command-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .command-item {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .error { color: #d32f2f; }
+        .success { color: #388e3c; }
+        .info { color: #1976d2; }
+        .warning { color: #f57c00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ ElevenLabs Voice Assistant</h1>
+        <p class="subtitle">Natural conversations with advanced AI • Powered by ElevenLabs + LangGraph</p>
+        
+        <div class="instructions">
+            <h3>✨ Try these natural voice commands:</h3>
+            <div class="command-list">
+                <div class="command-item">"Hello there!"</div>
+                <div class="command-item">"I need some milk"</div>
+                <div class="command-item">"Search for organic apples"</div>
+                <div class="command-item">"Add that to my cart"</div>
+                <div class="command-item">"What's in my cart?"</div>
+                <div class="command-item">"I'm ready to checkout"</div>
+            </div>
+            <p><strong>Features:</strong> Natural turn-taking • Interruption handling • Human-like responses • Advanced function calling</p>
+        </div>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startElevenLabsVoice()">🎙️ Start Conversation</button>
+            <button id="stopBtn" onclick="stopElevenLabsVoice()" disabled>🛑 Stop</button>
+            <button id="clearBtn" onclick="clearConversation()">🗑️ Clear</button>
+        </div>
+        
+        <div id="status">Ready to start natural voice conversation</div>
+        
+        <div class="audio-visualizer" id="audioVisualizer">
+            <div class="audio-wave" id="audioWave"></div>
+            🎵 Voice Activity Visualization
+        </div>
+        
+        <div id="conversation"></div>
+    </div>
+    
+    <script>
+        let websocket = null;
+        let audioContext = null;
+        let micStream = null;
+        let isRecording = false;
+        let conversationId = null;
+        
+        function clearConversation() {
+            document.getElementById('conversation').innerHTML = '';
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = type;
+        }
+        
+        function setAudioActivity(active) {
+            const wave = document.getElementById('audioWave');
+            if (active) {
+                wave.classList.add('active');
+            } else {
+                wave.classList.remove('active');
+            }
+        }
+        
+        function addMessage(type, content, extra = {}) {
+            const conversationEl = document.getElementById('conversation');
+            const messageEl = document.createElement('div');
+            messageEl.className = `conversation ${type}-message`;
+            
+            let icon, title;
+            switch(type) {
+                case 'user':
+                    icon = '👤';
+                    title = 'You';
+                    break;
+                case 'assistant':
+                    icon = '🤖';
+                    title = 'Assistant';
+                    break;
+                case 'transcript':
+                    icon = '🎤';
+                    title = 'Listening...';
+                    break;
+                case 'function':
+                    icon = '⚙️';
+                    title = 'Function Call';
+                    break;
+                default:
+                    icon = '💬';
+                    title = 'Message';
+            }
+            
+            let html = `
+                <div class="message-header">
+                    <span class="message-icon">${icon}</span>
+                    <span>${title}</span>
+                </div>
+                <div class="message-content">${content}</div>
+            `;
+            
+            // Add products if available
+            if (extra.products && extra.products.length > 0) {
+                html += '<div class="products-grid">';
+                extra.products.forEach(product => {
+                    html += `
+                        <div class="product-card">
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">$${product.price}</div>
+                            <div class="product-supplier">${product.supplier || 'Store'}</div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            // Add cart summary if available
+            if (extra.cart && extra.cart.items && extra.cart.items.length > 0) {
+                html += '<div class="cart-summary">';
+                html += '<strong>🛒 Shopping Cart:</strong>';
+                extra.cart.items.forEach(item => {
+                    html += `
+                        <div class="cart-item">
+                            <span>${item.quantity}× ${item.product_name}</span>
+                            <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    `;
+                });
+                html += `
+                    <div class="cart-item">
+                        <span><strong>Total</strong></span>
+                        <span><strong>$${extra.cart.total.toFixed(2)}</strong></span>
+                    </div>
+                `;
+                html += '</div>';
+            }
+            
+            messageEl.innerHTML = html;
+            conversationEl.appendChild(messageEl);
+            conversationEl.scrollTop = conversationEl.scrollHeight;
+        }
+        
+        async function startElevenLabsVoice() {
+            try {
+                updateStatus('Requesting microphone access...', 'info');
+                
+                // Get microphone
+                micStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                console.log('Microphone access granted');
+                updateStatus('Connecting to ElevenLabs...', 'info');
+                
+                // Connect WebSocket
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/api/v1/elevenlabs/connect`;
+                
+                console.log(`Connecting to: ${wsUrl}`);
+                websocket = new WebSocket(wsUrl);
+                
+                websocket.onopen = () => {
+                    console.log('Connected to ElevenLabs!');
+                    updateStatus('🎙️ Natural voice conversation ready!', 'success');
+                    startAudioCapture();
+                    
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                };
+                
+                websocket.onmessage = handleMessage;
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    updateStatus('Connection error', 'error');
+                };
+                
+                websocket.onclose = (event) => {
+                    console.log(`Connection closed: ${event.code}`);
+                    updateStatus('Connection closed', 'warning');
+                    stopElevenLabsVoice();
+                };
+                
+            } catch (error) {
+                console.error('Error:', error);
+                updateStatus('Failed to start voice assistant', 'error');
+            }
+        }
+        
+        function handleMessage(event) {
+            // Handle binary audio data
+            if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
+                playAudioResponse(event.data);
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(event.data);
+                console.log('Received:', data.type, data);
+                
+                switch (data.type) {
+                    case 'session_started':
+                        addMessage('assistant', data.message);
+                        break;
+                        
+                    case 'agent_ready':
+                        conversationId = data.conversation_id;
+                        addMessage('assistant', 'Voice agent ready! Start speaking naturally.');
+                        break;
+                        
+                    case 'transcript':
+                        if (data.is_final) {
+                            addMessage('user', data.text);
+                            setAudioActivity(false);
+                        } else {
+                            // Update or create interim transcript
+                            updateInterimTranscript(data.text);
+                        }
+                        break;
+                        
+                    case 'agent_response':
+                        addMessage('assistant', data.text);
+                        setAudioActivity(true);
+                        break;
+                        
+                    case 'function_executed':
+                        const result = data.result;
+                        let functionMsg = `Called: ${data.function}`;
+                        
+                        if (result.products) {
+                            addMessage('function', functionMsg, { products: result.products });
+                        } else if (result.items) {
+                            addMessage('function', functionMsg, { cart: result });
+                        } else {
+                            addMessage('function', `${functionMsg} - ${result.message || 'Completed'}`);
+                        }
+                        break;
+                        
+                    case 'conversation_ended':
+                        addMessage('assistant', 'Conversation ended. Thank you!');
+                        stopElevenLabsVoice();
+                        break;
+                        
+                    case 'error':
+                        console.error('Agent error:', data.message);
+                        updateStatus(`Error: ${data.message}`, 'error');
+                        break;
+                }
+                
+            } catch (e) {
+                console.error('Parse error:', e);
+            }
+        }
+        
+        function updateInterimTranscript(text) {
+            // Remove previous interim
+            const existing = document.querySelector('.transcript-message');
+            if (existing) {
+                existing.remove();
+            }
+            
+            if (text.trim()) {
+                addMessage('transcript', text);
+                setAudioActivity(true);
+            }
+        }
+        
+        function startAudioCapture() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                const source = audioContext.createMediaStreamSource(micStream);
+                const processor = audioContext.createScriptProcessor(1024, 1, 1);
+                
+                processor.onaudioprocess = (event) => {
+                    if (websocket?.readyState === WebSocket.OPEN && isRecording) {
+                        const inputBuffer = event.inputBuffer;
+                        const inputData = inputBuffer.getChannelData(0);
+                        
+                        // Convert to 16-bit PCM
+                        const pcmData = new Int16Array(inputData.length);
+                        for (let i = 0; i < inputData.length; i++) {
+                            const sample = Math.max(-1, Math.min(1, inputData[i]));
+                            pcmData[i] = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                        }
+                        
+                        websocket.send(pcmData.buffer);
+                    }
+                };
+                
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+                
+                isRecording = true;
+                console.log('Audio capture started');
+                
+            } catch (error) {
+                console.error('Audio capture error:', error);
+            }
+        }
+        
+        function playAudioResponse(data) {
+            try {
+                if (audioContext) {
+                    let buffer;
+                    if (data instanceof ArrayBuffer) {
+                        buffer = data;
+                    } else if (data instanceof Blob) {
+                        data.arrayBuffer().then(arrayBuffer => {
+                            playAudioResponse(arrayBuffer);
+                        });
+                        return;
+                    } else {
+                        return;
+                    }
+                    
+                    audioContext.decodeAudioData(buffer.slice(), (audioBuffer) => {
+                        const source = audioContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.connect(audioContext.destination);
+                        source.start();
+                        
+                        source.onended = () => {
+                            setAudioActivity(false);
+                            updateStatus('🎙️ Ready - speak naturally!', 'success');
+                        };
+                        
+                        console.log('Playing natural voice response');
+                    }, (error) => {
+                        console.error('Audio decode error:', error);
+                    });
+                }
+            } catch (error) {
+                console.error('Audio playback error:', error);
+            }
+        }
+        
+        function stopElevenLabsVoice() {
+            isRecording = false;
+            setAudioActivity(false);
+            
+            if (micStream) {
+                micStream.getTracks().forEach(track => track.stop());
+                micStream = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            updateStatus('Voice conversation stopped', 'warning');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            
+            console.log('ElevenLabs voice stopped');
+        }
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', stopElevenLabsVoice);
+    </script>
+</body>
+</html>

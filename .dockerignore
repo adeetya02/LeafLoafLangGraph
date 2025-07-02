@@ -1,0 +1,43 @@
+# Test files
+test_*.py
+archive/
+*.pyc
+__pycache__/
+
+# Development files
+.env.yaml
+.env.local
+*.log
+*.md
+
+# Git files
+.git/
+.gitignore
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+
+# Deployment scripts
+deploy_*.sh
+setup_*.py
+
+# Documentation
+docs/
+README.md
+
+# Temporary files
+*.tmp
+*.bak
+.DS_Store
+
+# Data files
+*.csv
+*.json
+*.pdf
+
+# Virtual environments
+venv/
+env/
+.venv/

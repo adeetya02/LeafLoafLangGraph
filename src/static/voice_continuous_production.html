@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Production Continuous Voice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #2e7d32;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .main-container {
+            flex: 1;
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .conversation-panel {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .conversation-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #dc3545;
+            transition: all 0.3s ease;
+        }
+        
+        .status-dot.active {
+            background: #28a745;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .conversation-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: #007bff;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 18px 18px 4px 18px;
+            max-width: 70%;
+        }
+        
+        .assistant-message {
+            align-self: flex-start;
+            background: #f1f3f5;
+            color: #333;
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 4px;
+            max-width: 70%;
+        }
+        
+        .interim-message {
+            opacity: 0.6;
+            font-style: italic;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .product-mini {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .product-mini:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .product-price {
+            color: #28a745;
+            font-weight: 500;
+        }
+        
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .audio-visualizer {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .audio-visualizer.active {
+            opacity: 1;
+        }
+        
+        .audio-bar {
+            width: 4px;
+            background: #28a745;
+            border-radius: 2px;
+            animation: audioWave 0.5s ease-in-out infinite;
+        }
+        
+        .audio-bar:nth-child(2) { animation-delay: 0.1s; }
+        .audio-bar:nth-child(3) { animation-delay: 0.2s; }
+        .audio-bar:nth-child(4) { animation-delay: 0.3s; }
+        .audio-bar:nth-child(5) { animation-delay: 0.4s; }
+        
+        @keyframes audioWave {
+            0%, 100% { height: 10px; }
+            50% { height: 30px; }
+        }
+        
+        .error-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: none;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>
+            <span>🥬</span>
+            LeafLoaf Voice Assistant
+            <span style="font-size: 14px; color: #6c757d;">(Production Mode)</span>
+        </h1>
+    </div>
+    
+    <div class="main-container">
+        <div class="conversation-panel">
+            <div class="conversation-header">
+                <h2 style="font-size: 18px; color: #333;">Conversation</h2>
+                <div class="status-indicator">
+                    <span class="status-dot" id="statusDot"></span>
+                    <span id="statusText">Disconnected</span>
+                </div>
+            </div>
+            
+            <div class="conversation-content" id="conversation">
+                <div class="assistant-message">
+                    Welcome! Click "Start Listening" and I'll help you find products. Just speak naturally - I'll listen continuously.
+                </div>
+            </div>
+            
+            <div class="audio-visualizer" id="audioVisualizer">
+                <div class="audio-bar" style="height: 10px;"></div>
+                <div class="audio-bar" style="height: 20px;"></div>
+                <div class="audio-bar" style="height: 15px;"></div>
+                <div class="audio-bar" style="height: 25px;"></div>
+                <div class="audio-bar" style="height: 18px;"></div>
+            </div>
+            
+            <div class="control-panel">
+                <button class="btn btn-primary" id="startBtn" onclick="startContinuous()">
+                    <span>🎤</span> Start Listening
+                </button>
+                <button class="btn btn-danger" id="stopBtn" onclick="stopListening()" disabled>
+                    <span>⏹️</span> Stop
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="error-toast" id="errorToast"></div>
+    
+    <script>
+        // State
+        let websocket = null;
+        let audioContext = null;
+        let mediaStream = null;
+        let scriptProcessor = null;
+        let isListening = false;
+        let currentInterimDiv = null;
+        
+        // DOM elements
+        const conversation = document.getElementById('conversation');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const audioVisualizer = document.getElementById('audioVisualizer');
+        const errorToast = document.getElementById('errorToast');
+        
+        async function startContinuous() {
+            try {
+                // Get microphone access
+                mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                // Connect to our WebSocket proxy
+                const wsUrl = `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/v1/voice-deepgram/continuous`;
+                websocket = new WebSocket(wsUrl);
+                
+                websocket.onopen = () => {
+                    console.log('Connected to server');
+                    isListening = true;
+                    updateUI('connected');
+                    startAudioStreaming();
+                };
+                
+                websocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    handleServerMessage(data);
+                };
+                
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    showError('Connection error. Please try again.');
+                    stopListening();
+                };
+                
+                websocket.onclose = () => {
+                    console.log('Disconnected from server');
+                    if (isListening) {
+                        stopListening();
+                    }
+                };
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to access microphone. Please check permissions.');
+            }
+        }
+        
+        function startAudioStreaming() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                sampleRate: 16000
+            });
+            
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            scriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            scriptProcessor.onaudioprocess = (event) => {
+                if (!isListening || websocket.readyState !== WebSocket.OPEN) return;
+                
+                const inputData = event.inputBuffer.getChannelData(0);
+                const pcm16 = convertFloat32ToInt16(inputData);
+                websocket.send(pcm16);
+            };
+            
+            source.connect(scriptProcessor);
+            scriptProcessor.connect(audioContext.destination);
+        }
+        
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const result = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                result[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            
+            return result.buffer;
+        }
+        
+        function handleServerMessage(data) {
+            switch (data.type) {
+                case 'connected':
+                    addMessage(data.message, 'assistant');
+                    break;
+                    
+                case 'transcript':
+                    handleTranscript(data);
+                    break;
+                    
+                case 'searching':
+                    addMessage(`Searching for: "${data.query}"`, 'assistant');
+                    break;
+                    
+                case 'results':
+                    handleResults(data);
+                    break;
+                    
+                case 'error':
+                    showError(data.message);
+                    break;
+            }
+        }
+        
+        function handleTranscript(data) {
+            if (data.speech_final && currentInterimDiv) {
+                // Convert interim to final
+                currentInterimDiv.classList.remove('interim-message');
+                currentInterimDiv = null;
+            } else if (!data.is_final) {
+                // Update or create interim message
+                if (!currentInterimDiv) {
+                    currentInterimDiv = addMessage(data.text, 'user', true);
+                } else {
+                    currentInterimDiv.textContent = data.text;
+                }
+            }
+        }
+        
+        function handleResults(data) {
+            let message = `Found ${data.count} products`;
+            if (data.count === 0) {
+                message = `No products found for "${data.query}". Try describing it differently!`;
+            }
+            
+            const messageDiv = addMessage(message, 'assistant');
+            
+            if (data.products && data.products.length > 0) {
+                const grid = document.createElement('div');
+                grid.className = 'products-grid';
+                
+                data.products.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'product-mini';
+                    card.innerHTML = `
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">$${product.price}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+                
+                messageDiv.appendChild(grid);
+            }
+        }
+        
+        function addMessage(text, type, isInterim = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            if (isInterim) {
+                messageDiv.classList.add('interim-message');
+            }
+            messageDiv.textContent = text;
+            conversation.appendChild(messageDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+            return messageDiv;
+        }
+        
+        function stopListening() {
+            isListening = false;
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            if (scriptProcessor) {
+                scriptProcessor.disconnect();
+                scriptProcessor = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            
+            updateUI('disconnected');
+            currentInterimDiv = null;
+        }
+        
+        function updateUI(state) {
+            if (state === 'connected') {
+                statusDot.classList.add('active');
+                statusText.textContent = 'Listening';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                audioVisualizer.classList.add('active');
+            } else {
+                statusDot.classList.remove('active');
+                statusText.textContent = 'Disconnected';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                audioVisualizer.classList.remove('active');
+            }
+        }
+        
+        function showError(message) {
+            errorToast.textContent = message;
+            errorToast.style.display = 'block';
+            setTimeout(() => {
+                errorToast.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Send periodic pings
+        setInterval(() => {
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.send(JSON.stringify({ type: 'ping' }));
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

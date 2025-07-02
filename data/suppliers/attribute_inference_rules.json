@@ -1,0 +1,100 @@
+{
+  "organic": {
+    "keywords": [
+      "organic",
+      "org",
+      "certified organic",
+      "usda organic"
+    ],
+    "exclude": [
+      "non-organic",
+      "conventional"
+    ],
+    "confidence": 0.9
+  },
+  "gluten_free": {
+    "keywords": [
+      "gluten free",
+      "gf",
+      "no gluten",
+      "gluten-free"
+    ],
+    "categories": [
+      "produce",
+      "meat",
+      "dairy",
+      "eggs"
+    ],
+    "confidence": 0.85
+  },
+  "vegan": {
+    "keywords": [
+      "vegan",
+      "plant based",
+      "plant-based"
+    ],
+    "exclude_categories": [
+      "meat",
+      "poultry",
+      "seafood",
+      "dairy",
+      "eggs"
+    ],
+    "confidence": 0.9
+  },
+  "local": {
+    "keywords": [
+      "local",
+      "locally grown",
+      "locally sourced",
+      "regional"
+    ],
+    "supplier_codes": [
+      "local_farms"
+    ],
+    "confidence": 0.95
+  },
+  "kosher": {
+    "keywords": [
+      "kosher",
+      "kosher certified",
+      "ou",
+      "ok kosher"
+    ],
+    "confidence": 0.95
+  },
+  "non_gmo": {
+    "keywords": [
+      "non-gmo",
+      "non gmo",
+      "gmo free",
+      "no gmo"
+    ],
+    "confidence": 0.9
+  },
+  "refrigerated": {
+    "categories": [
+      "dairy",
+      "meat",
+      "deli",
+      "prepared foods"
+    ],
+    "keywords": [
+      "refrigerated",
+      "keep cold",
+      "perishable"
+    ],
+    "confidence": 0.85
+  },
+  "frozen": {
+    "categories": [
+      "frozen"
+    ],
+    "keywords": [
+      "frozen",
+      "keep frozen",
+      "freezer"
+    ],
+    "confidence": 0.95
+  }
+}

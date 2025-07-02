@@ -1,0 +1,127 @@
+{
+  "session_id": "perf_test_1750915272",
+  "timestamp": "20250626_012121",
+  "results": [
+    {
+      "query": "milk",
+      "type": "Simple search",
+      "success": true,
+      "total_latency_ms": 557.1267604827881,
+      "component_latencies": {},
+      "intent": "unknown",
+      "alpha": 0.5,
+      "products_found": 0,
+      "response": {
+        "role": "assistant",
+        "content": "[Routing to product_search]",
+        "tool_calls": null,
+        "tool_call_id": null
+      }
+    },
+    {
+      "query": "Amul toned milk",
+      "type": "Brand specific",
+      "success": true,
+      "total_latency_ms": 473.538875579834,
+      "component_latencies": {},
+      "intent": "unknown",
+      "alpha": 0.5,
+      "products_found": 0,
+      "response": {
+        "role": "assistant",
+        "content": "[Routing to product_search]",
+        "tool_calls": null,
+        "tool_call_id": null
+      }
+    },
+    {
+      "query": "organic vegetables under 100 rupees",
+      "type": "Complex semantic",
+      "success": true,
+      "total_latency_ms": 734.705924987793,
+      "component_latencies": {},
+      "intent": "unknown",
+      "alpha": 0.5,
+      "products_found": 0,
+      "response": {
+        "role": "assistant",
+        "content": "[Routing to product_search]",
+        "tool_calls": null,
+        "tool_call_id": null
+      }
+    },
+    {
+      "query": "add 2 packets of milk",
+      "type": "Add to cart",
+      "success": true,
+      "total_latency_ms": 134.39679145812988,
+      "component_latencies": {},
+      "intent": "unknown",
+      "alpha": 0.5,
+      "products_found": 0,
+      "response": {
+        "role": "tool",
+        "content": "{\"success\": true, \"message\": \"Added 1 item(s) to your cart\", \"items_added\": 1, \"order\": {\"items\": [{\"product_id\": \"237\", \"sku\": \"237\", \"name\": \"Mdm0 Mdh Methi Leaves 48X100 Gm Mc\", \"quantity\": 2, \"unit\": \"\", \"price\": 195.0, \"added_at\": \"2025-06-26T05:21:17.132832\"}]}, \"total_items\": 1}",
+        "tool_calls": null,
+        "tool_call_id": "call_add_to_cart_1"
+      }
+    },
+    {
+      "query": "show my cart",
+      "type": "View cart",
+      "success": true,
+      "total_latency_ms": 114.82906341552734,
+      "component_latencies": {},
+      "intent": "unknown",
+      "alpha": 0.5,
+      "products_found": 0,
+      "response": {
+        "role": "tool",
+        "content": "{\"success\": true, \"message\": \"You have 1 item(s) in your cart\", \"order\": {\"items\": [{\"product_id\": \"237\", \"sku\": \"237\", \"name\": \"Mdm0 Mdh Methi Leaves 48X100 Gm Mc\", \"quantity\": 2, \"unit\": \"\", \"price\": 195.0, \"added_at\": \"2025-06-26T05:21:17.132832\"}]}, \"cart_summary\": {\"total_items\": 1, \"total_quantity\": 2, \"estimated_total\": 390.0, \"items\": [{\"name\": \"Mdm0 Mdh Methi Leaves 48X100 Gm Mc\", \"quantity\": 2, \"unit\": \"\", \"price\": 195.0, \"subtotal\": 390.0}]}}",
+        "tool_calls": null,
+        "tool_call_id": "call_show_cart_1"
+      }
+    },
+    {
+      "query": "what deals do you have",
+      "type": "Promotion query",
+      "success": false,
+      "error": "[Errno 32] Broken pipe",
+      "total_latency_ms": 13.06009292602539
+    },
+    {
+      "query": "I need my usual groceries",
+      "type": "Contextual",
+      "success": false,
+      "error": "[Errno 32] Broken pipe",
+      "total_latency_ms": 160.9349250793457
+    },
+    {
+      "query": "healthy breakfast ideas",
+      "type": "Exploratory",
+      "success": false,
+      "error": "[Errno 32] Broken pipe",
+      "total_latency_ms": 6.561040878295898
+    },
+    {
+      "query": "remove milk from cart",
+      "type": "Remove from cart",
+      "success": false,
+      "error": "[Errno 32] Broken pipe",
+      "total_latency_ms": 3.242969512939453
+    },
+    {
+      "query": "checkout my order",
+      "type": "Checkout",
+      "success": false,
+      "error": "[Errno 32] Broken pipe",
+      "total_latency_ms": 4.584789276123047
+    }
+  ],
+  "summary": {
+    "success_rate": 0.5,
+    "avg_latency_ms": 402.91948318481445,
+    "min_latency_ms": 114.82906341552734,
+    "max_latency_ms": 734.705924987793
+  }
+}

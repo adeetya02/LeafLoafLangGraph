@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Voice Test</title>
+</head>
+<body>
+    <h1>Simple Voice Test</h1>
+    <button id="testBtn">Test Voice API</button>
+    <div id="result"></div>
+    
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Step 1: Start session
+                resultDiv.innerHTML = 'Starting session...';
+                const sessionResp = await fetch('http://localhost:8080/api/v1/voice-http/start-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: 'test_user' })
+                });
+                
+                const sessionData = await sessionResp.json();
+                const sessionId = sessionData.session_id;
+                resultDiv.innerHTML += '<br>Session ID: ' + sessionId;
+                
+                // Step 2: Send test audio
+                resultDiv.innerHTML += '<br>Sending test request...';
+                const audioResp = await fetch(`http://localhost:8080/api/v1/voice-http/process-audio/${sessionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        audio: btoa('dummy'),
+                        format: 'webm',
+                        test_transcript: 'I need organic milk'
+                    })
+                });
+                
+                const audioData = await audioResp.json();
+                resultDiv.innerHTML += '<br>Response: ' + JSON.stringify(audioData, null, 2);
+                
+            } catch (error) {
+                resultDiv.innerHTML = 'Error: ' + error.message;
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "summary": {
+    "total_products": 19,
+    "with_upc": 19,
+    "with_price": 0,
+    "categories": {
+      "Other": 19
+    },
+    "price_range": {
+      "min": 0,
+      "max": 0,
+      "avg": 0
+    }
+  },
+  "products": [
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246265605"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246285245"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246176352"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246177281"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246295879",
+      "stock_status": "Low Stock"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246287683"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246282572"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246289694"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246183039"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246182063"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246181059",
+      "stock_status": "Low Stock"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246101309"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246266039",
+      "stock_status": "Low Stock"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246288338"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "6291103750082"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "6291103750235"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246288987"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246282497"
+    },
+    {
+      "sr": "40",
+      "item_code": "Executive",
+      "description": "Ave. Edison, NJ 08817",
+      "upc": "723246282497"
+    }
+  ]
+}

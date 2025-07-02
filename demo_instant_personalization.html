@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Instant Personalization Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .product-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .product-card.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .personalization-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .rerank-animation {
+            animation: rerank 0.5s ease-out;
+        }
+        @keyframes rerank {
+            0% { background-color: #fbbf24; }
+            100% { background-color: transparent; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">LeafLoaf Instant Personalization</h1>
+            <p class="text-lg text-gray-600">Watch AI learn your preferences in real-time</p>
+        </div>
+
+        <!-- User Switcher -->
+        <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <label class="text-sm font-medium text-gray-700">Current User:</label>
+                    <select id="userSelect" class="px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="demo_user_1">User 1 (Fresh)</option>
+                        <option value="demo_user_2">User 2 (Plant-Based)</option>
+                    </select>
+                    <button onclick="resetUser()" class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 text-sm">
+                        Reset Preferences
+                    </button>
+                </div>
+                <div id="performanceMetrics" class="text-sm text-gray-500">
+                    <!-- Performance metrics will be shown here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex space-x-4">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Try searching for 'milk'" 
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
+                    value="milk"
+                >
+                <button 
+                    onclick="performSearch()" 
+                    class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 font-semibold"
+                >
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Personalization Status -->
+        <div id="personalizationStatus" class="hidden mb-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-blue-700 font-medium">Personalization Active</span>
+                    <span id="personalizationDetails" class="ml-2 text-blue-600"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learned Preferences -->
+        <div id="preferencesPanel" class="hidden mb-6">
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h3 class="font-semibold text-yellow-800 mb-2">AI Learned:</h3>
+                <div id="learnedPreferences" class="text-sm text-yellow-700"></div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div id="searchResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Results will be populated here -->
+        </div>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            <p class="text-gray-600 mt-4">Searching products...</p>
+        </div>
+
+        <!-- Demo Instructions -->
+        <div class="mt-12 bg-gray-100 rounded-lg p-6">
+            <h3 class="font-semibold text-gray-800 mb-3">🎯 Demo Instructions:</h3>
+            <ol class="space-y-2 text-gray-700">
+                <li>1. Search for "milk" to see generic results</li>
+                <li>2. Click on "Oat Milk" - watch it instantly move to the top!</li>
+                <li>3. Click on "Organic Oat Milk" - see how AI learns you prefer organic + plant-based</li>
+                <li>4. Switch users to see different personalization</li>
+                <li>5. Performance metrics show <100ms personalization speed</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let currentUserId = 'demo_user_1';
+        let searchCount = 0;
+
+        // Initialize
+        document.getElementById('userSelect').addEventListener('change', (e) => {
+            currentUserId = e.target.value;
+            searchCount = 0;
+            document.getElementById('personalizationStatus').classList.add('hidden');
+            document.getElementById('preferencesPanel').classList.add('hidden');
+        });
+
+        // Perform search
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+
+            // Show loading
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('searchResults').innerHTML = '';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/v1/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-ID': currentUserId
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    searchCount++;
+                    displayResults(data.products || []);
+                    updatePerformanceMetrics(data.metadata);
+                    
+                    // Check if personalization was applied
+                    if (data.metadata?.personalization_metrics?.personalized) {
+                        showPersonalizationStatus(data.metadata.personalization_metrics);
+                    }
+                } else {
+                    showError(data.message || 'Search failed');
+                }
+            } catch (error) {
+                showError('Failed to connect to server');
+            } finally {
+                document.getElementById('loadingState').classList.add('hidden');
+            }
+        }
+
+        // Display search results
+        function displayResults(products) {
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+
+            products.forEach((product, index) => {
+                const card = createProductCard(product, index);
+                container.appendChild(card);
+                
+                // Animate cards appearing
+                setTimeout(() => {
+                    card.classList.add('loaded');
+                }, index * 50);
+            });
+        }
+
+        // Create product card
+        function createProductCard(product, position) {
+            const card = document.createElement('div');
+            card.className = 'product-card bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow';
+            
+            // Check if this product was personalized (moved up)
+            const isPersonalized = product._personalization_score > 0;
+            
+            card.innerHTML = `
+                <div class="relative">
+                    ${isPersonalized ? '<span class="personalization-badge absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">⭐ For You</span>' : ''}
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">${product.product_name || product.name}</h3>
+                    <p class="text-sm text-gray-600 mb-3">${product.category || ''}</p>
+                    <p class="text-xl font-bold text-green-600 mb-4">$${product.price?.toFixed(2) || '0.00'}</p>
+                    ${product.brand ? `<p class="text-sm text-gray-500">Brand: ${product.brand}</p>` : ''}
+                    <button 
+                        onclick="trackClick('${product.sku || product.product_id}', ${position + 1})" 
+                        class="mt-4 w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
+                    >
+                        View Details
+                    </button>
+                </div>
+            `;
+            
+            // Add click tracking
+            card.addEventListener('click', () => trackClick(product.sku || product.product_id, position + 1));
+            
+            return card;
+        }
+
+        // Track product click
+        async function trackClick(productSku, position) {
+            // Find the product data
+            const productCards = document.querySelectorAll('.product-card');
+            const clickedCard = productCards[position - 1];
+            
+            // Highlight the clicked card
+            clickedCard.classList.add('rerank-animation');
+            
+            try {
+                // Get product details from the search results
+                const productName = clickedCard.querySelector('h3').textContent;
+                const category = clickedCard.querySelector('p.text-sm').textContent;
+                const priceText = clickedCard.querySelector('p.text-xl').textContent;
+                const price = parseFloat(priceText.replace('$', ''));
+                const brandElement = clickedCard.querySelector('p.text-gray-500');
+                const brand = brandElement ? brandElement.textContent.replace('Brand: ', '') : '';
+
+                const product = {
+                    sku: productSku,
+                    name: productName,
+                    category: category,
+                    price: price,
+                    brand: brand
+                };
+
+                // Track the interaction
+                const response = await fetch(`${API_BASE}/api/personalization/track`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: currentUserId,
+                        signal_type: 'click',
+                        product: product,
+                        metadata: {
+                            position: position,
+                            search_count: searchCount
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Show instant feedback
+                    showClickFeedback(productName, data.data);
+                    
+                    // Automatically re-search to show personalization
+                    if (searchCount < 3) {
+                        setTimeout(() => performSearch(), 1000);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to track click:', error);
+            }
+        }
+
+        // Show click feedback
+        function showClickFeedback(productName, trackingData) {
+            const status = document.getElementById('personalizationStatus');
+            const details = document.getElementById('personalizationDetails');
+            
+            status.classList.remove('hidden');
+            details.textContent = `- Learned you clicked "${productName}" (${trackingData.update_time_ms}ms)`;
+            
+            // Update preferences panel
+            updatePreferencesPanel();
+        }
+
+        // Show personalization status
+        function showPersonalizationStatus(metrics) {
+            const status = document.getElementById('personalizationStatus');
+            const details = document.getElementById('personalizationDetails');
+            
+            if (metrics.reranked) {
+                status.classList.remove('hidden');
+                details.textContent = `- Results reranked based on your preferences (${metrics.time_ms}ms)`;
+            }
+        }
+
+        // Update performance metrics
+        function updatePerformanceMetrics(metadata) {
+            const metricsEl = document.getElementById('performanceMetrics');
+            const searchTime = metadata?.execution?.total_time_ms || 0;
+            const personalizationTime = metadata?.personalization_metrics?.time_ms || 0;
+            
+            metricsEl.innerHTML = `
+                <span class="mr-3">Search: ${searchTime.toFixed(0)}ms</span>
+                <span>Personalization: ${personalizationTime.toFixed(1)}ms</span>
+            `;
+        }
+
+        // Update preferences panel
+        async function updatePreferencesPanel() {
+            try {
+                const response = await fetch(`${API_BASE}/api/personalization/preferences/${currentUserId}`);
+                const data = await response.json();
+                
+                if (data.success && data.data.has_preferences) {
+                    const panel = document.getElementById('preferencesPanel');
+                    const prefs = document.getElementById('learnedPreferences');
+                    
+                    panel.classList.remove('hidden');
+                    
+                    let prefsHtml = '<div class="grid grid-cols-2 gap-2">';
+                    
+                    // Show top categories
+                    if (Object.keys(data.data.top_categories).length > 0) {
+                        prefsHtml += '<div><strong>Categories:</strong> ' + 
+                            Object.entries(data.data.top_categories)
+                                .map(([k, v]) => `${k} (${v.toFixed(2)})`)
+                                .join(', ') + '</div>';
+                    }
+                    
+                    // Show top attributes
+                    if (Object.keys(data.data.top_attributes).length > 0) {
+                        prefsHtml += '<div><strong>Preferences:</strong> ' + 
+                            Object.entries(data.data.top_attributes)
+                                .map(([k, v]) => `${k} (${v.toFixed(2)})`)
+                                .join(', ') + '</div>';
+                    }
+                    
+                    prefsHtml += '</div>';
+                    prefs.innerHTML = prefsHtml;
+                }
+            } catch (error) {
+                console.error('Failed to get preferences:', error);
+            }
+        }
+
+        // Reset user preferences
+        async function resetUser() {
+            try {
+                const response = await fetch(`${API_BASE}/api/personalization/reset`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: currentUserId
+                    })
+                });
+
+                if (response.ok) {
+                    searchCount = 0;
+                    document.getElementById('personalizationStatus').classList.add('hidden');
+                    document.getElementById('preferencesPanel').classList.add('hidden');
+                    alert('User preferences reset!');
+                }
+            } catch (error) {
+                console.error('Failed to reset user:', error);
+            }
+        }
+
+        // Show error
+        function showError(message) {
+            const container = document.getElementById('searchResults');
+            container.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <p class="text-red-600">${message}</p>
+                </div>
+            `;
+        }
+
+        // Auto-search on load
+        window.addEventListener('load', () => {
+            performSearch();
+        });
+    </script>
+</body>
+</html>

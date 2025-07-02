@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaf & Loaf - HTTP Streaming Voice AI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f1e;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: 90vh;
+        }
+        
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            font-size: 36px;
+            background: linear-gradient(135deg, #64ffda 0%, #63a4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .status {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #64ffda;
+        }
+        
+        .conversation {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .user-message {
+            background: rgba(100, 255, 218, 0.1);
+            margin-left: 20%;
+            color: #64ffda;
+        }
+        
+        .assistant-message {
+            background: rgba(99, 164, 255, 0.1);
+            margin-right: 20%;
+            color: #a8daff;
+        }
+        
+        .interim {
+            color: #8892b0;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+        
+        .mic-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            font-size: 32px;
+            cursor: pointer;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        
+        .mic-button:hover {
+            background: rgba(100, 255, 218, 0.2);
+        }
+        
+        .mic-button.active {
+            background: #64ffda;
+            color: #0f0f1e;
+            animation: pulse 2s infinite;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .product-name {
+            font-weight: bold;
+            color: #ccd6f6;
+        }
+        
+        .product-price {
+            color: #4ade80;
+            font-size: 18px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.4); }
+            50% { box-shadow: 0 0 0 20px rgba(100, 255, 218, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panel">
+            <h1>🎤 Voice Shopping</h1>
+            
+            <div class="status" id="status">Ready - Click microphone to start</div>
+            
+            <div class="conversation" id="conversation">
+                <div class="message assistant-message">
+                    Hi! I'm your voice shopping assistant. Click the microphone and tell me what you're looking for!
+                </div>
+            </div>
+            
+            <div class="interim" id="interim"></div>
+            
+            <button class="mic-button" id="micButton">🎤</button>
+        </div>
+        
+        <div class="panel">
+            <h2 style="color: #63a4ff; margin-bottom: 20px;">Products</h2>
+            <div id="products"></div>
+        </div>
+    </div>
+    
+    <script>
+        let mediaRecorder = null;
+        let isRecording = false;
+        let audioContext = null;
+        
+        const status = document.getElementById('status');
+        const conversation = document.getElementById('conversation');
+        const interim = document.getElementById('interim');
+        const micButton = document.getElementById('micButton');
+        const products = document.getElementById('products');
+        
+        micButton.addEventListener('click', toggleRecording);
+        
+        async function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                const audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await processAudio(audioBlob);
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                micButton.classList.add('active');
+                status.textContent = '🎤 Listening... Click again to stop';
+                interim.textContent = 'Speak now...';
+                
+            } catch (err) {
+                status.textContent = 'Microphone permission required';
+                status.style.color = '#f87171';
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                micButton.classList.remove('active');
+                status.textContent = 'Processing...';
+                interim.textContent = '';
+            }
+        }
+        
+        async function processAudio(audioBlob) {
+            try {
+                status.textContent = '🔄 Processing speech...';
+                
+                // Create FormData for audio upload
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'audio.webm');
+                formData.append('session_id', 'demo_session_' + Date.now());
+                
+                // Send to our HTTP streaming endpoint
+                const response = await fetch('/api/v1/voice/process-stream', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to process audio');
+                }
+                
+                // Handle streaming response
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                
+                status.textContent = '💭 AI thinking...';
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.substring(6));
+                                handleStreamEvent(data);
+                            } catch (e) {
+                                // Ignore malformed JSON
+                            }
+                        }
+                    }
+                }
+                
+                status.textContent = '✅ Ready - Click microphone to speak again';
+                
+            } catch (error) {
+                console.error('Processing error:', error);
+                status.textContent = '❌ Error - Try again';
+                status.style.color = '#f87171';
+                setTimeout(() => {
+                    status.textContent = 'Ready - Click microphone to start';
+                    status.style.color = '#64ffda';
+                }, 3000);
+            }
+        }
+        
+        function handleStreamEvent(data) {
+            switch (data.type) {
+                case 'transcript':
+                    addMessage(data.text, 'user');
+                    break;
+                    
+                case 'response':
+                    addMessage(data.text, 'assistant');
+                    if (data.products) {
+                        showProducts(data.products);
+                    }
+                    break;
+                    
+                case 'audio':
+                    playAudioResponse(data.audio);
+                    break;
+                    
+                case 'status':
+                    status.textContent = data.message;
+                    break;
+            }
+        }
+        
+        function addMessage(text, type) {
+            const div = document.createElement('div');
+            div.className = `message ${type}-message`;
+            div.textContent = text;
+            conversation.appendChild(div);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        function showProducts(productList) {
+            products.innerHTML = productList.slice(0, 6).map(p => `
+                <div class="product-card">
+                    <div class="product-name">${p.product_name || p.name}</div>
+                    <div class="product-price">$${(p.price || 0).toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function playAudioResponse(base64Audio) {
+            try {
+                if (!audioContext) {
+                    audioContext = new AudioContext();
+                }
+                
+                const audioData = atob(base64Audio);
+                const audioBuffer = new ArrayBuffer(audioData.length);
+                const view = new Uint8Array(audioBuffer);
+                
+                for (let i = 0; i < audioData.length; i++) {
+                    view[i] = audioData.charCodeAt(i);
+                }
+                
+                const buffer = await audioContext.decodeAudioData(audioBuffer);
+                const source = audioContext.createBufferSource();
+                source.buffer = buffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+                
+            } catch (error) {
+                console.error('Audio playback error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

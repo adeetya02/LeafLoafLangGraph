@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - 11Labs Voice Assistant</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 800px;
+            width: 90%;
+        }
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        .agent-widget {
+            margin: 40px 0;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .examples {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .examples ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .examples li {
+            margin: 8px 0;
+            color: #333;
+        }
+        .status {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .status-item {
+            background: #f5f5f5;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin: 5px;
+        }
+        .status-item strong {
+            color: #2e7d32;
+        }
+        .webhook-status {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .webhook-status h3 {
+            margin-top: 0;
+            color: #2e7d32;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍃 LeafLoaf Voice Assistant</h1>
+        <p class="subtitle">Powered by 11Labs Conversational AI</p>
+
+        <div class="agent-widget">
+            <div class="loading">Loading voice assistant...</div>
+            <!-- 11Labs Widget with your agent ID -->
+            <elevenlabs-convai agent-id="agent_01jyfpd7vtewwahh7h14g67g4d"></elevenlabs-convai>
+        </div>
+
+        <div class="examples">
+            <h3>Try These Conversations:</h3>
+            <ul>
+                <li>"Hello, I'm looking for organic milk"</li>
+                <li>"What types of milk do you have?"</li>
+                <li>"Add 2 gallons of the first one to my cart"</li>
+                <li>"I also need some bread"</li>
+                <li>"Show me what's in my cart"</li>
+                <li>"That's perfect, confirm my order"</li>
+            </ul>
+        </div>
+
+        <div class="webhook-status">
+            <h3>✅ Webhook Status</h3>
+            <div id="webhook-checks">Checking webhook connectivity...</div>
+        </div>
+
+        <div class="status">
+            <div class="status-item">
+                <strong>🔄 Server</strong><br>
+                Connected
+            </div>
+            <div class="status-item">
+                <strong>🌐 Ngrok</strong><br>
+                171f-108-53-27-176
+            </div>
+            <div class="status-item">
+                <strong>📊 Monitor</strong><br>
+                <a href="http://127.0.0.1:4040" target="_blank">View Requests</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11Labs Conversational AI Widget Script -->
+    <script src="https://elevenlabs.io/convai-widget/index.js"></script>
+    
+    <script>
+        // Check webhook status
+        async function checkWebhooks() {
+            const webhookStatus = document.getElementById('webhook-checks');
+            const baseUrl = 'https://171f-108-53-27-176.ngrok-free.app';
+            
+            try {
+                const response = await fetch(`${baseUrl}/health`);
+                if (response.ok) {
+                    webhookStatus.innerHTML = '✅ All webhooks are active and ready!';
+                } else {
+                    webhookStatus.innerHTML = '⚠️ Server is reachable but returned an error';
+                }
+            } catch (error) {
+                webhookStatus.innerHTML = '❌ Cannot reach webhooks - make sure ngrok and server are running';
+            }
+        }
+
+        // Remove loading message when widget loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loading = document.querySelector('.loading');
+                if (loading) loading.style.display = 'none';
+            }, 2000);
+            checkWebhooks();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Gemini Voice Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .gemini-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #4285f4, #34a853, #fbbc04, #ea4335);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .assistant-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .assistant-avatar.listening {
+            animation: pulse 2s infinite;
+        }
+        
+        .assistant-avatar.speaking {
+            animation: speak 0.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(66, 133, 244, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+        }
+        
+        @keyframes speak {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .assistant-avatar::before {
+            content: "🎙️";
+            font-size: 50px;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status.listening {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status.processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.speaking {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .voice-settings {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .voice-settings h3 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+        
+        .voice-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .voice-control {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .voice-control label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .voice-control select {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .conversation {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.assistant {
+            text-align: left;
+        }
+        
+        .message-bubble {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+        
+        .user .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .assistant .message-bubble {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+        
+        .message-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn.stop {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .text-input-container {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .text-input {
+            flex: 1;
+            padding: 10px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .text-input:focus {
+            border-color: #667eea;
+        }
+        
+        .products {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .products.show {
+            display: block;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .product-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .product-unit {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .debug {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .debug.show {
+            display: block;
+        }
+        
+        .debug-toggle {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .debug-toggle button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🥬 LeafLoaf Voice Assistant</h1>
+            <p class="subtitle">Powered by Gemini 2.5</p>
+            <span class="gemini-badge">Native Voice AI</span>
+        </div>
+        
+        <div class="assistant-avatar" id="avatar"></div>
+        
+        <div id="status" class="status">
+            Ready to connect to Gemini
+        </div>
+        
+        <div class="voice-settings">
+            <h3>Voice Settings</h3>
+            <div class="voice-controls">
+                <div class="voice-control">
+                    <label>Style</label>
+                    <select id="voiceStyle" onchange="updateVoiceSettings()">
+                        <option value="friendly" selected>Friendly</option>
+                        <option value="professional">Professional</option>
+                        <option value="casual">Casual</option>
+                        <option value="enthusiastic">Enthusiastic</option>
+                    </select>
+                </div>
+                <div class="voice-control">
+                    <label>Pace</label>
+                    <select id="voicePace" onchange="updateVoiceSettings()">
+                        <option value="slow">Slow</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="fast">Fast</option>
+                    </select>
+                </div>
+                <div class="voice-control">
+                    <label>Pitch</label>
+                    <select id="voicePitch" onchange="updateVoiceSettings()">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="voice-control">
+                    <label>Accent</label>
+                    <select id="voiceAccent" onchange="updateVoiceSettings()">
+                        <option value="american" selected>American</option>
+                        <option value="british">British</option>
+                        <option value="australian">Australian</option>
+                        <option value="neutral">Neutral</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+        
+        <div class="text-input-container">
+            <input 
+                type="text" 
+                class="text-input" 
+                id="textInput" 
+                placeholder="Type a message or use voice..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="btn" onclick="sendTextMessage()">Send</button>
+        </div>
+        
+        <div class="products" id="products">
+            <h3>Search Results</h3>
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="startBtn" onclick="startConversation()">
+                Start Voice Conversation
+            </button>
+            <button class="btn stop" id="stopBtn" onclick="stopConversation()" disabled>
+                End Conversation
+            </button>
+        </div>
+        
+        <div class="debug-toggle">
+            <button onclick="toggleDebug()">Toggle Debug Console</button>
+        </div>
+        
+        <div class="debug" id="debug"></div>
+    </div>
+
+    <script>
+        let ws = null;
+        let audioContext = null;
+        let processor = null;
+        let source = null;
+        let stream = null;
+        let isConnected = false;
+        
+        // Audio playback
+        let audioQueue = [];
+        let isPlaying = false;
+        
+        function log(message) {
+            const debug = document.getElementById('debug');
+            const time = new Date().toLocaleTimeString();
+            debug.innerHTML = `${time}: ${message}<br>` + debug.innerHTML;
+            console.log(`${time}: ${message}`);
+        }
+        
+        function updateStatus(status, message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = message;
+            
+            // Update avatar animation
+            const avatar = document.getElementById('avatar');
+            avatar.className = 'assistant-avatar';
+            if (status === 'listening') {
+                avatar.classList.add('listening');
+            } else if (status === 'speaking') {
+                avatar.classList.add('speaking');
+            }
+        }
+        
+        function addMessage(role, text) {
+            const conversation = document.getElementById('conversation');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = role === 'user' ? 'You' : 'LeafLoaf (Gemini)';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            
+            messageDiv.appendChild(label);
+            messageDiv.appendChild(bubble);
+            conversation.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        async function startConversation() {
+            try {
+                log('Starting Gemini voice conversation...');
+                
+                // Get microphone access
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                log('Got microphone access');
+                
+                // Create WebSocket connection
+                const wsUrl = `ws://${window.location.host}/api/v1/voice-gemini/stream`;
+                log(`Connecting to Gemini WebSocket: ${wsUrl}`);
+                ws = new WebSocket(wsUrl);
+                
+                ws.binaryType = 'arraybuffer';
+                
+                ws.onopen = () => {
+                    log('Gemini WebSocket connected');
+                    isConnected = true;
+                    updateStatus('connected', 'Connected to Gemini - Initializing...');
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                    
+                    // Start audio capture
+                    startAudioCapture();
+                };
+                
+                ws.onmessage = async (event) => {
+                    const data = JSON.parse(event.data);
+                    log(`Received: ${data.type}`);
+                    
+                    switch(data.type) {
+                        case 'gemini_ready':
+                            updateStatus('listening', 'Gemini ready - Start speaking...');
+                            if (data.features) {
+                                log(`Gemini features: ${JSON.stringify(data.features)}`);
+                            }
+                            break;
+                            
+                        case 'transcript':
+                            if (data.is_final) {
+                                addMessage('user', data.text);
+                            }
+                            break;
+                            
+                        case 'assistant_response':
+                            addMessage('assistant', data.text);
+                            updateStatus('speaking', 'Speaking...');
+                            break;
+                            
+                        case 'audio_chunk':
+                            // Handle audio data
+                            if (data.format === 'wav' || data.encoding === 'base64') {
+                                queueAudio(data.data, data.format);
+                            }
+                            break;
+                            
+                        case 'audio_complete':
+                            log('Audio generation complete');
+                            break;
+                            
+                        case 'products':
+                            displayProducts(data.data);
+                            break;
+                            
+                        case 'voice_settings_updated':
+                            log(`Voice settings updated: ${JSON.stringify(data.settings)}`);
+                            break;
+                            
+                        case 'error':
+                            log(`Error: ${data.message}`);
+                            updateStatus('error', 'Error occurred');
+                            break;
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    log(`WebSocket error: ${error}`);
+                    updateStatus('error', 'Connection error');
+                };
+                
+                ws.onclose = () => {
+                    log('WebSocket closed');
+                    isConnected = false;
+                    updateStatus('connected', 'Disconnected');
+                    stopConversation();
+                };
+                
+            } catch (error) {
+                log(`Error: ${error.message}`);
+                updateStatus('error', 'Failed to start');
+            }
+        }
+        
+        function startAudioCapture() {
+            // Create audio context
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                sampleRate: 16000
+            });
+            
+            source = audioContext.createMediaStreamSource(stream);
+            processor = audioContext.createScriptProcessor(2048, 1, 1);
+            
+            processor.onaudioprocess = (e) => {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    const audioData = convertFloat32ToInt16(inputData);
+                    ws.send(audioData);
+                }
+            };
+            
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            log('Audio capture started');
+        }
+        
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const result = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                result[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            
+            return result.buffer;
+        }
+        
+        function queueAudio(audioData, format) {
+            audioQueue.push({ data: audioData, format: format });
+            log(`Queued audio chunk, queue size: ${audioQueue.length}`);
+            if (!isPlaying) {
+                playNextAudio();
+            }
+        }
+        
+        async function playNextAudio() {
+            if (audioQueue.length === 0) {
+                isPlaying = false;
+                updateStatus('listening', 'Listening...');
+                return;
+            }
+            
+            isPlaying = true;
+            const { data, format } = audioQueue.shift();
+            
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                let audioBuffer;
+                
+                if (format === 'base64' || format === 'wav') {
+                    // Decode base64 and create audio buffer
+                    const binaryString = atob(data);
+                    const bytes = new Uint8Array(binaryString.length);
+                    for (let i = 0; i < binaryString.length; i++) {
+                        bytes[i] = binaryString.charCodeAt(i);
+                    }
+                    audioBuffer = await audioContext.decodeAudioData(bytes.buffer);
+                }
+                
+                if (audioBuffer) {
+                    const source = audioContext.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.connect(audioContext.destination);
+                    
+                    source.onended = () => {
+                        log('Audio chunk finished playing');
+                        playNextAudio();
+                    };
+                    
+                    source.start();
+                } else {
+                    playNextAudio();
+                }
+                
+            } catch (error) {
+                log(`Audio playback error: ${error.message}`);
+                playNextAudio();
+            }
+        }
+        
+        function sendTextMessage() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+            
+            if (text && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'text_input',
+                    text: text
+                }));
+                input.value = '';
+                updateStatus('processing', 'Processing...');
+            }
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendTextMessage();
+            }
+        }
+        
+        function updateVoiceSettings() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                const settings = {
+                    style: document.getElementById('voiceStyle').value,
+                    pace: document.getElementById('voicePace').value,
+                    pitch: document.getElementById('voicePitch').value,
+                    accent: document.getElementById('voiceAccent').value
+                };
+                
+                ws.send(JSON.stringify({
+                    type: 'voice_settings',
+                    settings: settings
+                }));
+                
+                log(`Updating voice settings: ${JSON.stringify(settings)}`);
+            }
+        }
+        
+        function displayProducts(products) {
+            const productsDiv = document.getElementById('products');
+            const grid = document.getElementById('productGrid');
+            
+            if (!products || products.length === 0) {
+                productsDiv.classList.remove('show');
+                return;
+            }
+            
+            productsDiv.classList.add('show');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-unit">${product.unit}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function stopConversation() {
+            log('Stopping conversation...');
+            
+            // Stop audio
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            
+            if (source) {
+                source.disconnect();
+                source = null;
+            }
+            
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Close WebSocket
+            if (ws) {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'stop' }));
+                }
+                ws.close();
+                ws = null;
+            }
+            
+            // Clear audio queue
+            audioQueue = [];
+            isPlaying = false;
+            
+            // Update UI
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            updateStatus('connected', 'Disconnected');
+        }
+        
+        function toggleDebug() {
+            const debug = document.getElementById('debug');
+            debug.classList.toggle('show');
+        }
+        
+        // Send periodic pings to keep connection alive
+        setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'ping' }));
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

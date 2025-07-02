@@ -1,0 +1,14 @@
+test_name,latency_ms,success
+Simple Search - Step 1,2788.6929512023926,True
+Brand Search - Step 1,2191.842794418335,True
+Add to Cart - Step 1,2249.5360374450684,True
+Add to Cart - Step 2,120.43499946594238,True
+Cart Management - Step 1,112.63084411621094,True
+Cart Management - Step 2,2270.231008529663,True
+Cart Management - Step 3,117.25783348083496,True
+Reorder Flow - Step 1,99.27010536193848,True
+Reorder Flow - Step 2,118.67189407348633,True
+Complex Shopping - Step 1,2302.065134048462,True
+Complex Shopping - Step 2,2175.6129264831543,True
+Complex Shopping - Step 3,114.83120918273926,True
+Complex Shopping - Step 4,98.69790077209473,True

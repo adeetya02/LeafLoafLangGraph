@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Voice Continuous Streaming</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            border: none;
+            transition: all 0.2s;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        #startBtn { 
+            background: #27ae60; 
+            color: white;
+        }
+        #startBtn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #stopBtn { 
+            background: #e74c3c; 
+            color: white;
+        }
+        #stopBtn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #95a5a6;
+            animation: pulse 2s infinite;
+        }
+        .status-indicator.connected {
+            background: #27ae60;
+        }
+        .status-indicator.speaking {
+            background: #3498db;
+            animation: pulse 0.5s infinite;
+        }
+        .status-indicator.error {
+            background: #e74c3c;
+            animation: none;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .status-text {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .messages {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+        }
+        .message {
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 6px;
+            background: white;
+            border-left: 3px solid #3498db;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .message.final {
+            border-left-color: #27ae60;
+            background: #f0fff4;
+            font-weight: 500;
+        }
+        .message.error {
+            border-left-color: #e74c3c;
+            background: #fff5f5;
+            color: #c0392b;
+        }
+        .message.activity {
+            border-left-color: #f39c12;
+            background: #fffcf0;
+            font-style: italic;
+        }
+        .message.system {
+            border-left-color: #95a5a6;
+            background: #f5f6fa;
+            color: #7f8c8d;
+        }
+        .timestamp {
+            font-size: 11px;
+            color: #95a5a6;
+            margin-right: 8px;
+        }
+        .metadata {
+            font-size: 11px;
+            color: #7f8c8d;
+            margin-left: 8px;
+        }
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Google Voice Continuous Streaming</h1>
+        <p class="subtitle">Production-ready continuous speech recognition</p>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startVoice()">Start Streaming</button>
+            <button id="stopBtn" onclick="stopVoice()" disabled>Stop Streaming</button>
+            <button onclick="clearMessages()">Clear Messages</button>
+        </div>
+        
+        <div class="status-container">
+            <div id="statusIndicator" class="status-indicator"></div>
+            <div id="statusText" class="status-text">Ready to start...</div>
+        </div>
+        
+        <div id="messages" class="messages"></div>
+        
+        <div class="info-box">
+            💡 This implementation features:
+            <ul style="margin: 5px 0;">
+                <li>Continuous streaming (no timeouts)</li>
+                <li>Multi-language support (English, Spanish, Hindi, Chinese, Korean)</li>
+                <li>Voice activity detection</li>
+                <li>Thread-safe message handling</li>
+                <li>Proper error recovery</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        let websocket = null;
+        let mediaStream = null;
+        let audioContext = null;
+        let processor = null;
+        let isRecording = false;
+        
+        function updateStatus(message, type = 'normal') {
+            const statusText = document.getElementById('statusText');
+            const statusIndicator = document.getElementById('statusIndicator');
+            
+            statusText.textContent = message;
+            
+            // Update indicator class
+            statusIndicator.className = 'status-indicator';
+            if (type === 'connected') statusIndicator.classList.add('connected');
+            else if (type === 'speaking') statusIndicator.classList.add('speaking');
+            else if (type === 'error') statusIndicator.classList.add('error');
+        }
+        
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', { 
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                fractionalSecondDigits: 3
+            });
+        }
+        
+        function addMessage(content, type = 'interim') {
+            const messages = document.getElementById('messages');
+            const div = document.createElement('div');
+            div.className = `message ${type}`;
+            
+            // Add timestamp
+            const timestamp = content.timestamp || new Date().toISOString();
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'timestamp';
+            timeSpan.textContent = formatTime(timestamp);
+            div.appendChild(timeSpan);
+            
+            // Add main content
+            const textSpan = document.createElement('span');
+            textSpan.textContent = content.text || content.message || JSON.stringify(content);
+            div.appendChild(textSpan);
+            
+            // Add metadata if available
+            if (content.metadata) {
+                const metaSpan = document.createElement('span');
+                metaSpan.className = 'metadata';
+                metaSpan.textContent = `[${content.metadata.language_code || 'en-US'}]`;
+                if (content.metadata.confidence) {
+                    metaSpan.textContent += ` ${(content.metadata.confidence * 100).toFixed(1)}%`;
+                }
+                div.appendChild(metaSpan);
+            }
+            
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        function clearMessages() {
+            document.getElementById('messages').innerHTML = '';
+        }
+        
+        async function startVoice() {
+            try {
+                // Request microphone access
+                updateStatus('Requesting microphone access...');
+                mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                // Create audio context
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                // Connect to WebSocket
+                updateStatus('Connecting to server...');
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/api/v1/google-streaming/ws`;
+                
+                websocket = new WebSocket(wsUrl);
+                
+                websocket.onopen = () => {
+                    updateStatus('Connected! Speak continuously...', 'connected');
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                    
+                    // Start audio streaming
+                    startAudioStreaming();
+                };
+                
+                websocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    console.log('Message:', data);
+                    
+                    switch (data.type) {
+                        case 'connected':
+                            addMessage(data, 'system');
+                            break;
+                        case 'transcript':
+                            addMessage(data, data.is_final ? 'final' : 'interim');
+                            break;
+                        case 'speech_activity':
+                            addMessage(data, 'activity');
+                            if (data.activity === 'started') {
+                                updateStatus('Speaking...', 'speaking');
+                            } else {
+                                updateStatus('Listening...', 'connected');
+                            }
+                            break;
+                        case 'error':
+                            addMessage(data, 'error');
+                            updateStatus('Error occurred', 'error');
+                            break;
+                        default:
+                            addMessage(data, 'system');
+                    }
+                };
+                
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    updateStatus('Connection error', 'error');
+                    addMessage({ message: 'WebSocket error occurred' }, 'error');
+                };
+                
+                websocket.onclose = () => {
+                    updateStatus('Disconnected');
+                    stopVoice();
+                };
+                
+            } catch (error) {
+                console.error('Error:', error);
+                updateStatus(`Error: ${error.message}`, 'error');
+                addMessage({ message: error.message }, 'error');
+            }
+        }
+        
+        function startAudioStreaming() {
+            const source = audioContext.createMediaStreamSource(mediaStream);
+            processor = audioContext.createScriptProcessor(2048, 1, 1);
+            
+            processor.onaudioprocess = (event) => {
+                if (!isRecording || !websocket || websocket.readyState !== WebSocket.OPEN) return;
+                
+                const inputData = event.inputBuffer.getChannelData(0);
+                
+                // Convert float32 to int16
+                const output = new Int16Array(inputData.length);
+                for (let i = 0; i < inputData.length; i++) {
+                    const s = Math.max(-1, Math.min(1, inputData[i]));
+                    output[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                }
+                
+                // Send audio data
+                websocket.send(output.buffer);
+            };
+            
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            isRecording = true;
+            
+            console.log('Audio streaming started');
+        }
+        
+        function stopVoice() {
+            isRecording = false;
+            
+            // Stop audio processing
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            
+            // Stop media stream
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+            }
+            
+            // Close audio context
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            // Close WebSocket
+            if (websocket && websocket.readyState === WebSocket.OPEN) {
+                websocket.close();
+            }
+            websocket = null;
+            
+            // Update UI
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            updateStatus('Stopped');
+            
+            addMessage({ message: 'Streaming session ended' }, 'system');
+        }
+        
+        // Auto-stop on page unload
+        window.addEventListener('beforeunload', () => {
+            stopVoice();
+        });
+    </script>
+</body>
+</html>

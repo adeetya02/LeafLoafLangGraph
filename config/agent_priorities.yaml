@@ -1,0 +1,30 @@
+# Agent Priority Configuration
+version: "1.0"
+environment: "development"
+
+# Search Strategy Configuration
+search_strategy:
+  # For now, using static configuration
+  # Will add dynamic alpha calculation later
+  default_strategy: "hybrid"
+  default_alpha: 0.7
+
+# Agent Configuration
+agents:
+  supervisor:
+    timeout_ms: 50
+    enabled: true
+    
+  product_search:
+    timeout_ms: 150
+    max_results: 20
+    enabled: true
+    
+  response_compiler:
+    timeout_ms: 30
+    enabled: true
+
+# TODO: Alpha calculator configuration
+# alpha_calculator:
+#   timeout_ms: 50
+#   enabled: true

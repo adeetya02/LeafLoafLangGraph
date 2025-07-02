@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .assistant-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .assistant-avatar.listening {
+            animation: pulse 2s infinite;
+        }
+        
+        .assistant-avatar.speaking {
+            animation: speak 0.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+        
+        @keyframes speak {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+        
+        .assistant-avatar::before {
+            content: "🥬";
+            font-size: 60px;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .status.connected {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status.listening {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        
+        .status.speaking {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .status.processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .conversation {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.assistant {
+            text-align: left;
+        }
+        
+        .message-bubble {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 20px;
+            max-width: 70%;
+        }
+        
+        .user .message-bubble {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .assistant .message-bubble {
+            background-color: #e9ecef;
+            color: #212529;
+        }
+        
+        .message-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .live-transcript {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 50px;
+            font-style: italic;
+            color: #6c757d;
+        }
+        
+        .products {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .products.show {
+            display: block;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .product-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #28a745;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .product-unit {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3);
+        }
+        
+        .btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn.stop {
+            background-color: #dc3545;
+        }
+        
+        .btn.stop:hover {
+            background-color: #c82333;
+        }
+        
+        .debug {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .debug.show {
+            display: block;
+        }
+        
+        .debug-toggle {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .debug-toggle button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🥬 LeafLoaf Voice Assistant</h1>
+            <p>Your personal grocery shopping companion</p>
+        </div>
+        
+        <div class="assistant-avatar" id="avatar"></div>
+        
+        <div id="status" class="status">
+            Ready to connect
+        </div>
+        
+        <div class="live-transcript" id="liveTranscript">
+            Click "Start Conversation" to begin
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+        
+        <div class="products" id="products">
+            <h3>Search Results</h3>
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="startBtn" onclick="startConversation()">
+                Start Conversation
+            </button>
+            <button class="btn stop" id="stopBtn" onclick="stopConversation()" disabled>
+                End Conversation
+            </button>
+        </div>
+        
+        <div class="debug-toggle">
+            <button onclick="toggleDebug()">Toggle Debug Console</button>
+        </div>
+        
+        <div class="debug" id="debug"></div>
+    </div>
+
+    <script>
+        let ws = null;
+        let audioContext = null;
+        let processor = null;
+        let source = null;
+        let stream = null;
+        let isConnected = false;
+        
+        // Audio playback
+        let audioQueue = [];
+        let isPlaying = false;
+        
+        function log(message) {
+            const debug = document.getElementById('debug');
+            const time = new Date().toLocaleTimeString();
+            debug.innerHTML = `${time}: ${message}<br>` + debug.innerHTML;
+            console.log(`${time}: ${message}`);
+        }
+        
+        function updateStatus(status, message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = message;
+            
+            // Update avatar animation
+            const avatar = document.getElementById('avatar');
+            avatar.className = 'assistant-avatar';
+            if (status === 'listening') {
+                avatar.classList.add('listening');
+            } else if (status === 'speaking') {
+                avatar.classList.add('speaking');
+            }
+        }
+        
+        function addMessage(role, text) {
+            const conversation = document.getElementById('conversation');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = role === 'user' ? 'You' : 'LeafLoaf';
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = text;
+            
+            messageDiv.appendChild(label);
+            messageDiv.appendChild(bubble);
+            conversation.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        async function startConversation() {
+            try {
+                log('Starting conversation...');
+                
+                // Get microphone access
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                log('Got microphone access');
+                
+                // Create WebSocket connection with current host
+                const wsUrl = `ws://${window.location.host}/api/v1/voice-conv/stream`;
+                log(`Connecting to WebSocket: ${wsUrl}`);
+                ws = new WebSocket(wsUrl);
+                
+                ws.binaryType = 'arraybuffer';
+                
+                ws.onopen = () => {
+                    log('WebSocket connected');
+                    isConnected = true;
+                    updateStatus('connected', 'Connected - Initializing...');
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                    
+                    // Start audio processing
+                    startAudioCapture();
+                };
+                
+                ws.onmessage = async (event) => {
+                    const data = JSON.parse(event.data);
+                    log(`Received: ${data.type}`);
+                    
+                    switch(data.type) {
+                        case 'stt_ready':
+                            updateStatus('listening', 'Listening...');
+                            break;
+                            
+                        case 'user_speaking':
+                            if (data.status === 'started') {
+                                updateStatus('listening', 'Listening to you...');
+                            }
+                            break;
+                            
+                        case 'transcript':
+                            document.getElementById('liveTranscript').textContent = data.text;
+                            if (data.is_final) {
+                                addMessage('user', data.text);
+                                
+                                // Display Audio Intelligence
+                                if (data.audio_intelligence) {
+                                    const ai = data.audio_intelligence;
+                                    log(`Sentiment: ${ai.sentiment} (${ai.sentiment_score})`);
+                                    if (ai.intents && ai.intents.length > 0) {
+                                        log(`Intents: ${ai.intents.map(i => i.intent).join(', ')}`);
+                                    }
+                                    if (ai.topics && ai.topics.length > 0) {
+                                        log(`Topics: ${ai.topics.map(t => t.topic).join(', ')}`);
+                                    }
+                                    if (ai.entities && ai.entities.length > 0) {
+                                        log(`Entities: ${ai.entities.map(e => e.entity).join(', ')}`);
+                                    }
+                                }
+                            }
+                            break;
+                            
+                        case 'processing':
+                            if (data.status === 'started') {
+                                updateStatus('processing', 'Thinking...');
+                                document.getElementById('liveTranscript').textContent = '';
+                            }
+                            break;
+                            
+                        case 'assistant_response':
+                            addMessage('assistant', data.text);
+                            updateStatus('speaking', 'Speaking...');
+                            break;
+                            
+                        case 'audio_chunk':
+                            // Decode base64 audio and queue for playback
+                            const audioData = base64ToArrayBuffer(data.data);
+                            if (data.encoding === 'linear16') {
+                                // Convert linear16 to WAV for browser playback
+                                const wavData = addWavHeader(audioData, data.sample_rate || 16000, 16, 1);
+                                queueAudio(wavData);
+                            } else {
+                                queueAudio(audioData);
+                            }
+                            break;
+                            
+                        case 'audio_complete':
+                            // All audio received
+                            log('Audio generation complete');
+                            break;
+                            
+                        case 'products':
+                            displayProducts(data.data);
+                            break;
+                            
+                        case 'error':
+                        case 'stt_error':
+                        case 'tts_error':
+                            log(`Error: ${data.error || data.message}`);
+                            updateStatus('error', 'Error occurred');
+                            break;
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    log(`WebSocket error: ${error}`);
+                    updateStatus('error', 'Connection error');
+                };
+                
+                ws.onclose = () => {
+                    log('WebSocket closed');
+                    isConnected = false;
+                    updateStatus('connected', 'Disconnected');
+                    stopConversation();
+                };
+                
+            } catch (error) {
+                log(`Error: ${error.message}`);
+                updateStatus('error', 'Failed to start');
+            }
+        }
+        
+        function startAudioCapture() {
+            // Create audio context at 16kHz
+            audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                sampleRate: 16000
+            });
+            
+            source = audioContext.createMediaStreamSource(stream);
+            processor = audioContext.createScriptProcessor(2048, 1, 1);  // Reduced from 4096 for lower latency
+            
+            processor.onaudioprocess = (e) => {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    const audioData = convertFloat32ToInt16(inputData);
+                    ws.send(audioData);
+                }
+            };
+            
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            log('Audio capture started');
+        }
+        
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const result = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                result[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            
+            return result.buffer;
+        }
+        
+        function base64ToArrayBuffer(base64) {
+            const binaryString = atob(base64);
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+        
+        function queueAudio(audioData) {
+            audioQueue.push(audioData);
+            log(`Queued audio chunk: ${audioData.byteLength} bytes, queue size: ${audioQueue.length}`);
+            if (!isPlaying) {
+                playNextAudio();
+            }
+        }
+        
+        async function playNextAudio() {
+            if (audioQueue.length === 0) {
+                isPlaying = false;
+                updateStatus('listening', 'Listening...');
+                return;
+            }
+            
+            isPlaying = true;
+            const audioData = audioQueue.shift();
+            
+            try {
+                // Create audio context if needed
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                log(`Playing audio chunk: ${audioData.byteLength} bytes`);
+                
+                // Decode audio data (WAV format)
+                const audioBuffer = await audioContext.decodeAudioData(audioData);
+                log(`Decoded audio: ${audioBuffer.duration}s, ${audioBuffer.sampleRate}Hz`);
+                
+                // Create and play source
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                
+                source.onended = () => {
+                    log('Audio chunk finished playing');
+                    playNextAudio();
+                };
+                
+                source.start();
+                
+            } catch (error) {
+                log(`Audio playback error: ${error.message || error}`);
+                // Try to play next audio
+                playNextAudio();
+            }
+        }
+        
+        function addWavHeader(pcmData, sampleRate, bitDepth, channels) {
+            const dataLength = pcmData.byteLength;
+            const buffer = new ArrayBuffer(44 + dataLength);
+            const view = new DataView(buffer);
+            
+            // "RIFF" chunk descriptor
+            const encoder = new TextEncoder();
+            view.setUint8(0, encoder.encode('R')[0]);
+            view.setUint8(1, encoder.encode('I')[0]);
+            view.setUint8(2, encoder.encode('F')[0]);
+            view.setUint8(3, encoder.encode('F')[0]);
+            view.setUint32(4, 36 + dataLength, true);
+            view.setUint8(8, encoder.encode('W')[0]);
+            view.setUint8(9, encoder.encode('A')[0]);
+            view.setUint8(10, encoder.encode('V')[0]);
+            view.setUint8(11, encoder.encode('E')[0]);
+            
+            // "fmt " sub-chunk
+            view.setUint8(12, encoder.encode('f')[0]);
+            view.setUint8(13, encoder.encode('m')[0]);
+            view.setUint8(14, encoder.encode('t')[0]);
+            view.setUint8(15, encoder.encode(' ')[0]);
+            view.setUint32(16, 16, true); // Subchunk1Size
+            view.setUint16(20, 1, true); // AudioFormat (PCM)
+            view.setUint16(22, channels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, sampleRate * channels * bitDepth / 8, true); // ByteRate
+            view.setUint16(32, channels * bitDepth / 8, true); // BlockAlign
+            view.setUint16(34, bitDepth, true);
+            
+            // "data" sub-chunk
+            view.setUint8(36, encoder.encode('d')[0]);
+            view.setUint8(37, encoder.encode('a')[0]);
+            view.setUint8(38, encoder.encode('t')[0]);
+            view.setUint8(39, encoder.encode('a')[0]);
+            view.setUint32(40, dataLength, true);
+            
+            // Copy PCM data
+            const pcmArray = new Uint8Array(pcmData);
+            const wavArray = new Uint8Array(buffer);
+            wavArray.set(pcmArray, 44);
+            
+            return buffer;
+        }
+        
+        function displayProducts(products) {
+            const productsDiv = document.getElementById('products');
+            const grid = document.getElementById('productGrid');
+            
+            if (!products || products.length === 0) {
+                productsDiv.classList.remove('show');
+                return;
+            }
+            
+            productsDiv.classList.add('show');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div class="product-unit">${product.unit}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+        
+        function stopConversation() {
+            log('Stopping conversation...');
+            
+            // Stop audio
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            
+            if (source) {
+                source.disconnect();
+                source = null;
+            }
+            
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Close WebSocket
+            if (ws) {
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ type: 'stop' }));
+                }
+                ws.close();
+                ws = null;
+            }
+            
+            // Clear audio queue
+            audioQueue = [];
+            isPlaying = false;
+            
+            // Update UI
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            updateStatus('connected', 'Disconnected');
+            document.getElementById('liveTranscript').textContent = 'Click "Start Conversation" to begin';
+        }
+        
+        function toggleDebug() {
+            const debug = document.getElementById('debug');
+            debug.classList.toggle('show');
+        }
+        
+        // Send periodic pings to keep connection alive
+        setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'ping' }));
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

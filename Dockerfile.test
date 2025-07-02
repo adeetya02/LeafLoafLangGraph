@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install minimal dependencies
+RUN pip install fastapi uvicorn
+
+# Copy test script
+COPY run_test.py .
+
+# Set environment variables
+ENV PYTHONPATH=/app
+
+# Expose port (Cloud Run will override with PORT env var)
+EXPOSE 8080
+
+# Run the application
+CMD ["python", "run_test.py"]

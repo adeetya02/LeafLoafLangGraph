@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transformers-inference
+  namespace: leafloaf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transformers-inference
+  template:
+    metadata:
+      labels:
+        app: transformers-inference
+    spec:
+      containers:
+      - name: transformers-inference
+        image: semitechnologies/transformers-inference:sentence-transformers-multi-qa-MiniLM-L6-cos-v1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ENABLE_CUDA
+          value: "0"  # Set to "1" if using GPU nodes
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "2"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transformers-inference
+  namespace: leafloaf
+spec:
+  selector:
+    app: transformers-inference
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+  type: ClusterIP

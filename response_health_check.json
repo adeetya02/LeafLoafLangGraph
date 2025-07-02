@@ -1,0 +1,8 @@
+{
+  "status": "healthy",
+  "service": "leafloaf",
+  "version": "1.0.0",
+  "weaviate": "connected",
+  "environment": "production",
+  "timestamp": "2025-06-26T01:04:31.318574"
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaf & Loaf Voice Shopping - Deepgram Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #636e72;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .status {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #2e7d32;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            border-left-color: #f44336;
+            color: #c62828;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .mic-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #4caf50;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(76, 175, 80, 0.4);
+        }
+        
+        .mic-button.active {
+            background: #f44336;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 4px 20px rgba(244, 67, 54, 0.3);
+        }
+        
+        .mic-button svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .conversation {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #e3f2fd;
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .message.assistant {
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .message-label {
+            font-size: 12px;
+            color: #757575;
+            margin-bottom: 5px;
+        }
+        
+        .insights {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .insight-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #e8eaf6;
+            color: #5c6bc0;
+        }
+        
+        .insight-tag.sentiment-positive { background: #c8e6c9; color: #388e3c; }
+        .insight-tag.sentiment-negative { background: #ffcdd2; color: #d32f2f; }
+        .insight-tag.sentiment-neutral { background: #ffe0b2; color: #f57c00; }
+        
+        .info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #616161;
+        }
+        
+        .info h3 {
+            color: #424242;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .info li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .info li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Leaf & Loaf Voice Shopping</h1>
+        <p class="subtitle">Powered by Deepgram Audio Intelligence</p>
+        
+        <div id="status" class="status">
+            Click the microphone to start shopping by voice
+        </div>
+        
+        <div class="controls">
+            <button id="micButton" class="mic-button">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+        
+        <div class="info">
+            <h3>Voice Features</h3>
+            <ul>
+                <li>Natural conversation flow</li>
+                <li>Sentiment & intent detection</li>
+                <li>Interruption handling</li>
+                <li>Multi-language support</li>
+                <li>Real-time transcription</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        let ws = null;
+        let mediaRecorder = null;
+        let audioContext = null;
+        let isRecording = false;
+        
+        const micButton = document.getElementById('micButton');
+        const statusDiv = document.getElementById('status');
+        const conversationDiv = document.getElementById('conversation');
+        
+        // Initialize audio context
+        async function initAudio() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                await navigator.mediaDevices.getUserMedia({ audio: true });
+                updateStatus('Ready to start voice shopping', false);
+            } catch (err) {
+                updateStatus('Microphone access denied. Please allow microphone access.', true);
+                console.error('Audio init error:', err);
+            }
+        }
+        
+        // Update status display
+        function updateStatus(message, isError = false) {
+            statusDiv.textContent = message;
+            statusDiv.className = isError ? 'status error' : 'status';
+        }
+        
+        // Add message to conversation
+        function addMessage(text, type, insights = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const labelDiv = document.createElement('div');
+            labelDiv.className = 'message-label';
+            labelDiv.textContent = type === 'user' ? 'You' : 'Assistant';
+            
+            const textDiv = document.createElement('div');
+            textDiv.textContent = text;
+            
+            messageDiv.appendChild(labelDiv);
+            messageDiv.appendChild(textDiv);
+            
+            // Add insights if available
+            if (insights) {
+                const insightsDiv = document.createElement('div');
+                insightsDiv.className = 'insights';
+                
+                if (insights.sentiment) {
+                    const sentimentTag = document.createElement('span');
+                    sentimentTag.className = `insight-tag sentiment-${insights.sentiment}`;
+                    sentimentTag.textContent = insights.sentiment;
+                    insightsDiv.appendChild(sentimentTag);
+                }
+                
+                if (insights.intent) {
+                    const intentTag = document.createElement('span');
+                    intentTag.className = 'insight-tag';
+                    intentTag.textContent = insights.intent;
+                    insightsDiv.appendChild(intentTag);
+                }
+                
+                messageDiv.appendChild(insightsDiv);
+            }
+            
+            conversationDiv.appendChild(messageDiv);
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        }
+        
+        // Connect to WebSocket
+        function connectWebSocket() {
+            const wsUrl = `ws://localhost:8000/api/v1/voice-stream/stream`;
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                updateStatus('Connected. Start speaking...', false);
+                startRecording();
+            };
+            
+            ws.onmessage = async (event) => {
+                if (event.data instanceof Blob) {
+                    // Audio data - play it
+                    playAudio(event.data);
+                } else {
+                    // JSON data
+                    const data = JSON.parse(event.data);
+                    
+                    if (data.type === 'transcript') {
+                        // Update interim transcript
+                        if (!data.is_final) {
+                            updateStatus(`Listening: ${data.text}`, false);
+                        }
+                    } else if (data.user_said && data.transcript) {
+                        // Final turn processed
+                        addMessage(data.user_said, 'user');
+                        addMessage(data.transcript, 'assistant');
+                    } else if (data.type === 'error') {
+                        updateStatus(data.message, true);
+                    }
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateStatus('Connection error. Please try again.', true);
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket closed');
+                stopRecording();
+                updateStatus('Disconnected. Click to start again.', false);
+            };
+        }
+        
+        // Play audio response
+        async function playAudio(audioBlob) {
+            try {
+                const arrayBuffer = await audioBlob.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+            } catch (err) {
+                console.error('Audio playback error:', err);
+            }
+        }
+        
+        // Start recording
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0 && ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(event.data);
+                    }
+                };
+                
+                mediaRecorder.start(100); // Send chunks every 100ms
+                isRecording = true;
+                micButton.classList.add('active');
+            } catch (err) {
+                console.error('Recording error:', err);
+                updateStatus('Failed to start recording', true);
+            }
+        }
+        
+        // Stop recording
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                micButton.classList.remove('active');
+            }
+        }
+        
+        // Toggle recording
+        micButton.addEventListener('click', () => {
+            if (!isRecording) {
+                connectWebSocket();
+            } else {
+                if (ws) {
+                    ws.close();
+                }
+                stopRecording();
+            }
+        });
+        
+        // Initialize on load
+        window.addEventListener('load', initAudio);
+    </script>
+</body>
+</html>

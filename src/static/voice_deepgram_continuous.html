@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - TRUE Continuous Voice (Deepgram)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            border-radius: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ccc;
+            transition: all 0.3s ease;
+        }
+        
+        .status-dot.listening {
+            background: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        .conversation {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-bottom: 30px;
+        }
+        
+        .transcript-line {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-speech {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .assistant-response {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .interim {
+            opacity: 0.6;
+            font-style: italic;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .product-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.2s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #4caf50;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .controls {
+            text-align: center;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+        }
+        
+        .btn-stop {
+            background: linear-gradient(135deg, #f44336 0%, #c62828 100%);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🥬</div>
+            <h1>LeafLoaf Continuous Voice</h1>
+            <div class="status-indicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Ready to start</span>
+            </div>
+        </div>
+        
+        <div class="conversation" id="conversation">
+            <div class="transcript-line assistant-response">
+                Welcome! Click "Start Listening" and just talk naturally. I'll listen continuously and help you find products.
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-start" id="startBtn" onclick="startContinuousListening()">
+                🎤 Start Listening
+            </button>
+            <button class="btn btn-stop" id="stopBtn" onclick="stopListening()" disabled>
+                ⏹️ Stop Listening
+            </button>
+        </div>
+        
+        <div class="info">
+            💡 This uses Deepgram's continuous transcription. Just speak naturally - no need to click for each sentence!
+        </div>
+        
+        <div class="error" id="errorMsg"></div>
+    </div>
+    
+    <script>
+        // Configuration
+        const DEEPGRAM_API_KEY = '36a821d351939023aabad9beeaa68b391caa124a';
+        const API_BASE = window.location.origin;
+        
+        // State
+        let isListening = false;
+        let mediaRecorder = null;
+        let audioStream = null;
+        let websocket = null;
+        let currentTranscript = '';
+        let silenceTimer = null;
+        let lastProcessedTranscript = '';
+        
+        // DOM elements
+        const conversation = document.getElementById('conversation');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const errorMsg = document.getElementById('errorMsg');
+        
+        async function startContinuousListening() {
+            try {
+                // Get microphone access
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                // Connect to Deepgram WebSocket
+                const wsUrl = `wss://api.deepgram.com/v1/listen?model=nova-2&language=en-US&punctuate=true&smart_format=true&interim_results=true&utterance_end_ms=1500&vad_events=true`;
+                
+                websocket = new WebSocket(wsUrl, {
+                    headers: {
+                        'Authorization': `Token ${DEEPGRAM_API_KEY}`
+                    }
+                });
+                
+                websocket.onopen = () => {
+                    console.log('Connected to Deepgram');
+                    isListening = true;
+                    statusDot.classList.add('listening');
+                    statusText.textContent = 'Listening... Just speak naturally!';
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    
+                    // Start sending audio
+                    startAudioStreaming();
+                };
+                
+                websocket.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    handleDeepgramMessage(data);
+                };
+                
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    showError('Connection error. Please try again.');
+                    stopListening();
+                };
+                
+                websocket.onclose = () => {
+                    console.log('Disconnected from Deepgram');
+                    if (isListening) {
+                        stopListening();
+                    }
+                };
+                
+            } catch (error) {
+                console.error('Error starting:', error);
+                showError('Failed to access microphone. Please check permissions.');
+            }
+        }
+        
+        function startAudioStreaming() {
+            const audioContext = new AudioContext();
+            const source = audioContext.createMediaStreamSource(audioStream);
+            const processor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            processor.onaudioprocess = (e) => {
+                if (!isListening || !websocket || websocket.readyState !== WebSocket.OPEN) return;
+                
+                const inputData = e.inputBuffer.getChannelData(0);
+                const pcm16 = convertFloat32ToInt16(inputData);
+                websocket.send(pcm16);
+            };
+        }
+        
+        function convertFloat32ToInt16(buffer) {
+            const l = buffer.length;
+            const result = new Int16Array(l);
+            
+            for (let i = 0; i < l; i++) {
+                const s = Math.max(-1, Math.min(1, buffer[i]));
+                result[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+            }
+            
+            return result.buffer;
+        }
+        
+        function handleDeepgramMessage(data) {
+            if (data.type === 'Results') {
+                const transcript = data.channel?.alternatives?.[0]?.transcript || '';
+                const isFinal = data.is_final;
+                const speechFinal = data.speech_final;
+                
+                if (transcript) {
+                    // Update current transcript
+                    if (isFinal) {
+                        currentTranscript += transcript + ' ';
+                        updateTranscriptDisplay(currentTranscript, false);
+                    } else {
+                        updateTranscriptDisplay(currentTranscript + transcript, true);
+                    }
+                    
+                    // Process when speech ends
+                    if (speechFinal && currentTranscript.trim() && currentTranscript.trim() !== lastProcessedTranscript) {
+                        processUserQuery(currentTranscript.trim());
+                        lastProcessedTranscript = currentTranscript.trim();
+                        currentTranscript = '';
+                    }
+                    
+                    // Reset silence timer
+                    clearTimeout(silenceTimer);
+                    silenceTimer = setTimeout(() => {
+                        if (currentTranscript.trim() && currentTranscript.trim() !== lastProcessedTranscript) {
+                            processUserQuery(currentTranscript.trim());
+                            lastProcessedTranscript = currentTranscript.trim();
+                            currentTranscript = '';
+                        }
+                    }, 2000);
+                }
+            }
+        }
+        
+        function updateTranscriptDisplay(text, isInterim) {
+            let lastUserLine = conversation.querySelector('.user-speech:last-child');
+            
+            if (!lastUserLine || lastUserLine.dataset.processed === 'true') {
+                lastUserLine = document.createElement('div');
+                lastUserLine.className = 'transcript-line user-speech';
+                conversation.appendChild(lastUserLine);
+            }
+            
+            lastUserLine.textContent = text;
+            lastUserLine.classList.toggle('interim', isInterim);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        async function processUserQuery(query) {
+            // Mark current transcript as processed
+            const lastUserLine = conversation.querySelector('.user-speech:last-child');
+            if (lastUserLine) {
+                lastUserLine.dataset.processed = 'true';
+                lastUserLine.classList.remove('interim');
+            }
+            
+            // Add processing indicator
+            const processingDiv = document.createElement('div');
+            processingDiv.className = 'transcript-line assistant-response interim';
+            processingDiv.textContent = 'Searching for products...';
+            conversation.appendChild(processingDiv);
+            
+            try {
+                // Search for products
+                const response = await fetch(`${API_BASE}/api/v1/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: query,
+                        user_id: 'voice_continuous_' + Date.now(),
+                        limit: 6
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove processing indicator
+                processingDiv.remove();
+                
+                // Add response
+                const responseDiv = document.createElement('div');
+                responseDiv.className = 'transcript-line assistant-response';
+                
+                if (data.products && data.products.length > 0) {
+                    responseDiv.innerHTML = `Found ${data.products.length} products for "${query}":`;
+                    
+                    const productsGrid = document.createElement('div');
+                    productsGrid.className = 'products';
+                    
+                    data.products.slice(0, 6).forEach(product => {
+                        const card = document.createElement('div');
+                        card.className = 'product-card';
+                        card.innerHTML = `
+                            <div class="product-name">${product.name || product.product_name || 'Unknown'}</div>
+                            <div class="product-price">$${product.price || product.unit_price || '0'}</div>
+                        `;
+                        productsGrid.appendChild(card);
+                    });
+                    
+                    responseDiv.appendChild(productsGrid);
+                } else {
+                    responseDiv.textContent = `No products found for "${query}". Try describing it differently!`;
+                }
+                
+                conversation.appendChild(responseDiv);
+                conversation.scrollTop = conversation.scrollHeight;
+                
+            } catch (error) {
+                console.error('Search error:', error);
+                processingDiv.textContent = 'Sorry, there was an error searching for products.';
+                processingDiv.classList.remove('interim');
+            }
+        }
+        
+        function stopListening() {
+            isListening = false;
+            
+            // Close WebSocket
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            // Stop audio
+            if (audioStream) {
+                audioStream.getTracks().forEach(track => track.stop());
+                audioStream = null;
+            }
+            
+            // Update UI
+            statusDot.classList.remove('listening');
+            statusText.textContent = 'Stopped';
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            // Clear timers
+            clearTimeout(silenceTimer);
+        }
+        
+        function showError(message) {
+            errorMsg.textContent = message;
+            errorMsg.style.display = 'block';
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

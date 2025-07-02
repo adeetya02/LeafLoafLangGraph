@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Test - Basic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        #micButton {
+            font-size: 60px;
+            background: #4CAF50;
+            border: none;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+        
+        #micButton:hover {
+            background: #45a049;
+            transform: scale(1.1);
+        }
+        
+        #micButton.recording {
+            background: #f44336;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+        
+        #status {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        #transcript {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            min-height: 60px;
+            text-align: left;
+        }
+        
+        #response {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            min-height: 60px;
+            text-align: left;
+        }
+        
+        #debug {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .product {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        
+        .product-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .product-price {
+            color: #4CAF50;
+            font-size: 18px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Voice Test - Basic</h1>
+        
+        <button id="micButton" onclick="toggleRecording()">🎤</button>
+        
+        <div id="status">Click the microphone to start</div>
+        
+        <div id="transcript">
+            <strong>You said:</strong> <span id="speechText">Nothing yet...</span>
+        </div>
+        
+        <div id="response">
+            <strong>Response:</strong> <span id="responseText">Waiting for your input...</span>
+        </div>
+        
+        <div id="products" class="products"></div>
+        
+        <div id="debug">
+            <strong>Debug Info:</strong><br>
+            <span id="debugText">Ready</span>
+        </div>
+    </div>
+    
+    <script>
+        let isRecording = false;
+        let recognition = null;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        
+        // Debug logging
+        function debug(message) {
+            console.log(message);
+            const debugEl = document.getElementById('debugText');
+            const time = new Date().toLocaleTimeString();
+            debugEl.innerHTML = `[${time}] ${message}<br>` + debugEl.innerHTML;
+        }
+        
+        // Initialize speech recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                debug('Speech Recognition API available');
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                
+                recognition.onstart = () => {
+                    debug('Speech recognition started');
+                    document.getElementById('status').textContent = 'Listening...';
+                };
+                
+                recognition.onresult = (event) => {
+                    const last = event.results.length - 1;
+                    const text = event.results[last][0].transcript;
+                    
+                    document.getElementById('speechText').textContent = text;
+                    
+                    if (event.results[last].isFinal) {
+                        debug(`Final transcript: "${text}"`);
+                        processText(text);
+                    }
+                };
+                
+                recognition.onerror = (event) => {
+                    debug(`Speech recognition error: ${event.error}`);
+                    stopRecording();
+                };
+                
+                recognition.onend = () => {
+                    debug('Speech recognition ended');
+                    stopRecording();
+                };
+                
+                return true;
+            } else {
+                debug('Speech Recognition API not available - will use audio recording');
+                return false;
+            }
+        }
+        
+        // Toggle recording
+        function toggleRecording() {
+            debug(`Toggle recording: isRecording=${isRecording}`);
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+        
+        // Start recording
+        function startRecording() {
+            debug('Starting recording...');
+            isRecording = true;
+            document.getElementById('micButton').classList.add('recording');
+            document.getElementById('products').innerHTML = '';
+            
+            if (recognition) {
+                try {
+                    recognition.start();
+                    debug('Speech recognition started successfully');
+                } catch (err) {
+                    debug(`Speech recognition start error: ${err.message}`);
+                    fallbackToAudioRecording();
+                }
+            } else {
+                fallbackToAudioRecording();
+            }
+        }
+        
+        // Stop recording
+        function stopRecording() {
+            debug('Stopping recording...');
+            isRecording = false;
+            document.getElementById('micButton').classList.remove('recording');
+            document.getElementById('status').textContent = 'Processing...';
+            
+            if (recognition) {
+                try {
+                    recognition.stop();
+                } catch (err) {
+                    debug(`Speech recognition stop error: ${err.message}`);
+                }
+            }
+            
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+        }
+        
+        // Fallback to audio recording
+        async function fallbackToAudioRecording() {
+            debug('Using fallback audio recording');
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                debug('Got microphone stream');
+                
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                    debug(`Audio chunk received: ${event.data.size} bytes`);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    debug('MediaRecorder stopped');
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    debug(`Audio blob created: ${audioBlob.size} bytes`);
+                    
+                    // For now, just process a test query
+                    document.getElementById('speechText').textContent = 'Audio recorded (processing not implemented)';
+                    processText('bell peppers'); // Test with a default query
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                debug('MediaRecorder started');
+                document.getElementById('status').textContent = 'Recording... Click again to stop';
+                
+            } catch (err) {
+                debug(`Microphone error: ${err.message}`);
+                document.getElementById('status').textContent = 'Microphone access denied';
+            }
+        }
+        
+        // Process text
+        async function processText(text) {
+            debug(`Processing text: "${text}"`);
+            document.getElementById('status').textContent = 'Processing...';
+            document.getElementById('responseText').textContent = 'Thinking...';
+            
+            try {
+                // Use the conversational endpoint that goes through supervisor
+                const response = await fetch('/api/v1/voice/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: text,
+                        session_id: 'test-session-' + Date.now(),
+                        source: 'voice',
+                        voice_metadata: {
+                            source: 'test_page',
+                            has_context: false
+                        }
+                    })
+                });
+                
+                debug(`Voice API response: ${response.status}`);
+                const data = await response.json();
+                debug(`Voice results: ${JSON.stringify(data).substring(0, 200)}...`);
+                
+                // Handle conversational response
+                if (data.is_general_chat) {
+                    // It's a chat message, not a search
+                    document.getElementById('responseText').textContent = data.text || data.response;
+                    document.getElementById('products').innerHTML = '';
+                    speak(data.text || data.response);
+                } else if (data.products && data.products.length > 0) {
+                    // Product search results
+                    document.getElementById('responseText').textContent = 
+                        data.text || `Found ${data.products.length} products for "${text}"`;
+                    displayProducts(data.products);
+                    speak(data.text || `I found ${data.products.length} products. ${data.products[0].product_name} for $${data.products[0].price.toFixed(2)}`);
+                } else {
+                    // No results or other response
+                    document.getElementById('responseText').textContent = 
+                        data.text || data.message || 'I can help you find groceries. What are you looking for?';
+                    speak(data.text || data.message || 'I can help you find groceries. What are you looking for?');
+                }
+                
+                document.getElementById('status').textContent = 'Ready - Click microphone to continue';
+                
+            } catch (err) {
+                debug(`API error: ${err.message}`);
+                document.getElementById('responseText').textContent = 'Error: ' + err.message;
+                document.getElementById('status').textContent = 'Error - Try again';
+            }
+        }
+        
+        // Display products
+        function displayProducts(products) {
+            const html = products.slice(0, 5).map(p => `
+                <div class="product">
+                    <div class="product-name">${p.product_name}</div>
+                    <div class="product-price">$${p.price.toFixed(2)}</div>
+                    <div style="color: #666; font-size: 14px;">${p.category}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('products').innerHTML = html;
+        }
+        
+        // Text to speech
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                debug(`Speaking: "${text}"`);
+                const utterance = new SpeechSynthesisUtterance(text);
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+        
+        // Initialize on load
+        window.onload = () => {
+            debug('Page loaded, initializing...');
+            const hasSpeechRecognition = initSpeechRecognition();
+            
+            // Check microphone permission
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    debug('Microphone permission granted');
+                    stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(err => {
+                    debug(`Microphone permission denied: ${err.message}`);
+                });
+        };
+    </script>
+</body>
+</html>

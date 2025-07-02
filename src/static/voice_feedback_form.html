@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Demo Feedback - Leaf & Loaf</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #636e72;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2d3436;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .rating {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .rating label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            transition: all 0.3s;
+            margin-bottom: 0;
+        }
+        
+        .rating input[type="radio"] {
+            display: none;
+        }
+        
+        .rating label:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+        
+        .rating input[type="radio"]:checked + label {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .rating .number {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .rating .desc {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Voice Demo Feedback</h1>
+        <p class="subtitle">Thank you for testing Leaf & Loaf voice shopping!</p>
+        
+        <div class="success" id="successMessage">
+            ✅ Thank you! Your feedback has been submitted.
+        </div>
+        
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="testId">Test Session ID</label>
+                <input type="text" id="testId" name="testId" placeholder="Paste your test ID from the demo" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="name">Your Name (Optional)</label>
+                <input type="text" id="name" name="name" placeholder="John Doe">
+            </div>
+            
+            <div class="form-group">
+                <label>Overall Experience</label>
+                <div class="rating">
+                    <input type="radio" id="rating1" name="rating" value="1" required>
+                    <label for="rating1">
+                        <span class="number">1</span>
+                        <span class="desc">Poor</span>
+                    </label>
+                    
+                    <input type="radio" id="rating2" name="rating" value="2">
+                    <label for="rating2">
+                        <span class="number">2</span>
+                        <span class="desc">Fair</span>
+                    </label>
+                    
+                    <input type="radio" id="rating3" name="rating" value="3">
+                    <label for="rating3">
+                        <span class="number">3</span>
+                        <span class="desc">Good</span>
+                    </label>
+                    
+                    <input type="radio" id="rating4" name="rating" value="4">
+                    <label for="rating4">
+                        <span class="number">4</span>
+                        <span class="desc">Great</span>
+                    </label>
+                    
+                    <input type="radio" id="rating5" name="rating" value="5">
+                    <label for="rating5">
+                        <span class="number">5</span>
+                        <span class="desc">Excellent</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>What worked well? (Check all that apply)</label>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="worked_well" value="speech_recognition">
+                        Speech recognition accuracy
+                    </label>
+                    <label>
+                        <input type="checkbox" name="worked_well" value="response_speed">
+                        Response speed
+                    </label>
+                    <label>
+                        <input type="checkbox" name="worked_well" value="voice_quality">
+                        Voice quality
+                    </label>
+                    <label>
+                        <input type="checkbox" name="worked_well" value="product_search">
+                        Finding products
+                    </label>
+                    <label>
+                        <input type="checkbox" name="worked_well" value="natural_conversation">
+                        Natural conversation flow
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>What needs improvement? (Check all that apply)</label>
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" name="needs_improvement" value="speech_recognition">
+                        Speech recognition accuracy
+                    </label>
+                    <label>
+                        <input type="checkbox" name="needs_improvement" value="response_speed">
+                        Response speed
+                    </label>
+                    <label>
+                        <input type="checkbox" name="needs_improvement" value="voice_quality">
+                        Voice quality
+                    </label>
+                    <label>
+                        <input type="checkbox" name="needs_improvement" value="product_search">
+                        Finding products
+                    </label>
+                    <label>
+                        <input type="checkbox" name="needs_improvement" value="understanding">
+                        Understanding my requests
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="easiest">What was the easiest task?</label>
+                <textarea id="easiest" name="easiest" placeholder="e.g., Finding milk products"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="hardest">What was the hardest task?</label>
+                <textarea id="hardest" name="hardest" placeholder="e.g., Adding specific quantities"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="suggestions">Any suggestions or features you'd like?</label>
+                <textarea id="suggestions" name="suggestions" placeholder="Tell us how we can improve..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="would_use">Would you use voice shopping regularly?</label>
+                <select id="would_use" name="would_use" required>
+                    <option value="">Select...</option>
+                    <option value="definitely">Definitely</option>
+                    <option value="probably">Probably</option>
+                    <option value="maybe">Maybe</option>
+                    <option value="probably_not">Probably not</option>
+                    <option value="definitely_not">Definitely not</option>
+                </select>
+            </div>
+            
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+    
+    <script>
+        const form = document.getElementById('feedbackForm');
+        const successMessage = document.getElementById('successMessage');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(form);
+            const feedback = {
+                timestamp: new Date().toISOString(),
+                testId: formData.get('testId'),
+                name: formData.get('name') || 'Anonymous',
+                rating: formData.get('rating'),
+                workedWell: formData.getAll('worked_well'),
+                needsImprovement: formData.getAll('needs_improvement'),
+                easiest: formData.get('easiest'),
+                hardest: formData.get('hardest'),
+                suggestions: formData.get('suggestions'),
+                wouldUse: formData.get('would_use')
+            };
+            
+            // For now, log to console (in production, send to your backend)
+            console.log('Feedback submitted:', feedback);
+            
+            // You can send this to your backend:
+            // await fetch('/api/feedback', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify(feedback)
+            // });
+            
+            // Show success message
+            successMessage.style.display = 'block';
+            form.style.display = 'none';
+            
+            // Store locally for now
+            localStorage.setItem('voice_feedback_' + feedback.testId, JSON.stringify(feedback));
+        });
+        
+        // Pre-fill test ID if provided in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const testId = urlParams.get('testId');
+        if (testId) {
+            document.getElementById('testId').value = testId;
+        }
+    </script>
+</body>
+</html>

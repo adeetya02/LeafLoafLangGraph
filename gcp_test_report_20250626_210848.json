@@ -1,0 +1,104 @@
+{
+  "test_session": "gcp_test_1750986498",
+  "timestamp": "20250626_210848",
+  "gcp_url": "https://leafloaf-32905605817.us-central1.run.app",
+  "summary": {
+    "total_tests": 13,
+    "successful": 13,
+    "average_latency_ms": 1135.3673568138709,
+    "median_latency_ms": 120.43499946594238
+  },
+  "results": [
+    {
+      "test_name": "Simple Search - Step 1",
+      "success": true,
+      "latency_ms": 2788.6929512023926,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:23.563072"
+    },
+    {
+      "test_name": "Brand Search - Step 1",
+      "success": true,
+      "latency_ms": 2191.842794418335,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:27.258654"
+    },
+    {
+      "test_name": "Add to Cart - Step 1",
+      "success": true,
+      "latency_ms": 2249.5360374450684,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:31.012335"
+    },
+    {
+      "test_name": "Add to Cart - Step 2",
+      "success": true,
+      "latency_ms": 120.43499946594238,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:31.635161"
+    },
+    {
+      "test_name": "Cart Management - Step 1",
+      "success": true,
+      "latency_ms": 112.63084411621094,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:33.252712"
+    },
+    {
+      "test_name": "Cart Management - Step 2",
+      "success": true,
+      "latency_ms": 2270.231008529663,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:36.025071"
+    },
+    {
+      "test_name": "Cart Management - Step 3",
+      "success": true,
+      "latency_ms": 117.25783348083496,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:36.644834"
+    },
+    {
+      "test_name": "Reorder Flow - Step 1",
+      "success": true,
+      "latency_ms": 99.27010536193848,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:38.248421"
+    },
+    {
+      "test_name": "Reorder Flow - Step 2",
+      "success": true,
+      "latency_ms": 118.67189407348633,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:38.981704"
+    },
+    {
+      "test_name": "Complex Shopping - Step 1",
+      "success": true,
+      "latency_ms": 2302.065134048462,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:42.788110"
+    },
+    {
+      "test_name": "Complex Shopping - Step 2",
+      "success": true,
+      "latency_ms": 2175.6129264831543,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:45.465624"
+    },
+    {
+      "test_name": "Complex Shopping - Step 3",
+      "success": true,
+      "latency_ms": 114.83120918273926,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:46.082236"
+    },
+    {
+      "test_name": "Complex Shopping - Step 4",
+      "success": true,
+      "latency_ms": 98.69790077209473,
+      "error": null,
+      "timestamp": "2025-06-26T21:08:46.682465"
+    }
+  ]
+}

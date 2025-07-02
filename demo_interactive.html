@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf AI - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .login-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .demo-section {
+            display: none;
+        }
+        
+        .step {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-box input {
+            flex: 1;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .product-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .product-card.selected {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #48bb78;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .product-category {
+            color: #718096;
+            font-size: 0.9em;
+        }
+        
+        .metadata-box {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .metadata-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .cart-section {
+            background: #e6fffa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #b2f5ea;
+        }
+        
+        .cart-total {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #234e52;
+            text-align: right;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #38b2ac;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .comparison-box {
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .first-time {
+            background: #fef5e7;
+            border: 2px solid #f39c12;
+        }
+        
+        .returning {
+            background: #e8f8f5;
+            border: 2px solid #27ae60;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .personalization-badge {
+            background: #48bb78;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .flow-diagram {
+            background: #f7fafc;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .flow-step {
+            display: inline-block;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .flow-arrow {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 20px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .data-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .data-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .data-item {
+            background: #f7fafc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        
+        .success-message {
+            background: #c6f6d5;
+            border: 2px solid #48bb78;
+            color: #22543d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌿 LeafLoaf AI - Interactive Demo</h1>
+            <p>Experience the complete personalization pipeline: Gemma → Weaviate → Graphiti → Spanner → BigQuery</p>
+        </div>
+        
+        <!-- Login Section -->
+        <div class="login-section" id="loginSection">
+            <h2>Login to Start Demo</h2>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" value="a@a.com" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" value="a" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+                <label for="userId">User ID (UUID)</label>
+                <input type="text" id="userId" placeholder="Auto-generated" readonly>
+            </div>
+            <button class="btn" onclick="login()">Start Demo</button>
+        </div>
+        
+        <!-- Demo Section -->
+        <div class="demo-section" id="demoSection">
+            <!-- Step 1: Search -->
+            <div class="step">
+                <h2><span class="step-number">1</span> Product Search</h2>
+                <div class="search-box">
+                    <input type="text" id="searchQuery" placeholder="Try: organic milk and breakfast items" value="organic milk and breakfast items">
+                    <button class="btn" onclick="performSearch()">Search</button>
+                </div>
+                
+                <div id="gemmaAnalysis" style="display:none;">
+                    <div class="metadata-box">
+                        <div class="metadata-title">🤖 Gemma Intent Analysis</div>
+                        <div id="gemmaResults"></div>
+                    </div>
+                </div>
+                
+                <div id="searchResults" style="display:none;">
+                    <h3>Search Results <span id="searchTime" style="color: #718096; font-size: 0.8em;"></span></h3>
+                    <div class="results-grid" id="productsGrid"></div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Cart & Order -->
+            <div class="step" id="cartStep" style="display:none;">
+                <h2><span class="step-number">2</span> Shopping Cart</h2>
+                <div class="cart-section">
+                    <div id="cartItems"></div>
+                    <div class="cart-total" id="cartTotal">Total: $0.00</div>
+                </div>
+                <button class="btn" onclick="confirmOrder()">Confirm Order</button>
+            </div>
+            
+            <!-- Step 3: Graphiti Processing -->
+            <div class="step" id="graphitiStep" style="display:none;">
+                <h2><span class="step-number">3</span> Graphiti Memory Extraction</h2>
+                <div class="metadata-box">
+                    <div class="metadata-title">🧠 Entities & Relationships Extracted</div>
+                    <div id="graphitiData"></div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Spanner Storage -->
+            <div class="step" id="spannerStep" style="display:none;">
+                <h2><span class="step-number">4</span> Spanner Graph Database</h2>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h3>📊 Order Data</h3>
+                        <div id="spannerOrder"></div>
+                    </div>
+                    <div class="data-card">
+                        <h3>🔗 Relationships</h3>
+                        <div id="spannerRelations"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 5: BigQuery Analytics -->
+            <div class="step" id="bigqueryStep" style="display:none;">
+                <h2><span class="step-number">5</span> BigQuery Analytics</h2>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h3>📈 Events Streamed</h3>
+                        <div id="bigqueryEvents"></div>
+                    </div>
+                    <div class="data-card">
+                        <h3>🎯 ML Features</h3>
+                        <div id="mlFeatures"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 6: Personalization Demo -->
+            <div class="step" id="personalizationStep" style="display:none;">
+                <h2><span class="step-number">6</span> Personalization Comparison</h2>
+                <p>Search again to see personalization in action!</p>
+                <div class="search-box">
+                    <input type="text" id="searchQuery2" placeholder="Try searching for 'milk' again" value="milk">
+                    <button class="btn" onclick="performPersonalizedSearch()">Search as Returning User</button>
+                </div>
+                
+                <div class="comparison-grid" id="comparisonResults" style="display:none;">
+                    <div class="comparison-box first-time">
+                        <h3>👤 First-Time User</h3>
+                        <div id="firstTimeResults"></div>
+                    </div>
+                    <div class="comparison-box returning">
+                        <h3>🌟 Returning User (You)</h3>
+                        <div id="returningResults"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Flow Visualization -->
+            <div class="step" id="flowStep" style="display:none;">
+                <h2>📊 Complete Data Flow</h2>
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        User Query
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        Gemma Analysis
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        Weaviate Search
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        User Purchase
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        Graphiti Extract
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        Spanner Store
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        BigQuery ML
+                        <span class="flow-arrow">→</span>
+                    </div>
+                    <div class="flow-step">
+                        Personalized Results
+                    </div>
+                </div>
+                
+                <div class="success-message">
+                    ✅ Demo Complete! You've experienced the full LeafLoaf AI personalization pipeline.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Global state
+        let currentUser = null;
+        let selectedProducts = [];
+        let orderData = null;
+        let userHistory = {};
+        const API_URL = 'http://localhost:8080/api';
+        
+        // Generate UUID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        
+        // Login function
+        function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email === 'a@a.com' && password === 'a') {
+                const userId = generateUUID();
+                document.getElementById('userId').value = userId;
+                
+                currentUser = {
+                    email: email,
+                    userId: userId,
+                    sessionId: generateUUID(),
+                    isReturning: userHistory[email] !== undefined
+                };
+                
+                // Initialize user history
+                if (!userHistory[email]) {
+                    userHistory[email] = {
+                        purchases: [],
+                        preferences: []
+                    };
+                }
+                
+                // Show demo section
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('demoSection').style.display = 'block';
+                
+                if (currentUser.isReturning) {
+                    alert('Welcome back! Your purchase history has been loaded.');
+                }
+            } else {
+                alert('Please use email: a@a.com and password: a');
+            }
+        }
+        
+        // Perform search
+        async function performSearch() {
+            const query = document.getElementById('searchQuery').value;
+            
+            // Show loading
+            document.getElementById('gemmaAnalysis').style.display = 'block';
+            document.getElementById('gemmaResults').innerHTML = '<div class="loading"></div> Analyzing intent...';
+            
+            // Simulate Gemma analysis
+            setTimeout(() => {
+                const alpha = query.includes('organic') ? 0.3 : 0.7;
+                const intent = query.includes('breakfast') ? 'category_search' : 'product_search';
+                
+                document.getElementById('gemmaResults').innerHTML = `
+                    <strong>Intent:</strong> ${intent}<br>
+                    <strong>Routing:</strong> product_search<br>
+                    <strong>Alpha:</strong> ${alpha} (${alpha < 0.5 ? 'keyword-focused' : 'semantic-focused'})<br>
+                    <strong>Entities:</strong> [organic, milk, breakfast, healthy]<br>
+                    <strong>Categories:</strong> [Dairy, Breakfast, Organic]
+                `;
+                
+                // Simulate Weaviate search
+                searchProducts(query, alpha);
+            }, 1000);
+        }
+        
+        // Search products
+        function searchProducts(query, alpha) {
+            document.getElementById('searchResults').style.display = 'block';
+            document.getElementById('searchTime').textContent = 'Searching...';
+            
+            // Simulate search results
+            setTimeout(() => {
+                const products = [
+                    { id: 'OV_MILK_2P_GAL', name: 'Organic 2% Milk', price: 6.99, category: 'Dairy', brand: 'Organic Valley' },
+                    { id: 'OV_MILK_WH', name: 'Organic Whole Milk', price: 7.49, category: 'Dairy', brand: 'Organic Valley' },
+                    { id: 'HO_YOGURT', name: 'Organic Greek Yogurt', price: 5.99, category: 'Dairy', brand: 'Horizon' },
+                    { id: 'OV_OATS', name: 'Organic Old Fashioned Oats', price: 8.99, category: 'Breakfast', brand: 'Organic Valley' },
+                    { id: 'NP_GRANOLA', name: 'Organic Granola', price: 9.99, category: 'Breakfast', brand: 'Nature\'s Path' },
+                    { id: 'OV_EGGS', name: 'Organic Free-Range Eggs', price: 7.99, category: 'Dairy', brand: 'Organic Valley' },
+                    { id: 'WF_BREAD', name: 'Organic Whole Wheat Bread', price: 4.99, category: 'Bakery', brand: 'Whole Foods' },
+                    { id: 'OV_BUTTER', name: 'Organic Butter', price: 6.49, category: 'Dairy', brand: 'Organic Valley' }
+                ];
+                
+                const searchTime = 650 + Math.random() * 400;
+                document.getElementById('searchTime').textContent = `(${searchTime.toFixed(0)}ms)`;
+                
+                // Display products
+                const grid = document.getElementById('productsGrid');
+                grid.innerHTML = '';
+                
+                products.forEach((product, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                        <div class="product-category">${product.category} | ${product.brand}</div>
+                    `;
+                    card.onclick = () => toggleProduct(product);
+                    card.id = `product-${product.id}`;
+                    grid.appendChild(card);
+                });
+                
+                document.getElementById('cartStep').style.display = 'block';
+            }, 1500);
+        }
+        
+        // Toggle product selection
+        function toggleProduct(product) {
+            const index = selectedProducts.findIndex(p => p.id === product.id);
+            
+            if (index > -1) {
+                selectedProducts.splice(index, 1);
+                document.getElementById(`product-${product.id}`).classList.remove('selected');
+            } else {
+                selectedProducts.push({ ...product, quantity: product.name.includes('Milk') ? 2 : 1 });
+                document.getElementById(`product-${product.id}`).classList.add('selected');
+            }
+            
+            updateCart();
+        }
+        
+        // Update cart display
+        function updateCart() {
+            const cartItems = document.getElementById('cartItems');
+            let total = 0;
+            
+            cartItems.innerHTML = '';
+            selectedProducts.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                cartItems.innerHTML += `
+                    <div class="cart-item">
+                        <span>${item.name} x${item.quantity}</span>
+                        <span>$${itemTotal.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('cartTotal').textContent = `Total: $${total.toFixed(2)}`;
+        }
+        
+        // Confirm order
+        function confirmOrder() {
+            if (selectedProducts.length === 0) {
+                alert('Please select some products first!');
+                return;
+            }
+            
+            orderData = {
+                orderId: generateUUID(),
+                userId: currentUser.userId,
+                items: selectedProducts,
+                timestamp: new Date().toISOString(),
+                total: selectedProducts.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+            
+            // Save to user history
+            userHistory[currentUser.email].purchases.push(...selectedProducts);
+            userHistory[currentUser.email].preferences = [...new Set(selectedProducts.map(p => p.category))];
+            
+            // Show Graphiti processing
+            processWithGraphiti();
+        }
+        
+        // Process with Graphiti
+        function processWithGraphiti() {
+            document.getElementById('graphitiStep').style.display = 'block';
+            document.getElementById('graphitiData').innerHTML = '<div class="loading"></div> Processing...';
+            
+            setTimeout(() => {
+                const entities = selectedProducts.map(p => `Product: ${p.name}`).join('<br>');
+                const categories = [...new Set(selectedProducts.map(p => p.category))];
+                
+                document.getElementById('graphitiData').innerHTML = `
+                    <strong>Entities Extracted:</strong><br>
+                    • User: ${currentUser.email}<br>
+                    ${entities}<br><br>
+                    <strong>Relationships Created:</strong><br>
+                    • User PURCHASED Products<br>
+                    • User PREFERS ${categories.join(', ')}<br>
+                    • User HAS_PATTERN ${selectedProducts.some(p => p.quantity > 1) ? 'BulkBuyer' : 'Regular'}<br><br>
+                    <strong>Facts Stored:</strong><br>
+                    • Total spent: $${orderData.total.toFixed(2)}<br>
+                    • Preferred brands: ${[...new Set(selectedProducts.map(p => p.brand))].join(', ')}<br>
+                    • Shopping time: ${new Date().toLocaleTimeString()}
+                `;
+                
+                // Continue to Spanner
+                storeInSpanner();
+            }, 2000);
+        }
+        
+        // Store in Spanner
+        function storeInSpanner() {
+            document.getElementById('spannerStep').style.display = 'block';
+            
+            // Simulate Spanner storage
+            setTimeout(() => {
+                document.getElementById('spannerOrder').innerHTML = `
+                    <div class="data-item">
+                        <strong>Order ID:</strong> ${orderData.orderId.substring(0, 20)}...<br>
+                        <strong>User ID:</strong> ${orderData.userId.substring(0, 20)}...<br>
+                        <strong>Items:</strong> ${orderData.items.length}<br>
+                        <strong>Total:</strong> $${orderData.total.toFixed(2)}<br>
+                        <strong>Timestamp:</strong> ${new Date().toLocaleString()}
+                    </div>
+                `;
+                
+                document.getElementById('spannerRelations').innerHTML = `
+                    <div class="data-item">User → PURCHASED → ${selectedProducts[0].name}</div>
+                    <div class="data-item">User → PREFERS → Organic</div>
+                    <div class="data-item">User → HAS_PATTERN → EarlyMorning</div>
+                `;
+                
+                // Continue to BigQuery
+                streamToBigQuery();
+            }, 1500);
+        }
+        
+        // Stream to BigQuery
+        function streamToBigQuery() {
+            document.getElementById('bigqueryStep').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('bigqueryEvents').innerHTML = `
+                    <div class="data-item">search_event - ${new Date().toISOString()}</div>
+                    <div class="data-item">product_view_event - ${selectedProducts.length} products</div>
+                    <div class="data-item">cart_add_event - ${selectedProducts.length} items</div>
+                    <div class="data-item">order_complete_event - $${orderData.total.toFixed(2)}</div>
+                `;
+                
+                document.getElementById('mlFeatures').innerHTML = `
+                    <div class="data-item">avg_order_value: $${orderData.total.toFixed(2)}</div>
+                    <div class="data-item">category_affinity: Organic (0.85)</div>
+                    <div class="data-item">purchase_time: Morning</div>
+                    <div class="data-item">bulk_buyer_score: ${selectedProducts.some(p => p.quantity > 1) ? '0.75' : '0.25'}</div>
+                `;
+                
+                // Show personalization step
+                document.getElementById('personalizationStep').style.display = 'block';
+            }, 1500);
+        }
+        
+        // Perform personalized search
+        function performPersonalizedSearch() {
+            const query = document.getElementById('searchQuery2').value;
+            
+            // Show comparison
+            document.getElementById('comparisonResults').style.display = 'block';
+            
+            // First-time results
+            document.getElementById('firstTimeResults').innerHTML = `
+                <p><strong>Generic Results:</strong></p>
+                1. Regular Whole Milk - $4.99<br>
+                2. 2% Milk - $4.49<br>
+                3. Skim Milk - $4.29<br>
+                4. Chocolate Milk - $3.99<br>
+                5. Almond Milk - $5.99
+            `;
+            
+            // Personalized results
+            const purchasedMilk = selectedProducts.find(p => p.name.includes('Milk'));
+            document.getElementById('returningResults').innerHTML = `
+                <p><strong>Personalized for You:</strong></p>
+                1. ${purchasedMilk ? purchasedMilk.name : 'Organic Whole Milk'} <span class="personalization-badge">Your usual</span><br>
+                2. Organic 2% Milk <span class="personalization-badge">Similar</span><br>
+                3. Oat Milk Barista <span class="personalization-badge">Recommended</span><br>
+                4. Organic Chocolate Milk <span class="personalization-badge">Same brand</span><br>
+                5. Regular Milk <span class="personalization-badge">Budget option</span>
+            `;
+            
+            // Show flow diagram
+            document.getElementById('flowStep').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

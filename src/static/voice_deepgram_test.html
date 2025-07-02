@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepgram WebSocket Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        #status {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        
+        #log {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Deepgram WebSocket Test</h1>
+    
+    <div>
+        <button onclick="testConnection()">Test Deepgram Connection</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div id="status">Ready to test</div>
+    
+    <div id="log"></div>
+    
+    <script>
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const className = type;
+            logEl.innerHTML += `<div class="${className}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        async function testConnection() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = 'Testing Deepgram connection...';
+            
+            log('Starting Deepgram WebSocket test', 'info');
+            
+            try {
+                // Connect to our backend WebSocket endpoint
+                const wsUrl = `ws://${window.location.host}/api/v1/deepgram/conversation`;
+                log(`Connecting to: ${wsUrl}`, 'info');
+                
+                const ws = new WebSocket(wsUrl);
+                
+                ws.onopen = () => {
+                    log('WebSocket connected!', 'success');
+                    statusEl.textContent = 'Connected to Deepgram!';
+                    statusEl.style.color = 'green';
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        log(`Received message: ${data.type}`, 'info');
+                        
+                        if (data.type === 'session_started') {
+                            log(`Session ID: ${data.session_id}`, 'success');
+                            log(data.message, 'success');
+                            
+                            // Send test audio (silence)
+                            setTimeout(() => {
+                                log('Sending test audio (silence)', 'info');
+                                const silence = new ArrayBuffer(1600); // 100ms of silence
+                                ws.send(silence);
+                            }, 1000);
+                        }
+                    } catch (e) {
+                        log(`Failed to parse message: ${e.message}`, 'error');
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    log(`WebSocket error: ${error}`, 'error');
+                    statusEl.textContent = 'Connection error';
+                    statusEl.style.color = 'red';
+                };
+                
+                ws.onclose = (event) => {
+                    log(`WebSocket closed: Code ${event.code}, Reason: ${event.reason}`, 'info');
+                    statusEl.textContent = 'Connection closed';
+                    statusEl.style.color = 'orange';
+                };
+                
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                statusEl.textContent = 'Failed to connect';
+                statusEl.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>

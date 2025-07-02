@@ -1,0 +1,24 @@
+{
+  "client_type": "vertex_endpoint",
+  "endpoint_config": {
+    "project_id": "leafloafai",
+    "location": "us-central1",
+    "endpoint_id": "6438719201535328256",
+    "endpoint_name": "projects/leafloafai/locations/us-central1/endpoints/6438719201535328256"
+  },
+  "request_format": {
+    "instances": [
+      {
+        "prompt": "{query}"
+      }
+    ],
+    "parameters": {
+      "temperature": 0.3,
+      "maxOutputTokens": 100,
+      "topK": 10,
+      "topP": 0.9
+    }
+  },
+  "timeout_ms": 150,
+  "retry_attempts": 1
+}

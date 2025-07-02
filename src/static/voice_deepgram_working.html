@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaf & Loaf - Voice Shopping (Working Demo)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f1e;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 48px;
+            background: linear-gradient(135deg, #64ffda 0%, #63a4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #8892b0;
+            margin-bottom: 40px;
+        }
+        
+        .voice-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid rgba(100, 255, 218, 0.3);
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            font-size: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mic-button:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .mic-button.active {
+            background: #64ffda;
+            color: #0f0f1e;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(100, 255, 218, 0.4); }
+            50% { box-shadow: 0 0 0 30px rgba(100, 255, 218, 0); }
+        }
+        
+        .status {
+            color: #8892b0;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        
+        .transcript {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 100px;
+            margin-bottom: 20px;
+        }
+        
+        .response {
+            background: rgba(99, 164, 255, 0.1);
+            border: 1px solid rgba(99, 164, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 100px;
+            color: #a8daff;
+        }
+        
+        .products {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .product-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .product-name {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #4ade80;
+            font-size: 18px;
+        }
+        
+        .error {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            color: #f87171;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leaf & Loaf</h1>
+        <p class="subtitle">Voice-Powered Grocery Shopping</p>
+        
+        <div class="voice-container">
+            <button class="mic-button" id="micButton">
+                🎤
+            </button>
+            
+            <div class="status" id="status">Click the microphone to start</div>
+            
+            <div class="transcript" id="transcript">
+                <em>Your speech will appear here...</em>
+            </div>
+            
+            <div class="response" id="response">
+                <em>AI response will appear here...</em>
+            </div>
+        </div>
+        
+        <div id="products" class="products"></div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+    </div>
+    
+    <script>
+        // State
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        
+        // DOM elements
+        const micButton = document.getElementById('micButton');
+        const status = document.getElementById('status');
+        const transcript = document.getElementById('transcript');
+        const response = document.getElementById('response');
+        const products = document.getElementById('products');
+        const error = document.getElementById('error');
+        
+        // Handle microphone button
+        micButton.addEventListener('click', toggleRecording);
+        
+        async function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                await startRecording();
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                // Get microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Create MediaRecorder
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    // Create audio blob
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    
+                    // Process the audio
+                    await processAudio(audioBlob);
+                };
+                
+                // Start recording
+                mediaRecorder.start();
+                isRecording = true;
+                
+                // Update UI
+                micButton.classList.add('active');
+                status.textContent = 'Listening... Click again to stop';
+                transcript.innerHTML = '<em>Recording...</em>';
+                error.style.display = 'none';
+                
+            } catch (err) {
+                console.error('Microphone error:', err);
+                showError('Microphone access denied');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            isRecording = false;
+            micButton.classList.remove('active');
+            status.textContent = 'Processing...';
+        }
+        
+        async function processAudio(audioBlob) {
+            try {
+                // Convert to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+                    
+                    // Send to Deepgram for transcription
+                    const transcriptResponse = await fetch('https://api.deepgram.com/v1/listen', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Token 36a821d351939023aabad9beeaa68b391caa124a',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'buffer': base64Audio,
+                            'encoding': 'webm',
+                            'model': 'nova-2',
+                            'punctuate': true,
+                            'smart_format': true
+                        })
+                    });
+                    
+                    if (!transcriptResponse.ok) {
+                        throw new Error('Transcription failed');
+                    }
+                    
+                    const transcriptData = await transcriptResponse.json();
+                    const text = transcriptData.results.channels[0].alternatives[0].transcript;
+                    
+                    transcript.textContent = text || 'No speech detected';
+                    
+                    if (text) {
+                        // Search for products
+                        await searchProducts(text);
+                    }
+                    
+                    status.textContent = 'Ready - Click microphone to speak again';
+                };
+                
+            } catch (err) {
+                console.error('Processing error:', err);
+                showError('Failed to process audio');
+                status.textContent = 'Error - Try again';
+            }
+        }
+        
+        async function searchProducts(query) {
+            try {
+                response.innerHTML = '<em>Searching for products...</em>';
+                products.innerHTML = '';
+                
+                // Call our API
+                const searchResponse = await fetch('/api/v1/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        limit: 10,
+                        source: 'voice'
+                    })
+                });
+                
+                const data = await searchResponse.json();
+                
+                if (data.success && data.products && data.products.length > 0) {
+                    response.textContent = `Found ${data.products.length} products matching "${query}"`;
+                    
+                    // Display products
+                    displayProducts(data.products);
+                    
+                    // Generate voice response
+                    const voiceText = `I found ${data.products.length} products. ${data.products.slice(0, 3).map(p => p.product_name).join(', ')}`;
+                    await speakResponse(voiceText);
+                    
+                } else {
+                    response.textContent = 'No products found. Try describing what you need differently.';
+                    await speakResponse('I couldn\'t find any products matching that. Can you try again?');
+                }
+                
+            } catch (err) {
+                console.error('Search error:', err);
+                showError('Search failed');
+            }
+        }
+        
+        function displayProducts(productList) {
+            products.innerHTML = productList.map(product => `
+                <div class="product-card">
+                    <div class="product-name">${product.product_name}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                    <div style="color: #8892b0; font-size: 14px;">${product.category}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function speakResponse(text) {
+            try {
+                // Use Deepgram TTS
+                const ttsResponse = await fetch('https://api.deepgram.com/v1/speak?model=aura-luna-en&encoding=mp3', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token 36a821d351939023aabad9beeaa68b391caa124a',
+                        'Content-Type': 'text/plain'
+                    },
+                    body: text
+                });
+                
+                if (ttsResponse.ok) {
+                    const audioBlob = await ttsResponse.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    audio.play();
+                }
+                
+            } catch (err) {
+                console.error('TTS error:', err);
+            }
+        }
+        
+        function showError(message) {
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

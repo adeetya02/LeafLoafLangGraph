@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Voice Assistant Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            padding: 15px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        #startBtn {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        #stopBtn {
+            background: #f44336;
+            color: white;
+        }
+        
+        #clearBtn {
+            background: #2196F3;
+            color: white;
+        }
+        
+        #status {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .conversation {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            border-left-color: #2196F3;
+        }
+        
+        .assistant-message {
+            background: #e8f5e8;
+            border-left-color: #4CAF50;
+        }
+        
+        .interim-transcript {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+            font-style: italic;
+            opacity: 0.7;
+        }
+        
+        .products {
+            background: #f3e5f5;
+            border-left-color: #9c27b0;
+            margin-top: 10px;
+        }
+        
+        .product-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        
+        #log {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        .warning { color: orange; }
+        
+        .audio-status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        
+        .instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Simple Voice Assistant</h1>
+        
+        <div class="instructions">
+            <h3>Try these voice commands:</h3>
+            <ul>
+                <li><strong>"Hello"</strong> - Get a greeting</li>
+                <li><strong>"Search for milk"</strong> - Find products</li>
+                <li><strong>"Add to cart"</strong> - Add the last searched product</li>
+                <li><strong>"Show my cart"</strong> - View cart contents</li>
+                <li><strong>"Checkout"</strong> - Complete your order</li>
+            </ul>
+        </div>
+        
+        <div>
+            <button id="startBtn" onclick="startVoice()">🎙️ Start Voice</button>
+            <button id="stopBtn" onclick="stopVoice()" disabled>🛑 Stop Voice</button>
+            <button id="clearBtn" onclick="clearConversation()">🗑️ Clear</button>
+        </div>
+        
+        <div id="status">Ready to start voice assistant</div>
+        
+        <div class="audio-status" id="audioStatus" style="display: none;">
+            🎵 Audio processing...
+        </div>
+        
+        <div id="conversation"></div>
+        
+        <div id="log"></div>
+    </div>
+    
+    <script>
+        let websocket = null;
+        let audioContext = null;
+        let micStream = null;
+        let isRecording = false;
+        
+        function log(message, type = 'info') {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            logEl.innerHTML += `<div class="${type}">[${time}] ${message}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+            console.log(`[${type}] ${message}`);
+        }
+        
+        function clearConversation() {
+            document.getElementById('conversation').innerHTML = '';
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = type;
+        }
+        
+        function addMessage(role, content, extra = {}) {
+            const conversationEl = document.getElementById('conversation');
+            const messageEl = document.createElement('div');
+            messageEl.className = `conversation ${role}-message`;
+            
+            let icon = role === 'user' ? '👤' : '🤖';
+            let title = role === 'user' ? 'You' : 'Assistant';
+            
+            let html = `<strong>${icon} ${title}:</strong> ${content}`;
+            
+            if (extra.products && extra.products.length > 0) {
+                html += `<div class="products"><strong>Products found:</strong>`;
+                extra.products.forEach(product => {
+                    html += `<div class="product-item">📦 ${product.product_name} - $${product.price} (${product.supplier || 'Store'})</div>`;
+                });
+                html += `</div>`;
+            }
+            
+            if (extra.order && extra.order.items && extra.order.items.length > 0) {
+                const total = extra.order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                html += `<div class="products"><strong>Cart (${extra.order.items.length} items, $${total.toFixed(2)}):</strong>`;
+                extra.order.items.forEach(item => {
+                    html += `<div class="product-item">🛒 ${item.quantity}× ${item.product_name} - $${(item.price * item.quantity).toFixed(2)}</div>`;
+                });
+                html += `</div>`;
+            }
+            
+            messageEl.innerHTML = html;
+            conversationEl.appendChild(messageEl);
+            conversationEl.scrollTop = conversationEl.scrollHeight;
+        }
+        
+        function showInterimTranscript(text) {
+            // Remove previous interim
+            const existing = document.querySelector('.interim-transcript');
+            if (existing) {
+                existing.remove();
+            }
+            
+            if (text.trim()) {
+                const conversationEl = document.getElementById('conversation');
+                const messageEl = document.createElement('div');
+                messageEl.className = 'conversation interim-transcript';
+                messageEl.innerHTML = `<strong>👤 You (listening...):</strong> ${text}`;
+                conversationEl.appendChild(messageEl);
+                conversationEl.scrollTop = conversationEl.scrollHeight;
+            }
+        }
+        
+        async function startVoice() {
+            try {
+                updateStatus('Requesting microphone access...', 'info');
+                
+                // Get microphone
+                micStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        sampleRate: 16000,
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                log('Microphone access granted', 'success');
+                updateStatus('Connecting to voice assistant...', 'info');
+                
+                // Connect WebSocket
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${window.location.host}/api/v1/voice-simple/connect`;
+                
+                log(`Connecting to: ${wsUrl}`, 'info');
+                websocket = new WebSocket(wsUrl);
+                
+                websocket.onopen = () => {
+                    log('Connected to voice assistant!', 'success');
+                    updateStatus('🎙️ Voice assistant ready - speak now!', 'success');
+                    startAudioRecording();
+                    
+                    document.getElementById('startBtn').disabled = true;
+                    document.getElementById('stopBtn').disabled = false;
+                };
+                
+                websocket.onmessage = handleMessage;
+                websocket.onerror = (error) => {
+                    log(`WebSocket error: ${error}`, 'error');
+                    updateStatus('Connection error', 'error');
+                };
+                
+                websocket.onclose = (event) => {
+                    log(`Connection closed: ${event.code}`, 'info');
+                    updateStatus('Connection closed', 'warning');
+                    stopVoice();
+                };
+                
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+                updateStatus('Failed to start voice assistant', 'error');
+            }
+        }
+        
+        function handleMessage(event) {
+            // Check if it's binary audio data
+            if (event.data instanceof ArrayBuffer || event.data instanceof Blob) {
+                playAudioData(event.data);
+                return;
+            }
+            
+            // Check if it's a string that looks like binary data
+            if (typeof event.data === 'string' && event.data.startsWith('[object')) {
+                log('Received binary data as string - skipping JSON parse', 'info');
+                return;
+            }
+            
+            try {
+                const data = JSON.parse(event.data);
+                log(`Received: ${data.type}`, 'info');
+                
+                switch (data.type) {
+                    case 'session_started':
+                        log(`Session: ${data.session_id}`, 'success');
+                        addMessage('assistant', data.message);
+                        break;
+                        
+                    case 'interim_transcript':
+                        showInterimTranscript(data.text);
+                        break;
+                        
+                    case 'final_transcript':
+                        // Remove interim
+                        const interim = document.querySelector('.interim-transcript');
+                        if (interim) interim.remove();
+                        
+                        addMessage('user', data.text);
+                        updateStatus('🤖 Assistant thinking...', 'info');
+                        break;
+                        
+                    case 'assistant_response':
+                        addMessage('assistant', data.text, {
+                            products: data.products,
+                            order: data.order
+                        });
+                        updateStatus('🔊 Speaking response...', 'info');
+                        break;
+                        
+                    case 'user_speaking':
+                        if (data.status === 'started') {
+                            updateStatus('🎙️ Listening...', 'info');
+                            document.getElementById('audioStatus').style.display = 'block';
+                        } else {
+                            updateStatus('🤖 Processing...', 'info');
+                            document.getElementById('audioStatus').style.display = 'none';
+                        }
+                        break;
+                        
+                    case 'audio_start':
+                        updateStatus('🔊 Playing response...', 'success');
+                        break;
+                        
+                    case 'audio_end':
+                        updateStatus('🎙️ Ready - speak now!', 'success');
+                        break;
+                        
+                    case 'error':
+                        log(`Error: ${data.message}`, 'error');
+                        updateStatus(`Error: ${data.message}`, 'error');
+                        break;
+                }
+                
+            } catch (e) {
+                log(`Parse error: ${e.message}`, 'error');
+            }
+        }
+        
+        function startAudioRecording() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                const source = audioContext.createMediaStreamSource(micStream);
+                const processor = audioContext.createScriptProcessor(1024, 1, 1);
+                
+                processor.onaudioprocess = (event) => {
+                    if (websocket?.readyState === WebSocket.OPEN && isRecording) {
+                        const inputBuffer = event.inputBuffer;
+                        const inputData = inputBuffer.getChannelData(0);
+                        
+                        // Convert to 16-bit PCM
+                        const pcmData = new Int16Array(inputData.length);
+                        for (let i = 0; i < inputData.length; i++) {
+                            const sample = Math.max(-1, Math.min(1, inputData[i]));
+                            pcmData[i] = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                        }
+                        
+                        websocket.send(pcmData.buffer);
+                    }
+                };
+                
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+                
+                isRecording = true;
+                log('Audio recording started', 'success');
+                
+            } catch (error) {
+                log(`Audio error: ${error.message}`, 'error');
+            }
+        }
+        
+        function playAudioData(data) {
+            try {
+                if (audioContext) {
+                    // Handle different data types
+                    let buffer;
+                    if (data instanceof ArrayBuffer) {
+                        buffer = data;
+                    } else if (data instanceof Blob) {
+                        // Convert Blob to ArrayBuffer
+                        data.arrayBuffer().then(arrayBuffer => {
+                            playAudioData(arrayBuffer);
+                        });
+                        return;
+                    } else {
+                        log('Unknown audio data type', 'warning');
+                        return;
+                    }
+                    
+                    audioContext.decodeAudioData(buffer.slice(), (audioBuffer) => {
+                        const source = audioContext.createBufferSource();
+                        source.buffer = audioBuffer;
+                        source.connect(audioContext.destination);
+                        source.start();
+                        log('Playing audio response', 'success');
+                    }, (error) => {
+                        log(`Audio decode error: ${error.message}`, 'error');
+                    });
+                }
+            } catch (error) {
+                log(`Audio playback error: ${error.message}`, 'error');
+            }
+        }
+        
+        function stopVoice() {
+            isRecording = false;
+            
+            if (micStream) {
+                micStream.getTracks().forEach(track => track.stop());
+                micStream = null;
+            }
+            
+            if (audioContext) {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            document.getElementById('audioStatus').style.display = 'none';
+            updateStatus('Voice assistant stopped', 'warning');
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            
+            log('Voice assistant stopped', 'info');
+        }
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', stopVoice);
+    </script>
+</body>
+</html>

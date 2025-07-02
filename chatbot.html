@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - AI Shopping Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f4f8;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 90vh;
+            max-height: 700px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .chat-header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .chat-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.bot {
+            text-align: left;
+        }
+        
+        .message-content {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .user .message-content {
+            background: #2e7d32;
+            color: white;
+        }
+        
+        .bot .message-content {
+            background: white;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .product-card {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        
+        .product-card h4 {
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+        
+        .product-card p {
+            font-size: 14px;
+            color: #666;
+            margin: 2px 0;
+        }
+        
+        .cart-summary {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #c8e6c9;
+        }
+        
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #999;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+            }
+            30% {
+                opacity: 1;
+            }
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .chat-input:focus {
+            border-color: #4caf50;
+        }
+        
+        .send-button {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .send-button:hover {
+            background: #1b5e20;
+        }
+        
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            padding: 8px 15px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-action:hover {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>🍃 LeafLoaf Assistant</h1>
+            <p>Your AI-powered organic grocery shopping helper</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-content">
+                    Hello! Welcome to LeafLoaf. I can help you find organic products, manage your cart, and place orders. What are you looking for today?
+                </div>
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <input 
+                    type="text" 
+                    class="chat-input" 
+                    id="chatInput" 
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                >
+                <button class="send-button" id="sendButton">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-action" onclick="quickAction('organic milk')">Organic Milk</button>
+                <button class="quick-action" onclick="quickAction('fresh bread')">Fresh Bread</button>
+                <button class="quick-action" onclick="quickAction('show my cart')">View Cart</button>
+                <button class="quick-action" onclick="quickAction('confirm order')">Checkout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://171f-108-53-27-176.ngrok-free.app';
+        let sessionId = 'session_' + Date.now();
+        let conversationState = {
+            lastResults: null,
+            cart: { items: [] },
+            awaitingConfirmation: false
+        };
+
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Send message on Enter
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendButton.addEventListener('click', sendMessage);
+
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            chatInput.value = '';
+            
+            // Show typing indicator
+            showTyping();
+
+            try {
+                // Determine intent and process
+                const response = await processUserMessage(message);
+                hideTyping();
+                
+                if (response.error) {
+                    addMessage('I apologize, but I encountered an error. Please try again.', 'bot', 'error');
+                } else {
+                    displayResponse(response);
+                }
+            } catch (error) {
+                hideTyping();
+                console.error('Error:', error);
+                addMessage('I apologize, but I\'m having trouble connecting. Please check your connection and try again.', 'bot', 'error');
+            }
+        }
+
+        async function processUserMessage(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Determine intent
+            if (lowerMessage.includes('cart') && (lowerMessage.includes('show') || lowerMessage.includes('view') || lowerMessage.includes('what'))) {
+                return await showCart();
+            } else if (lowerMessage.includes('confirm') || lowerMessage.includes('checkout') || lowerMessage.includes('place order')) {
+                return await confirmOrder();
+            } else if (lowerMessage.includes('add') && (lowerMessage.includes('cart') || lowerMessage.includes('first') || lowerMessage.includes('second'))) {
+                return await addToCart(message);
+            } else if (lowerMessage.includes('yes') && conversationState.awaitingConfirmation) {
+                return await confirmOrder();
+            } else {
+                // Default to search
+                return await searchProducts(message);
+            }
+        }
+
+        async function searchProducts(query) {
+            const response = await fetch(`${API_BASE}/api/v1/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    query: query,
+                    session_id: sessionId 
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success && data.products.length > 0) {
+                conversationState.lastResults = data.products;
+                return {
+                    type: 'search',
+                    products: data.products,
+                    message: `I found ${data.products.length} products for "${query}". Here are the top results:`
+                };
+            } else {
+                return {
+                    type: 'message',
+                    message: `I couldn't find any products matching "${query}". Try searching for something else like "organic milk" or "fresh bread".`
+                };
+            }
+        }
+
+        async function addToCart(message) {
+            const lowerMessage = message.toLowerCase();
+            let itemsToAdd = [];
+            
+            if (conversationState.lastResults) {
+                // Parse which items to add
+                if (lowerMessage.includes('first')) {
+                    itemsToAdd.push(conversationState.lastResults[0]);
+                } else if (lowerMessage.includes('second')) {
+                    itemsToAdd.push(conversationState.lastResults[1]);
+                } else if (lowerMessage.includes('third')) {
+                    itemsToAdd.push(conversationState.lastResults[2]);
+                } else if (lowerMessage.includes('all')) {
+                    itemsToAdd = conversationState.lastResults.slice(0, 3);
+                } else {
+                    // Try to match by product name
+                    for (let product of conversationState.lastResults) {
+                        const productName = product.name.toLowerCase();
+                        // Check if significant words from product name are in the message
+                        const productWords = productName.split(' ').filter(w => w.length > 3);
+                        const matches = productWords.filter(word => lowerMessage.includes(word));
+                        
+                        if (matches.length >= 2 || (matches.length === 1 && productWords.length <= 2)) {
+                            itemsToAdd.push(product);
+                            break; // Add first matching product
+                        }
+                    }
+                    
+                    // If still no match, check for specific product mentions
+                    if (itemsToAdd.length === 0) {
+                        if (lowerMessage.includes('almond') && lowerMessage.includes('milk')) {
+                            // Find almond milk in results
+                            const almondMilk = conversationState.lastResults.find(p => 
+                                p.name.toLowerCase().includes('almond') && p.name.toLowerCase().includes('milk')
+                            );
+                            if (almondMilk) itemsToAdd.push(almondMilk);
+                        } else if (lowerMessage.includes('organic')) {
+                            // Find first organic item
+                            const organicItem = conversationState.lastResults.find(p => 
+                                p.name.toLowerCase().includes('organic')
+                            );
+                            if (organicItem) itemsToAdd.push(organicItem);
+                        }
+                    }
+                    
+                    // Final fallback - add first item
+                    if (itemsToAdd.length === 0) {
+                        itemsToAdd.push(conversationState.lastResults[0]);
+                    }
+                }
+                
+                // Add to local cart
+                itemsToAdd.forEach(item => {
+                    conversationState.cart.items.push({
+                        name: item.name,
+                        price: item.retailPrice || 0,
+                        quantity: 1,
+                        size: item.retailPackSize || 'each'
+                    });
+                });
+                
+                return {
+                    type: 'message',
+                    message: `Added ${itemsToAdd.length} item(s) to your cart. You now have ${conversationState.cart.items.length} items total.`,
+                    showCart: true
+                };
+            } else {
+                return {
+                    type: 'message',
+                    message: 'Please search for products first, then tell me which ones to add to your cart.'
+                };
+            }
+        }
+
+        async function showCart() {
+            if (conversationState.cart.items.length === 0) {
+                return {
+                    type: 'message',
+                    message: 'Your cart is empty. What would you like to shop for today?'
+                };
+            }
+            
+            const total = conversationState.cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            return {
+                type: 'cart',
+                cart: conversationState.cart,
+                total: total,
+                message: `You have ${conversationState.cart.items.length} items in your cart, totaling $${total.toFixed(2)}.`
+            };
+        }
+
+        async function confirmOrder() {
+            if (conversationState.cart.items.length === 0) {
+                return {
+                    type: 'message',
+                    message: 'Your cart is empty. Please add some items before confirming your order.'
+                };
+            }
+            
+            // Clear cart after confirmation
+            const itemCount = conversationState.cart.items.length;
+            conversationState.cart = { items: [] };
+            conversationState.awaitingConfirmation = false;
+            
+            return {
+                type: 'message',
+                message: `Your order for ${itemCount} items has been confirmed! Thank you for shopping with LeafLoaf. 🍃`,
+                orderConfirmed: true
+            };
+        }
+
+        function displayResponse(response) {
+            if (response.type === 'search' && response.products) {
+                addMessage(response.message, 'bot');
+                displayProducts(response.products.slice(0, 5));
+                addMessage('Would you like to add any of these to your cart? You can say "add the first one" or "add all".', 'bot');
+            } else if (response.type === 'cart') {
+                addMessage(response.message, 'bot');
+                displayCart(response.cart, response.total);
+                if (!response.orderConfirmed) {
+                    conversationState.awaitingConfirmation = true;
+                    addMessage('Would you like to confirm this order?', 'bot');
+                }
+            } else {
+                addMessage(response.message, 'bot');
+                if (response.showCart) {
+                    showCart().then(cartResponse => displayResponse(cartResponse));
+                }
+            }
+        }
+
+        function displayProducts(products) {
+            const productsHtml = products.map((product, index) => `
+                <div class="product-card">
+                    <h4>${index + 1}. ${product.name}</h4>
+                    <p>Price: $${(product.retailPrice || 0).toFixed(2)}</p>
+                    <p>Size: ${product.retailPackSize || 'each'}</p>
+                    ${product.brand ? `<p>Brand: ${product.brand}</p>` : ''}
+                </div>
+            `).join('');
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.innerHTML = `<div class="message-content">${productsHtml}</div>`;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function displayCart(cart, total) {
+            const cartItemsHtml = cart.items.map(item => `
+                <div class="cart-item">
+                    <span>${item.quantity}x ${item.name}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+            
+            const cartHtml = `
+                <div class="cart-summary">
+                    <h4>🛒 Your Cart</h4>
+                    ${cartItemsHtml}
+                    <div class="cart-item" style="font-weight: bold; margin-top: 10px; padding-top: 10px;">
+                        <span>Total:</span>
+                        <span>$${total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            messageDiv.innerHTML = `<div class="message-content">${cartHtml}</div>`;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addMessage(message, sender, type = '') {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = `message-content ${type}`;
+            contentDiv.textContent = message;
+            
+            messageDiv.appendChild(contentDiv);
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTyping() {
+            typingIndicator.style.display = 'block';
+            scrollToBottom();
+        }
+
+        function hideTyping() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function quickAction(action) {
+            chatInput.value = action;
+            sendMessage();
+        }
+
+        // Initial greeting with suggestions
+        setTimeout(() => {
+            addMessage('Try asking me about organic milk, fresh vegetables, or gluten-free options!', 'bot');
+        }, 1000);
+    </script>
+</body>
+</html>

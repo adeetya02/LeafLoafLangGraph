@@ -1,0 +1,218 @@
+{
+  "success": true,
+  "query": "laxmi rice",
+  "results": null,
+  "products": [
+    {
+      "product_id": "732a4d4f-43f4-4607-954d-732e55703b2f",
+      "sku": "127",
+      "product_name": "5Ri6 Lx. Rice Flour 10X4 Lb (Non-Gmo)",
+      "product_description": "",
+      "price": 62.5,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "22a496e5-0e29-4c46-a9ae-2d814c2fb0c4",
+      "sku": "126",
+      "product_name": "5Ri39 Lx. Freshly Milled Rice Flour 4X10 Lb",
+      "product_description": "",
+      "price": 61.2,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "85018e83-579a-4c55-8a0f-168f878280c2",
+      "sku": "129",
+      "product_name": "5Ris7 Lx. South Indian Rice Flour 20X2 Lb (Non-Gmo)",
+      "product_description": "",
+      "price": 65.0,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "705b4363-d0e1-4a67-8145-55a936c94589",
+      "sku": "10",
+      "product_name": "Arsm0 Ak. Sona Masoori Rice",
+      "product_description": "",
+      "price": 57.5,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "44624300-3ad9-41b6-a029-005da9864b24",
+      "sku": "128",
+      "product_name": "5Ris6 Lx. South Indian Rice Flour 10X4 Lb (Non-Gmo)",
+      "product_description": "",
+      "price": 62.5,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "da952609-be1e-42ff-bba3-04131aea0aa5",
+      "sku": "LX_RICE_BAS_10",
+      "product_name": "Laxmi Basmati Rice",
+      "product_description": "",
+      "price": 37.5,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "495d2bb0-a40c-4fbb-89dc-1ada5ae35407",
+      "sku": "213",
+      "product_name": "Ggsp22 G.G. Roasted Poha Chiwda 20X285 Gm (Np)",
+      "product_description": "",
+      "price": 73.8,
+      "supplier": "Laxmi",
+      "category": "Rice & Grains",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "77e2635e-68f6-409e-a7cc-0ca6421ae7e5",
+      "sku": "VS_RICE_IDLI_10",
+      "product_name": "Vistar Idli Rice",
+      "product_description": "",
+      "price": 30.0,
+      "supplier": "Vistar",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "88e4d3f2-aa30-4a8c-b9c1-397ac5f8c2d8",
+      "sku": "LX_ATTA_20",
+      "product_name": "Laxmi Atta Flour",
+      "product_description": "",
+      "price": 32.5,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "370d1b08-32c7-4b9f-af13-159be19b5c92",
+      "sku": "VS_RICE_SONA_20",
+      "product_name": "Vistar Sona Masoori Rice",
+      "product_description": "",
+      "price": 62.5,
+      "supplier": "Vistar",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "7684ed62-a5ad-4066-ac88-566279938147",
+      "sku": "LX_BESAN_4",
+      "product_name": "Laxmi Besan Flour",
+      "product_description": "",
+      "price": 15.0,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "bc7216f1-11a1-4bae-a7fb-859e99dc8cea",
+      "sku": "LX_MASALA_GAR_7",
+      "product_name": "Laxmi Garam Masala",
+      "product_description": "",
+      "price": 12.5,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "1703b9de-f10f-4ba5-ace5-4237e9739272",
+      "sku": "LX_CHILI_14",
+      "product_name": "Laxmi Red Chili Powder",
+      "product_description": "",
+      "price": 13.7,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "ee05ea62-91b9-48e8-894e-99f0cbf2eb2b",
+      "sku": "LX_OIL_MUST_1L",
+      "product_name": "Laxmi Mustard Oil",
+      "product_description": "",
+      "price": 25.0,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    },
+    {
+      "product_id": "3cd91936-c7c2-418e-bcf3-f306c11eaba6",
+      "sku": "LX_DAL_MOONG_4",
+      "product_name": "Laxmi Moong Dal",
+      "product_description": "",
+      "price": 20.0,
+      "supplier": "Laxmi",
+      "category": "Indian Grocery",
+      "dietary_info": [],
+      "in_stock": true,
+      "score": null
+    }
+  ],
+  "metadata": {
+    "total_count": 15,
+    "categories": [],
+    "brands": [],
+    "search_config": {
+      "alpha": 0.5
+    }
+  },
+  "execution": {
+    "total_time_ms": 829.901967998012,
+    "agent_timings": {
+      "supervisor": 154.97560199946747,
+      "product_search": 667.0179850007116,
+      "response_compiler": 0.2553099984652363
+    },
+    "reasoning_steps": [
+      "Analysis (155ms) - Intent: product_search, Alpha: 0.5"
+    ],
+    "agents_run": [],
+    "timeout_ms": 10000
+  },
+  "conversation": {
+    "intent": "product_search",
+    "confidence": 0.6,
+    "response": "Found 15 products matching your search."
+  },
+  "message": "Found 15 products matching your search.",
+  "error": null,
+  "langsmith_trace_url": "https://smith.langchain.com/public/12928a61-2f2c-4994-9ea3-e9acb84042c0/r",
+  "suggestions": null,
+  "order": null
+}

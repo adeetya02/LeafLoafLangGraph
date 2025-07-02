@@ -1,0 +1,72 @@
+
+================================================================================
+LEAFLOAF LANGGRAPH API TEST REPORT
+================================================================================
+Generated: 2025-06-24 10:18:17
+
+SUMMARY
+----------------------------------------
+Total Tests: 10
+Successful: 10 (100.0%)
+Failed: 0 (0.0%)
+
+LATENCY METRICS
+----------------------------------------
+Average Latency: 176.16ms
+Min Latency: 9.87ms
+Max Latency: 645.09ms
+
+DETAILED RESULTS
+----------------------------------------
+
+1. 1. Basic Search - Organic Oat Milk
+   Status: ✅ PASS
+   Latency: 645.09ms
+
+2. 2. Brand Search - Oatly Barista Edition
+   Status: ✅ PASS
+   Latency: 223.33ms
+
+3. 3. Category Search - Breakfast Items
+   Status: ✅ PASS
+   Latency: 270.07ms
+
+4. 4. Add to Cart - Single Item
+   Status: ✅ PASS
+   Latency: 17.73ms
+
+5. 5. Add to Cart - Multiple Items
+   Status: ✅ PASS
+   Latency: 213.88ms
+
+6. 6. View Cart
+   Status: ✅ PASS
+   Latency: 15.79ms
+
+7. 7. Update Quantity
+   Status: ✅ PASS
+   Latency: 11.39ms
+
+8. 8. Remove Item
+   Status: ✅ PASS
+   Latency: 9.87ms
+
+9. 9. Confirm Order
+   Status: ✅ PASS
+   Latency: 10.11ms
+
+10. 10. Complex Query - Dietary Preferences
+   Status: ✅ PASS
+   Latency: 344.39ms
+
+========================================
+PERFORMANCE ANALYSIS
+========================================
+Fast (<1s): 10 requests
+Medium (1-3s): 0 requests
+Slow (>3s): 0 requests
+
+========================================
+RECOMMENDATIONS
+========================================
+✅ All tests passed successfully!

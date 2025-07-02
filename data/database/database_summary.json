@@ -1,0 +1,18 @@
+{
+  "generated_at": "2025-06-25T12:30:06.217811",
+  "statistics": {
+    "total_suppliers": 1,
+    "total_products": 934,
+    "total_prices": 938,
+    "products_with_upc": 0,
+    "products_without_upc": 934,
+    "organic_products": 255
+  },
+  "suppliers": [
+    {
+      "name": "Baldor Specialty Foods",
+      "code": "baldor",
+      "product_count": 934
+    }
+  ]
+}

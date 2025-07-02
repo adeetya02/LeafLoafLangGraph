@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Test - Debug Version</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            font-size: 20px;
+            padding: 20px 40px;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        #log {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Voice WebSocket Test</h1>
+    
+    <button id="testBtn">Test WebSocket Connection</button>
+    
+    <h3>Connection Log:</h3>
+    <div id="log"></div>
+    
+    <script>
+        const log = document.getElementById('log');
+        const testBtn = document.getElementById('testBtn');
+        
+        function addLog(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = type;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        testBtn.addEventListener('click', async () => {
+            addLog('Starting connection test...', 'info');
+            
+            // Test 1: HTTP endpoint
+            try {
+                addLog('Testing HTTP health endpoint...', 'info');
+                const response = await fetch('https://leafloaf-32905605817.us-central1.run.app/api/v1/voice-stream/health');
+                const data = await response.json();
+                addLog('HTTP health check: ' + JSON.stringify(data), 'success');
+            } catch (e) {
+                addLog('HTTP health check failed: ' + e.message, 'error');
+            }
+            
+            // Test 2: WebSocket connection
+            try {
+                addLog('Testing WebSocket connection...', 'info');
+                const ws = new WebSocket('wss://leafloaf-32905605817.us-central1.run.app/api/v1/voice-stream/stream');
+                
+                ws.onopen = () => {
+                    addLog('WebSocket connected successfully!', 'success');
+                    addLog('Connection state: ' + ws.readyState, 'info');
+                };
+                
+                ws.onerror = (error) => {
+                    addLog('WebSocket error: ' + error, 'error');
+                    console.error('Full error:', error);
+                };
+                
+                ws.onclose = (event) => {
+                    addLog(`WebSocket closed: code=${event.code}, reason=${event.reason}`, 'error');
+                };
+                
+                ws.onmessage = (event) => {
+                    addLog('Received message: ' + event.data, 'success');
+                };
+                
+            } catch (e) {
+                addLog('WebSocket connection failed: ' + e.message, 'error');
+            }
+            
+            // Test 3: Check browser support
+            addLog('Browser info:', 'info');
+            addLog('- User Agent: ' + navigator.userAgent, 'info');
+            addLog('- WebSocket support: ' + (typeof WebSocket !== 'undefined'), 'info');
+            addLog('- MediaRecorder support: ' + (typeof MediaRecorder !== 'undefined'), 'info');
+        });
+    </script>
+</body>
+</html>

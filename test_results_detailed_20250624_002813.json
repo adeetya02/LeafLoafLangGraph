@@ -1,0 +1,2035 @@
+{
+  "test_run": {
+    "timestamp": "2025-06-24T00:28:13.032927",
+    "base_url": "https://leafloaf-v2srnrkkhq-nn.a.run.app",
+    "session_id": "test-v2-1750739285",
+    "weaviate_tested": false
+  },
+  "results": [
+    {
+      "operation": "health_check",
+      "status": 200,
+      "duration_ms": 118.7751293182373,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:05.432037",
+      "query": "",
+      "details": "",
+      "data": {
+        "status": "healthy",
+        "timestamp": "2025-06-24T04:28:05.453290",
+        "version": "1.0.0"
+      }
+    },
+    {
+      "operation": "search_specific_product",
+      "status": 200,
+      "duration_ms": 327.9001712799072,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:05.760006",
+      "query": "Oatly Barista Edition oat milk",
+      "details": "Brand + specific variant",
+      "data": {
+        "success": false,
+        "query": "Oatly Barista Edition oat milk",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 268.6841080000022,
+          "agent_timings": {
+            "supervisor": 246.65325399996618,
+            "product_search": 4.566522000004625,
+            "response_compiler": 0.2029510000056689
+          },
+          "reasoning_steps": [
+            "Analysis (247ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (247ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: oatly barista edition oat milk",
+            "Only found 4 products - should search more broadly",
+            "Analysis (247ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (247ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: oatly barista edition oat milk",
+            "Only found 4 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/143278f9-2ee1-4d52-b997-253c853c6b05/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_specific_product",
+      "status": 200,
+      "duration_ms": 157.40108489990234,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:05.917615",
+      "query": "Organic Valley 2% milk gallon",
+      "details": "Brand + type + size",
+      "data": {
+        "success": false,
+        "query": "Organic Valley 2% milk gallon",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 120.01441299992166,
+          "agent_timings": {
+            "supervisor": 100.7794100000865,
+            "product_search": 4.4609379999656085,
+            "response_compiler": 0.25265900001159025
+          },
+          "reasoning_steps": [
+            "Analysis (101ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (101ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: valley 2% milk gallon",
+            "Only found 4 products - should search more broadly",
+            "Analysis (101ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (101ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: valley 2% milk gallon",
+            "Only found 4 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/6969c31e-27c4-4d26-b93d-61e99f72b9c2/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_specific_product",
+      "status": 200,
+      "duration_ms": 134.735107421875,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.052491",
+      "query": "Horizon organic whole milk",
+      "details": "Brand + attributes",
+      "data": {
+        "success": false,
+        "query": "Horizon organic whole milk",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 100.05520899994735,
+          "agent_timings": {
+            "supervisor": 79.56783600002382,
+            "product_search": 4.538495000019793,
+            "response_compiler": 0.20992800000385614
+          },
+          "reasoning_steps": [
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: horizon  whole milk",
+            "Only found 5 products - should search more broadly",
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: horizon  whole milk",
+            "Only found 5 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/041ff2e7-1fae-4a57-a619-6a5c4a68ae9b/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_specific_product",
+      "status": 200,
+      "duration_ms": 128.66878509521484,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.181299",
+      "query": "Nature's Path Heritage Flakes",
+      "details": "Exact product name",
+      "data": {
+        "success": false,
+        "query": "Nature's Path Heritage Flakes",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 94.24293100005343,
+          "agent_timings": {
+            "supervisor": 75.05241000001206,
+            "product_search": 4.231215999993765,
+            "response_compiler": 0.1882850000356484
+          },
+          "reasoning_steps": [
+            "Analysis (75ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (75ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: nature's path heritage flakes",
+            "Only found 1 products - should search more broadly",
+            "Analysis (75ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (75ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: nature's path heritage flakes",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/c24332d6-20dd-402b-881a-9075ee54bcf3/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_vague_product",
+      "status": 200,
+      "duration_ms": 132.69710540771484,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.314132",
+      "query": "milk",
+      "details": "Single word, common",
+      "data": {
+        "success": false,
+        "query": "milk",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 102.64492200008135,
+          "agent_timings": {
+            "supervisor": 82.18432800003939,
+            "product_search": 4.104095999991841,
+            "response_compiler": 0.20282800005588797
+          },
+          "reasoning_steps": [
+            "Analysis (82ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (82ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: milk",
+            "Only found 4 products - should search more broadly",
+            "Analysis (82ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (82ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: milk",
+            "Only found 4 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/048bfd77-c813-457d-831e-a20f562b496f/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_vague_product",
+      "status": 200,
+      "duration_ms": 119.02165412902832,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.433276",
+      "query": "bread",
+      "details": "Single word, common",
+      "data": {
+        "success": false,
+        "query": "bread",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 85.5532169999833,
+          "agent_timings": {
+            "supervisor": 66.52889700001197,
+            "product_search": 4.235287999904358,
+            "response_compiler": 0.18247399998472247
+          },
+          "reasoning_steps": [
+            "Analysis (66ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (66ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: bread",
+            "No products found - need to try different search strategy",
+            "Analysis (66ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (66ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: bread",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/0a41b022-d3f5-4d61-b762-179aa95807de/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_vague_product",
+      "status": 200,
+      "duration_ms": 126.10983848571777,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.559516",
+      "query": "something for breakfast",
+      "details": "Very vague",
+      "data": {
+        "success": false,
+        "query": "something for breakfast",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 90.74577399996997,
+          "agent_timings": {
+            "supervisor": 71.92050300000119,
+            "product_search": 4.192557000010311,
+            "response_compiler": 0.25300000004335743
+          },
+          "reasoning_steps": [
+            "Analysis (72ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (72ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 2 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: something for breakfast",
+            "Only found 2 products - should search more broadly",
+            "Analysis (72ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (72ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 2 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: something for breakfast",
+            "Only found 2 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/2e17be48-fd8e-4b2b-b40a-b7aa92356dad/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_vague_product",
+      "status": 200,
+      "duration_ms": 131.27994537353516,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.691121",
+      "query": "healthy snacks",
+      "details": "Vague category",
+      "data": {
+        "success": false,
+        "query": "healthy snacks",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 95.06766200001948,
+          "agent_timings": {
+            "supervisor": 73.25804300000982,
+            "product_search": 4.490448999945329,
+            "response_compiler": 0.23897700009456457
+          },
+          "reasoning_steps": [
+            "Analysis (73ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (73ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: healthy snacks",
+            "No products found - need to try different search strategy",
+            "Analysis (73ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (73ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: healthy snacks",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/6f2f7b62-098f-445f-bfd0-d4f46e1b0c94/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_category_search",
+      "status": 200,
+      "duration_ms": 142.3361301422119,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.833571",
+      "query": "dairy products",
+      "details": "Product category",
+      "data": {
+        "success": false,
+        "query": "dairy products",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 106.53204499999447,
+          "agent_timings": {
+            "supervisor": 85.06286900001214,
+            "product_search": 4.2970119999381495,
+            "response_compiler": 0.19490700003643724
+          },
+          "reasoning_steps": [
+            "Analysis (85ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (85ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: dairy products",
+            "Only found 1 products - should search more broadly",
+            "Analysis (85ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (85ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: dairy products",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/6a7486c6-282c-41b9-bbb1-3d429869b7f3/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_category_search",
+      "status": 200,
+      "duration_ms": 125.88310241699219,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:06.959675",
+      "query": "breakfast cereals",
+      "details": "Specific category",
+      "data": {
+        "success": false,
+        "query": "breakfast cereals",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 88.03987400006008,
+          "agent_timings": {
+            "supervisor": 69.33857199999238,
+            "product_search": 3.8568269999359472,
+            "response_compiler": 0.19033600005968765
+          },
+          "reasoning_steps": [
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: breakfast cereals",
+            "Only found 1 products - should search more broadly",
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: breakfast cereals",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/29d991cc-e2bf-4895-a070-9f40f682fa0b/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_category_search",
+      "status": 200,
+      "duration_ms": 131.8190097808838,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.091720",
+      "query": "plant-based alternatives",
+      "details": "Modern category",
+      "data": {
+        "success": false,
+        "query": "plant-based alternatives",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 102.38691000006384,
+          "agent_timings": {
+            "supervisor": 82.71773600006327,
+            "product_search": 4.7728860000688655,
+            "response_compiler": 0.23572699990381807
+          },
+          "reasoning_steps": [
+            "Analysis (83ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (83ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: plant-based alternatives",
+            "No products found - need to try different search strategy",
+            "Analysis (83ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (83ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: plant-based alternatives",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/66930c3c-d01f-42fc-99a6-8a021dbb9ea3/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_category_search",
+      "status": 200,
+      "duration_ms": 131.94680213928223,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.223786",
+      "query": "frozen foods",
+      "details": "Department category",
+      "data": {
+        "success": false,
+        "query": "frozen foods",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 97.2354360000054,
+          "agent_timings": {
+            "supervisor": 79.38919299999725,
+            "product_search": 3.941693999991003,
+            "response_compiler": 0.1803740000241305
+          },
+          "reasoning_steps": [
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: frozen foods",
+            "Only found 1 products - should search more broadly",
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (79ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: frozen foods",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/6e6f20ae-0a78-45e2-b704-b2407203e688/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_attribute_search",
+      "status": 200,
+      "duration_ms": 116.12105369567871,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.340036",
+      "query": "organic gluten-free products",
+      "details": "Multiple attributes",
+      "data": {
+        "success": false,
+        "query": "organic gluten-free products",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 84.95750500003396,
+          "agent_timings": {
+            "supervisor": 64.30512400004318,
+            "product_search": 6.386786000007305,
+            "response_compiler": 0.20528300001387834
+          },
+          "reasoning_steps": [
+            "Analysis (64ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (64ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: gluten-free products",
+            "No products found - need to try different search strategy",
+            "Analysis (64ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (64ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: gluten-free products",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/9afd0317-542f-4e66-9cbd-afee8d379418/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_attribute_search",
+      "status": 200,
+      "duration_ms": 122.10392951965332,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.462374",
+      "query": "vegan protein sources",
+      "details": "Diet + nutrition",
+      "data": {
+        "success": false,
+        "query": "vegan protein sources",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 88.57946000000538,
+          "agent_timings": {
+            "supervisor": 69.07578199991349,
+            "product_search": 4.160247000072559,
+            "response_compiler": 0.2462519998971402
+          },
+          "reasoning_steps": [
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 2 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: vegan protein sources",
+            "Only found 2 products - should search more broadly",
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (69ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 2 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: vegan protein sources",
+            "Only found 2 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/1c15e677-c7ea-49da-9634-45ea80400a08/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_attribute_search",
+      "status": 200,
+      "duration_ms": 104.18987274169922,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.566767",
+      "query": "low sodium items",
+      "details": "Health attribute",
+      "data": {
+        "success": false,
+        "query": "low sodium items",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 73.84346000003461,
+          "agent_timings": {
+            "supervisor": 55.273970000030204,
+            "product_search": 4.004503000032855,
+            "response_compiler": 0.25946199991722096
+          },
+          "reasoning_steps": [
+            "Analysis (55ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (55ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: low sodium items",
+            "No products found - need to try different search strategy",
+            "Analysis (55ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (55ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: low sodium items",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/bf0c80b3-3d27-40fe-b1da-c505eeeb3e11/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_attribute_search",
+      "status": 200,
+      "duration_ms": 98.4032154083252,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.665303",
+      "query": "non-GMO snacks",
+      "details": "Certification attribute",
+      "data": {
+        "success": false,
+        "query": "non-GMO snacks",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 66.22691199993369,
+          "agent_timings": {
+            "supervisor": 45.144972999992206,
+            "product_search": 4.9985809999952835,
+            "response_compiler": 0.2686020000055578
+          },
+          "reasoning_steps": [
+            "Analysis (45ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (45ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: non-gmo snacks",
+            "No products found - need to try different search strategy",
+            "Analysis (45ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (45ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: non-gmo snacks",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/8198aa6a-6099-4015-b7e3-05f2bbc174b5/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_exploratory",
+      "status": 200,
+      "duration_ms": 107.34200477600098,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.772818",
+      "query": "what's good for a picnic",
+      "details": "Use case query",
+      "data": {
+        "success": false,
+        "query": "what's good for a picnic",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 70.4227080000237,
+          "agent_timings": {
+            "supervisor": 47.03447300005337,
+            "product_search": 4.104809000068599,
+            "response_compiler": 0.2959099999770842
+          },
+          "reasoning_steps": [
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: what's good for a picnic",
+            "Only found 5 products - should search more broadly",
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: what's good for a picnic",
+            "Only found 5 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/d741be27-edba-4162-be1e-39d2781889a1/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_exploratory",
+      "status": 200,
+      "duration_ms": 103.91402244567871,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:07.876964",
+      "query": "dinner ideas for tonight",
+      "details": "Meal planning",
+      "data": {
+        "success": false,
+        "query": "dinner ideas for tonight",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 71.58474100003787,
+          "agent_timings": {
+            "supervisor": 50.66279699997267,
+            "product_search": 4.094119999990653,
+            "response_compiler": 0.2491220000138128
+          },
+          "reasoning_steps": [
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: dinner ideas for tonight",
+            "Only found 1 products - should search more broadly",
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: dinner ideas for tonight",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/09e91747-fbde-45d8-9f92-081f58248e4c/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_exploratory",
+      "status": 200,
+      "duration_ms": 172.34086990356445,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:08.049447",
+      "query": "healthy options for kids",
+      "details": "Demographic + health",
+      "data": {
+        "success": false,
+        "query": "healthy options for kids",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 67.08026499995867,
+          "agent_timings": {
+            "supervisor": 46.10042199999498,
+            "product_search": 4.390639999996893,
+            "response_compiler": 0.19710300000497227
+          },
+          "reasoning_steps": [
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: healthy options for kids",
+            "Only found 1 products - should search more broadly",
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: healthy options for kids",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/a3a6ec52-e9e2-49b5-a04e-68992bed0bd8/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "search_exploratory",
+      "status": 200,
+      "duration_ms": 94.36798095703125,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:08.144055",
+      "query": "quick lunch solutions",
+      "details": "Time-based need",
+      "data": {
+        "success": false,
+        "query": "quick lunch solutions",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 62.603294999917125,
+          "agent_timings": {
+            "supervisor": 44.10383499998716,
+            "product_search": 3.888098000061291,
+            "response_compiler": 0.19752100001824147
+          },
+          "reasoning_steps": [
+            "Analysis (44ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (44ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: quick lunch solutions",
+            "No products found - need to try different search strategy",
+            "Analysis (44ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (44ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: quick lunch solutions",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/79a31961-51fb-43b9-9e35-7e6c4cb5edbb/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_specific_specific_initial",
+      "status": 200,
+      "duration_ms": 101.10998153686523,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:08.245283",
+      "query": "I need Oatly Barista Edition",
+      "details": "Exact product request",
+      "data": {
+        "success": false,
+        "query": "I need Oatly Barista Edition",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 67.0183109999698,
+          "agent_timings": {
+            "supervisor": 46.04546600000958,
+            "product_search": 4.226814000048762,
+            "response_compiler": 0.22133200002372178
+          },
+          "reasoning_steps": [
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: i need oatly barista edition",
+            "Only found 5 products - should search more broadly",
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (46ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: i need oatly barista edition",
+            "Only found 5 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/71ba03a5-7c69-4ecc-9493-dd3105ee64c3/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_specific_specific_add",
+      "status": 200,
+      "duration_ms": 100.2037525177002,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:08.646744",
+      "query": "Add 2 cartons to my cart",
+      "details": "Specific quantity",
+      "data": {
+        "success": false,
+        "query": "Add 2 cartons to my cart",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 69.28310399996462,
+          "agent_timings": {
+            "supervisor": 51.26249700003882,
+            "order_agent": 2.2259770000800927,
+            "response_compiler": 0.22868899998229608
+          },
+          "reasoning_steps": [
+            "Analysis (51ms) - Intent: add_to_order, Alpha: 0.50",
+            "Analysis (51ms) - Intent: add_to_order, Alpha: 0.50",
+            "Order iteration 1: Need to get product information first",
+            "Tool get_product_for_order needs another iteration",
+            "Order iteration 2: Retrying to add items with more specific search",
+            "Analysis (51ms) - Intent: add_to_order, Alpha: 0.50",
+            "Analysis (51ms) - Intent: add_to_order, Alpha: 0.50",
+            "Order iteration 1: Need to get product information first",
+            "Tool get_product_for_order needs another iteration",
+            "Order iteration 2: Retrying to add items with more specific search"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/8ff0f5f5-9e55-4291-ae06-f3e9651bb7b0/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_specific_specific_additional",
+      "status": 200,
+      "duration_ms": 99.18785095214844,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:09.047264",
+      "query": "Also get me Horizon organic milk",
+      "details": "Another specific product",
+      "data": {
+        "success": false,
+        "query": "Also get me Horizon organic milk",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 69.16163200003211,
+          "agent_timings": {
+            "supervisor": 47.332256000004236,
+            "product_search": 4.69246000000112,
+            "response_compiler": 0.2743710000459032
+          },
+          "reasoning_steps": [
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: also get me horizon  milk",
+            "Only found 4 products - should search more broadly",
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (47ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: also get me horizon  milk",
+            "Only found 4 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/206bb74e-d398-4d7b-b917-0d87d8d4bca5/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_specific_specific_modify",
+      "status": 200,
+      "duration_ms": 110.08381843566895,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:09.458828",
+      "query": "Change Oatly quantity to 3",
+      "details": "Modify specific item",
+      "data": {
+        "success": false,
+        "query": "Change Oatly quantity to 3",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 73.89021999995293,
+          "agent_timings": {
+            "supervisor": 51.26698499998383,
+            "product_search": 4.926832999899489,
+            "response_compiler": 0.25311599995347933
+          },
+          "reasoning_steps": [
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: change oatly quantity to 3",
+            "Only found 1 products - should search more broadly",
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (51ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 1 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: change oatly quantity to 3",
+            "Only found 1 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/a5bb4ce1-ce0c-4390-b13d-220e26f5a0b7/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_specific_specific_list",
+      "status": 200,
+      "duration_ms": 100.29959678649902,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:09.860375",
+      "query": "Show me my order",
+      "details": "Review order",
+      "data": {
+        "success": false,
+        "query": "Show me my order",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 66.47406600006889,
+          "agent_timings": {
+            "supervisor": 45.688127000062195,
+            "order_agent": 1.6120819999514424,
+            "response_compiler": 0.249617000008584
+          },
+          "reasoning_steps": [
+            "Analysis (46ms) - Intent: add_to_order, Alpha: 0.50",
+            "Analysis (46ms) - Intent: add_to_order, Alpha: 0.50",
+            "Order iteration 1: Showing current cart contents",
+            "Cart contents displayed",
+            "Analysis (46ms) - Intent: add_to_order, Alpha: 0.50",
+            "Analysis (46ms) - Intent: add_to_order, Alpha: 0.50",
+            "Order iteration 1: Showing current cart contents",
+            "Cart contents displayed"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/c715a41e-0cb1-433a-b4bf-afed5e798aee/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_specific_specific_confirm",
+      "status": 200,
+      "duration_ms": 111.64188385009766,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:10.273496",
+      "query": "That's all, confirm order",
+      "details": "Confirm with context",
+      "data": {
+        "success": false,
+        "query": "That's all, confirm order",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 76.38557099994614,
+          "agent_timings": {
+            "supervisor": 56.61979500007419,
+            "order_agent": 2.1556680000003325,
+            "response_compiler": 0.2005210000106672
+          },
+          "reasoning_steps": [
+            "Analysis (57ms) - Intent: confirm_order, Alpha: 0.50",
+            "Analysis (57ms) - Intent: confirm_order, Alpha: 0.50",
+            "Order iteration 1: Confirming order for checkout",
+            "Tool confirm_order needs another iteration",
+            "Order iteration 2: Order action completed",
+            "Analysis (57ms) - Intent: confirm_order, Alpha: 0.50",
+            "Analysis (57ms) - Intent: confirm_order, Alpha: 0.50",
+            "Order iteration 1: Confirming order for checkout",
+            "Tool confirm_order needs another iteration",
+            "Order iteration 2: Order action completed"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/8733a51a-97bb-4adb-854b-3a0803a6e55c/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_vague_vague_initial",
+      "status": 200,
+      "duration_ms": 109.58385467529297,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:10.684701",
+      "query": "I need some milk",
+      "details": "Vague product request",
+      "data": {
+        "success": false,
+        "query": "I need some milk",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 73.41144100007568,
+          "agent_timings": {
+            "supervisor": 52.879396999969686,
+            "product_search": 4.842468999981975,
+            "response_compiler": 0.18882500000927394
+          },
+          "reasoning_steps": [
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: i need some milk",
+            "Only found 5 products - should search more broadly",
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 5 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: i need some milk",
+            "Only found 5 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/e4f21a72-873c-4863-aba4-ef0ecc402463/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_vague_vague_explore",
+      "status": 200,
+      "duration_ms": 114.18700218200684,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:11.100209",
+      "query": "What options do you have?",
+      "details": "Exploration",
+      "data": {
+        "success": false,
+        "query": "What options do you have?",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 73.79039099998863,
+          "agent_timings": {
+            "supervisor": 53.314238999973895,
+            "product_search": 4.100208000068051,
+            "response_compiler": 0.2186719999599518
+          },
+          "reasoning_steps": [
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: what options do you have?",
+            "No products found - need to try different search strategy",
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (53ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "No products found - need to try different search strategy",
+            "Search iteration 2: Too few results, broadening search to: what options do you have?",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/cc0674ed-1256-439a-9d00-947c4fb95a44/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_vague_vague_select",
+      "status": 200,
+      "duration_ms": 96.27604484558105,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:11.497838",
+      "query": "I'll take the organic one",
+      "details": "Relative selection",
+      "data": {
+        "success": false,
+        "query": "I'll take the organic one",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 67.13841700002376,
+          "agent_timings": {
+            "supervisor": 48.135181000020566,
+            "product_search": 4.1307120000055875,
+            "response_compiler": 0.2778990000251724
+          },
+          "reasoning_steps": [
+            "Analysis (48ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (48ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: i'll take the  one",
+            "No products found - need to try different search strategy",
+            "Analysis (48ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (48ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 4 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: i'll take the  one",
+            "No products found - need to try different search strategy"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/14b6ae81-327c-4f82-b509-5bec0248a957/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_vague_vague_additional",
+      "status": 200,
+      "duration_ms": 110.21304130554199,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:11.909345",
+      "query": "Add some bread too",
+      "details": "Another vague request",
+      "data": {
+        "success": false,
+        "query": "Add some bread too",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 76.93076500004281,
+          "agent_timings": {
+            "supervisor": 52.19128599992473,
+            "order_agent": 2.59300200002599,
+            "response_compiler": 0.3745099999150625
+          },
+          "reasoning_steps": [
+            "Analysis (52ms) - Intent: add_to_order, Alpha: 0.50",
+            "Analysis (52ms) - Intent: add_to_order, Alpha: 0.50",
+            "Order iteration 1: Need to get product information first",
+            "Tool get_product_for_order needs another iteration",
+            "Order iteration 2: Retrying to add items with more specific search",
+            "Analysis (52ms) - Intent: add_to_order, Alpha: 0.50",
+            "Analysis (52ms) - Intent: add_to_order, Alpha: 0.50",
+            "Order iteration 1: Need to get product information first",
+            "Tool get_product_for_order needs another iteration",
+            "Order iteration 2: Retrying to add items with more specific search"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/79dd8df1-16f1-4361-90a2-d34688b18932/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_vague_vague_category",
+      "status": 200,
+      "duration_ms": 110.30387878417969,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:12.321122",
+      "query": "Something for breakfast",
+      "details": "Very vague addition",
+      "data": {
+        "success": false,
+        "query": "Something for breakfast",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 72.89431600008811,
+          "agent_timings": {
+            "supervisor": 49.62268200006292,
+            "product_search": 4.502635999983795,
+            "response_compiler": 0.2346789999592147
+          },
+          "reasoning_steps": [
+            "Analysis (49ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (49ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 2 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: something for breakfast",
+            "Only found 2 products - should search more broadly",
+            "Analysis (49ms) - Intent: product_search, Alpha: 0.50",
+            "Analysis (49ms) - Intent: product_search, Alpha: 0.50",
+            "Search iteration 1: Performing general product search",
+            "Only found 2 products - should search more broadly",
+            "Search iteration 2: Too few results, broadening search to: something for breakfast",
+            "Only found 2 products - should search more broadly"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/6cc4bbcc-c9ac-4208-a19c-5dfa6c601911/r",
+        "suggestions": null
+      }
+    },
+    {
+      "operation": "conversation_vague_vague_confirm",
+      "status": 200,
+      "duration_ms": 107.49292373657227,
+      "success": true,
+      "timestamp": "2025-06-24T00:28:12.730043",
+      "query": "That's good, checkout",
+      "details": "Casual confirmation",
+      "data": {
+        "success": false,
+        "query": "That's good, checkout",
+        "products": [],
+        "metadata": {
+          "total_count": 0,
+          "categories": [],
+          "brands": [],
+          "search_config": {}
+        },
+        "execution": {
+          "total_time_ms": 66.72182800002702,
+          "agent_timings": {
+            "supervisor": 45.247016999951484,
+            "order_agent": 2.7462289999675704,
+            "response_compiler": 0.2543609999747787
+          },
+          "reasoning_steps": [
+            "Analysis (45ms) - Intent: confirm_order, Alpha: 0.50",
+            "Analysis (45ms) - Intent: confirm_order, Alpha: 0.50",
+            "Order iteration 1: Confirming order for checkout",
+            "Tool confirm_order needs another iteration",
+            "Order iteration 2: Order action completed",
+            "Analysis (45ms) - Intent: confirm_order, Alpha: 0.50",
+            "Analysis (45ms) - Intent: confirm_order, Alpha: 0.50",
+            "Order iteration 1: Confirming order for checkout",
+            "Tool confirm_order needs another iteration",
+            "Order iteration 2: Order action completed"
+          ],
+          "agents_run": [],
+          "timeout_ms": 5000
+        },
+        "message": "No products found. Try broadening your search.",
+        "error": null,
+        "langsmith_trace_url": "https://smith.langchain.com/public/72e58369-1579-4c43-8d8f-35ce893f1e24/r",
+        "suggestions": null
+      }
+    }
+  ],
+  "detailed_latency_stats": {
+    "health_check": {
+      "min": 118.7751293182373,
+      "max": 118.7751293182373,
+      "avg": 118.7751293182373,
+      "p50": 118.7751293182373,
+      "p95": 118.7751293182373,
+      "p99": 118.7751293182373,
+      "count": 1,
+      "queries": [
+        {
+          "query": "",
+          "latency_ms": 118.7751293182373,
+          "details": ""
+        }
+      ]
+    },
+    "search_specific_product": {
+      "min": 128.66878509521484,
+      "max": 327.9001712799072,
+      "avg": 187.17628717422485,
+      "p50": 157.40108489990234,
+      "p95": 327.9001712799072,
+      "p99": 327.9001712799072,
+      "count": 4,
+      "queries": [
+        {
+          "query": "Oatly Barista Edition oat milk",
+          "latency_ms": 327.9001712799072,
+          "details": "Brand + specific variant"
+        },
+        {
+          "query": "Organic Valley 2% milk gallon",
+          "latency_ms": 157.40108489990234,
+          "details": "Brand + type + size"
+        },
+        {
+          "query": "Horizon organic whole milk",
+          "latency_ms": 134.735107421875,
+          "details": "Brand + attributes"
+        },
+        {
+          "query": "Nature's Path Heritage Flakes",
+          "latency_ms": 128.66878509521484,
+          "details": "Exact product name"
+        }
+      ]
+    },
+    "search_vague_product": {
+      "min": 119.02165412902832,
+      "max": 132.69710540771484,
+      "avg": 127.27713584899902,
+      "p50": 131.27994537353516,
+      "p95": 132.69710540771484,
+      "p99": 132.69710540771484,
+      "count": 4,
+      "queries": [
+        {
+          "query": "milk",
+          "latency_ms": 132.69710540771484,
+          "details": "Single word, common"
+        },
+        {
+          "query": "bread",
+          "latency_ms": 119.02165412902832,
+          "details": "Single word, common"
+        },
+        {
+          "query": "something for breakfast",
+          "latency_ms": 126.10983848571777,
+          "details": "Very vague"
+        },
+        {
+          "query": "healthy snacks",
+          "latency_ms": 131.27994537353516,
+          "details": "Vague category"
+        }
+      ]
+    },
+    "search_category_search": {
+      "min": 125.88310241699219,
+      "max": 142.3361301422119,
+      "avg": 132.99626111984253,
+      "p50": 131.94680213928223,
+      "p95": 142.3361301422119,
+      "p99": 142.3361301422119,
+      "count": 4,
+      "queries": [
+        {
+          "query": "dairy products",
+          "latency_ms": 142.3361301422119,
+          "details": "Product category"
+        },
+        {
+          "query": "breakfast cereals",
+          "latency_ms": 125.88310241699219,
+          "details": "Specific category"
+        },
+        {
+          "query": "plant-based alternatives",
+          "latency_ms": 131.8190097808838,
+          "details": "Modern category"
+        },
+        {
+          "query": "frozen foods",
+          "latency_ms": 131.94680213928223,
+          "details": "Department category"
+        }
+      ]
+    },
+    "search_attribute_search": {
+      "min": 98.4032154083252,
+      "max": 122.10392951965332,
+      "avg": 110.20451784133911,
+      "p50": 116.12105369567871,
+      "p95": 122.10392951965332,
+      "p99": 122.10392951965332,
+      "count": 4,
+      "queries": [
+        {
+          "query": "organic gluten-free products",
+          "latency_ms": 116.12105369567871,
+          "details": "Multiple attributes"
+        },
+        {
+          "query": "vegan protein sources",
+          "latency_ms": 122.10392951965332,
+          "details": "Diet + nutrition"
+        },
+        {
+          "query": "low sodium items",
+          "latency_ms": 104.18987274169922,
+          "details": "Health attribute"
+        },
+        {
+          "query": "non-GMO snacks",
+          "latency_ms": 98.4032154083252,
+          "details": "Certification attribute"
+        }
+      ]
+    },
+    "search_exploratory": {
+      "min": 94.36798095703125,
+      "max": 172.34086990356445,
+      "avg": 119.49121952056885,
+      "p50": 107.34200477600098,
+      "p95": 172.34086990356445,
+      "p99": 172.34086990356445,
+      "count": 4,
+      "queries": [
+        {
+          "query": "what's good for a picnic",
+          "latency_ms": 107.34200477600098,
+          "details": "Use case query"
+        },
+        {
+          "query": "dinner ideas for tonight",
+          "latency_ms": 103.91402244567871,
+          "details": "Meal planning"
+        },
+        {
+          "query": "healthy options for kids",
+          "latency_ms": 172.34086990356445,
+          "details": "Demographic + health"
+        },
+        {
+          "query": "quick lunch solutions",
+          "latency_ms": 94.36798095703125,
+          "details": "Time-based need"
+        }
+      ]
+    },
+    "conversation_specific_specific_initial": {
+      "min": 101.10998153686523,
+      "max": 101.10998153686523,
+      "avg": 101.10998153686523,
+      "p50": 101.10998153686523,
+      "p95": 101.10998153686523,
+      "p99": 101.10998153686523,
+      "count": 1,
+      "queries": [
+        {
+          "query": "I need Oatly Barista Edition",
+          "latency_ms": 101.10998153686523,
+          "details": "Exact product request"
+        }
+      ]
+    },
+    "conversation_specific_specific_add": {
+      "min": 100.2037525177002,
+      "max": 100.2037525177002,
+      "avg": 100.2037525177002,
+      "p50": 100.2037525177002,
+      "p95": 100.2037525177002,
+      "p99": 100.2037525177002,
+      "count": 1,
+      "queries": [
+        {
+          "query": "Add 2 cartons to my cart",
+          "latency_ms": 100.2037525177002,
+          "details": "Specific quantity"
+        }
+      ]
+    },
+    "conversation_specific_specific_additional": {
+      "min": 99.18785095214844,
+      "max": 99.18785095214844,
+      "avg": 99.18785095214844,
+      "p50": 99.18785095214844,
+      "p95": 99.18785095214844,
+      "p99": 99.18785095214844,
+      "count": 1,
+      "queries": [
+        {
+          "query": "Also get me Horizon organic milk",
+          "latency_ms": 99.18785095214844,
+          "details": "Another specific product"
+        }
+      ]
+    },
+    "conversation_specific_specific_modify": {
+      "min": 110.08381843566895,
+      "max": 110.08381843566895,
+      "avg": 110.08381843566895,
+      "p50": 110.08381843566895,
+      "p95": 110.08381843566895,
+      "p99": 110.08381843566895,
+      "count": 1,
+      "queries": [
+        {
+          "query": "Change Oatly quantity to 3",
+          "latency_ms": 110.08381843566895,
+          "details": "Modify specific item"
+        }
+      ]
+    },
+    "conversation_specific_specific_list": {
+      "min": 100.29959678649902,
+      "max": 100.29959678649902,
+      "avg": 100.29959678649902,
+      "p50": 100.29959678649902,
+      "p95": 100.29959678649902,
+      "p99": 100.29959678649902,
+      "count": 1,
+      "queries": [
+        {
+          "query": "Show me my order",
+          "latency_ms": 100.29959678649902,
+          "details": "Review order"
+        }
+      ]
+    },
+    "conversation_specific_specific_confirm": {
+      "min": 111.64188385009766,
+      "max": 111.64188385009766,
+      "avg": 111.64188385009766,
+      "p50": 111.64188385009766,
+      "p95": 111.64188385009766,
+      "p99": 111.64188385009766,
+      "count": 1,
+      "queries": [
+        {
+          "query": "That's all, confirm order",
+          "latency_ms": 111.64188385009766,
+          "details": "Confirm with context"
+        }
+      ]
+    },
+    "conversation_vague_vague_initial": {
+      "min": 109.58385467529297,
+      "max": 109.58385467529297,
+      "avg": 109.58385467529297,
+      "p50": 109.58385467529297,
+      "p95": 109.58385467529297,
+      "p99": 109.58385467529297,
+      "count": 1,
+      "queries": [
+        {
+          "query": "I need some milk",
+          "latency_ms": 109.58385467529297,
+          "details": "Vague product request"
+        }
+      ]
+    },
+    "conversation_vague_vague_explore": {
+      "min": 114.18700218200684,
+      "max": 114.18700218200684,
+      "avg": 114.18700218200684,
+      "p50": 114.18700218200684,
+      "p95": 114.18700218200684,
+      "p99": 114.18700218200684,
+      "count": 1,
+      "queries": [
+        {
+          "query": "What options do you have?",
+          "latency_ms": 114.18700218200684,
+          "details": "Exploration"
+        }
+      ]
+    },
+    "conversation_vague_vague_select": {
+      "min": 96.27604484558105,
+      "max": 96.27604484558105,
+      "avg": 96.27604484558105,
+      "p50": 96.27604484558105,
+      "p95": 96.27604484558105,
+      "p99": 96.27604484558105,
+      "count": 1,
+      "queries": [
+        {
+          "query": "I'll take the organic one",
+          "latency_ms": 96.27604484558105,
+          "details": "Relative selection"
+        }
+      ]
+    },
+    "conversation_vague_vague_additional": {
+      "min": 110.21304130554199,
+      "max": 110.21304130554199,
+      "avg": 110.21304130554199,
+      "p50": 110.21304130554199,
+      "p95": 110.21304130554199,
+      "p99": 110.21304130554199,
+      "count": 1,
+      "queries": [
+        {
+          "query": "Add some bread too",
+          "latency_ms": 110.21304130554199,
+          "details": "Another vague request"
+        }
+      ]
+    },
+    "conversation_vague_vague_category": {
+      "min": 110.30387878417969,
+      "max": 110.30387878417969,
+      "avg": 110.30387878417969,
+      "p50": 110.30387878417969,
+      "p95": 110.30387878417969,
+      "p99": 110.30387878417969,
+      "count": 1,
+      "queries": [
+        {
+          "query": "Something for breakfast",
+          "latency_ms": 110.30387878417969,
+          "details": "Very vague addition"
+        }
+      ]
+    },
+    "conversation_vague_vague_confirm": {
+      "min": 107.49292373657227,
+      "max": 107.49292373657227,
+      "avg": 107.49292373657227,
+      "p50": 107.49292373657227,
+      "p95": 107.49292373657227,
+      "p99": 107.49292373657227,
+      "count": 1,
+      "queries": [
+        {
+          "query": "That's good, checkout",
+          "latency_ms": 107.49292373657227,
+          "details": "Casual confirmation"
+        }
+      ]
+    }
+  },
+  "test_queries": [
+    {
+      "query": "Oatly Barista Edition oat milk",
+      "category": "specific_product",
+      "expected_alpha": 0.1,
+      "description": "Brand + specific variant"
+    },
+    {
+      "query": "Organic Valley 2% milk gallon",
+      "category": "specific_product",
+      "expected_alpha": 0.15,
+      "description": "Brand + type + size"
+    },
+    {
+      "query": "Horizon organic whole milk",
+      "category": "specific_product",
+      "expected_alpha": 0.2,
+      "description": "Brand + attributes"
+    },
+    {
+      "query": "Nature's Path Heritage Flakes",
+      "category": "specific_product",
+      "expected_alpha": 0.1,
+      "description": "Exact product name"
+    },
+    {
+      "query": "milk",
+      "category": "vague_product",
+      "expected_alpha": 0.5,
+      "description": "Single word, common"
+    },
+    {
+      "query": "bread",
+      "category": "vague_product",
+      "expected_alpha": 0.5,
+      "description": "Single word, common"
+    },
+    {
+      "query": "something for breakfast",
+      "category": "vague_product",
+      "expected_alpha": 0.7,
+      "description": "Very vague"
+    },
+    {
+      "query": "healthy snacks",
+      "category": "vague_product",
+      "expected_alpha": 0.6,
+      "description": "Vague category"
+    },
+    {
+      "query": "dairy products",
+      "category": "category_search",
+      "expected_alpha": 0.6,
+      "description": "Product category"
+    },
+    {
+      "query": "breakfast cereals",
+      "category": "category_search",
+      "expected_alpha": 0.5,
+      "description": "Specific category"
+    },
+    {
+      "query": "plant-based alternatives",
+      "category": "category_search",
+      "expected_alpha": 0.6,
+      "description": "Modern category"
+    },
+    {
+      "query": "frozen foods",
+      "category": "category_search",
+      "expected_alpha": 0.5,
+      "description": "Department category"
+    },
+    {
+      "query": "organic gluten-free products",
+      "category": "attribute_search",
+      "expected_alpha": 0.4,
+      "description": "Multiple attributes"
+    },
+    {
+      "query": "vegan protein sources",
+      "category": "attribute_search",
+      "expected_alpha": 0.5,
+      "description": "Diet + nutrition"
+    },
+    {
+      "query": "low sodium items",
+      "category": "attribute_search",
+      "expected_alpha": 0.4,
+      "description": "Health attribute"
+    },
+    {
+      "query": "non-GMO snacks",
+      "category": "attribute_search",
+      "expected_alpha": 0.4,
+      "description": "Certification attribute"
+    },
+    {
+      "query": "what's good for a picnic",
+      "category": "exploratory",
+      "expected_alpha": 0.8,
+      "description": "Use case query"
+    },
+    {
+      "query": "dinner ideas for tonight",
+      "category": "exploratory",
+      "expected_alpha": 0.9,
+      "description": "Meal planning"
+    },
+    {
+      "query": "healthy options for kids",
+      "category": "exploratory",
+      "expected_alpha": 0.7,
+      "description": "Demographic + health"
+    },
+    {
+      "query": "quick lunch solutions",
+      "category": "exploratory",
+      "expected_alpha": 0.8,
+      "description": "Time-based need"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "session_id": "perf_test_1750915203",
+  "timestamp": "20250626_012008",
+  "results": [
+    {
+      "query": "milk",
+      "type": "Simple search",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 0.7779598236083984
+    },
+    {
+      "query": "Amul toned milk",
+      "type": "Brand specific",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 13.455867767333984
+    },
+    {
+      "query": "organic vegetables under 100 rupees",
+      "type": "Complex semantic",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 2.6149749755859375
+    },
+    {
+      "query": "add 2 packets of milk",
+      "type": "Add to cart",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 2.6712417602539062
+    },
+    {
+      "query": "show my cart",
+      "type": "View cart",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 2.897977828979492
+    },
+    {
+      "query": "what deals do you have",
+      "type": "Promotion query",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 9.308815002441406
+    },
+    {
+      "query": "I need my usual groceries",
+      "type": "Contextual",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 6.232976913452148
+    },
+    {
+      "query": "healthy breakfast ideas",
+      "type": "Exploratory",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 6.08515739440918
+    },
+    {
+      "query": "remove milk from cart",
+      "type": "Remove from cart",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 6.546258926391602
+    },
+    {
+      "query": "checkout my order",
+      "type": "Checkout",
+      "success": false,
+      "error": "'agent_status'",
+      "total_latency_ms": 7.003068923950195
+    }
+  ],
+  "summary": {
+    "success_rate": 0.0,
+    "avg_latency_ms": null,
+    "min_latency_ms": null,
+    "max_latency_ms": null
+  }
+}

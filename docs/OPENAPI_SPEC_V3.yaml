@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: LeafLoaf API
+  description: Ultra-thin API layer for agent-based grocery shopping
+  version: 3.0.0
+  
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.leafloaf.ai
+    description: Production
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      description: Simple health check endpoint
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: healthy
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/v1/search:
+    post:
+      summary: Universal search endpoint
+      description: All queries go through this single endpoint - agents handle routing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/stream:
+    post:
+      summary: Streaming search endpoint
+      description: SSE stream for real-time updates (future)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: SSE stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+components:
+  schemas:
+    SearchRequest:
+      type: object
+      required:
+        - query
+      properties:
+        query:
+          type: string
+          description: Natural language query
+          example: "organic milk"
+        user_id:
+          type: string
+          description: Optional user identifier
+          example: "user_123"
+        session_id:
+          type: string
+          description: Optional session identifier
+          example: "session_abc"
+        context:
+          type: object
+          description: Optional context (let agents decide what to do with it)
+          additionalProperties: true
+
+    SearchResponse:
+      type: object
+      required:
+        - success
+      properties:
+        success:
+          type: boolean
+          description: Whether the request succeeded
+        data:
+          type: object
+          description: Agent-determined response data
+          additionalProperties: true
+        error:
+          type: string
+          description: Error message if success is false
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+        code:
+          type: string
+          description: Error code
+        details:
+          type: object
+          description: Additional error context

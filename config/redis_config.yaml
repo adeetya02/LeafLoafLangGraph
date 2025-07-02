@@ -1,0 +1,47 @@
+# Redis Configuration for Different Environments
+
+development:
+  url: "redis://localhost:6379/0"
+  ttl:
+    user_cache: 3600        # 1 hour
+    product_cache: 3600     # 1 hour
+    session: 86400          # 24 hours
+    search_logs: null       # Permanent
+    analytics: 15552000     # 180 days
+  
+  # Local development settings
+  max_connections: 10
+  decode_responses: true
+  socket_timeout: 5
+  
+production:
+  # Google Cloud Memorystore Redis
+  url: "${REDIS_URL}"  # Set via environment variable
+  ttl:
+    user_cache: 3600        # 1 hour
+    product_cache: 3600     # 1 hour  
+    session: 86400          # 24 hours
+    search_logs: null       # Permanent for ML
+    analytics: 31536000     # 365 days
+    
+  # Production settings
+  max_connections: 50
+  decode_responses: true
+  socket_timeout: 10
+  retry_on_timeout: true
+  
+  # Connection pool settings
+  connection_pool:
+    max_connections: 100
+    max_idle_time: 300
+    retry_on_error: true
+    
+test:
+  # In-memory Redis for testing
+  url: "redis://localhost:6379/15"
+  ttl:
+    user_cache: 60          # 1 minute for faster tests
+    product_cache: 60       # 1 minute
+    session: 300            # 5 minutes
+    search_logs: 3600       # 1 hour
+    analytics: 3600         # 1 hour

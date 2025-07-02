@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice Shopping - Real-time</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: #2d7d46;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .main-container {
+            flex: 1;
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .conversation-panel {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: #2d7d46;
+            color: white;
+            align-self: flex-end;
+        }
+        
+        .assistant-message {
+            background: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+        }
+        
+        .transcript {
+            background: #e3f2fd;
+            color: #1976d2;
+            align-self: flex-end;
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        .products-panel {
+            width: 350px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .product-card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #2d7d46;
+            margin-bottom: 5px;
+        }
+        
+        .product-supplier {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .product-price {
+            font-size: 18px;
+            color: #d32f2f;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .controls {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .mic-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #2d7d46;
+            color: white;
+            border: none;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .mic-button.active {
+            background: #d32f2f;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .mic-button.processing {
+            background: #ff9800;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+        
+        .status {
+            flex: 1;
+            text-align: center;
+            color: #666;
+        }
+        
+        .volume-meter {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .volume-bar {
+            height: 100%;
+            background: #4caf50;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        .connection-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            background: #4caf50;
+            color: white;
+        }
+        
+        .connection-status.disconnected {
+            background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛒 LeafLoaf Voice Shopping - Real-time</h1>
+        <p>Natural conversation powered by Deepgram + LangGraph + ElevenLabs</p>
+    </div>
+    
+    <div class="main-container">
+        <div class="conversation-panel">
+            <div class="messages" id="messages">
+                <div class="assistant-message">
+                    Hello! I'm your LeafLoaf shopping assistant. Just start talking - I can help you find products, add them to your cart, and answer questions about our inventory.
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="status">
+                    <div id="status-text">Click the microphone to start</div>
+                    <div class="volume-meter">
+                        <div class="volume-bar" id="volume-bar"></div>
+                    </div>
+                </div>
+                
+                <button id="mic-button" class="mic-button">🎤</button>
+                
+                <div class="connection-status" id="connection-status">
+                    Ready
+                </div>
+            </div>
+        </div>
+        
+        <div class="products-panel">
+            <h3>Products Found</h3>
+            <div id="products-list" style="margin-top: 15px;">
+                <p style="color: #999;">Products will appear here as you search...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class VoiceStreamer {
+            constructor() {
+                this.ws = null;
+                this.mediaStream = null;
+                this.audioContext = null;
+                this.processor = null;
+                this.isActive = false;
+                this.audioQueue = [];
+                this.isPlaying = false;
+                
+                // UI elements
+                this.micButton = document.getElementById('mic-button');
+                this.statusText = document.getElementById('status-text');
+                this.messages = document.getElementById('messages');
+                this.productsList = document.getElementById('products-list');
+                this.volumeBar = document.getElementById('volume-bar');
+                this.connectionStatus = document.getElementById('connection-status');
+                
+                // Bind methods
+                this.toggleRecording = this.toggleRecording.bind(this);
+                this.micButton.addEventListener('click', this.toggleRecording);
+            }
+            
+            async toggleRecording() {
+                if (!this.isActive) {
+                    await this.start();
+                } else {
+                    await this.stop();
+                }
+            }
+            
+            async start() {
+                try {
+                    // Get microphone access
+                    this.mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            channelCount: 1,
+                            sampleRate: 16000,
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        } 
+                    });
+                    
+                    // Create audio context
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                        sampleRate: 16000
+                    });
+                    
+                    // Connect to WebSocket
+                    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    this.ws = new WebSocket(`${protocol}//${window.location.host}/api/v1/voice-stream/stream`);
+                    
+                    this.ws.binaryType = 'arraybuffer';
+                    
+                    this.ws.onopen = () => {
+                        console.log('WebSocket connected');
+                        this.connectionStatus.textContent = 'Connected';
+                        this.connectionStatus.classList.remove('disconnected');
+                        this.setupAudioProcessing();
+                    };
+                    
+                    this.ws.onmessage = (event) => {
+                        if (event.data instanceof ArrayBuffer) {
+                            // Audio data from ElevenLabs
+                            this.queueAudio(event.data);
+                        } else {
+                            // JSON message
+                            const data = JSON.parse(event.data);
+                            this.handleMessage(data);
+                        }
+                    };
+                    
+                    this.ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                        this.showError('Connection error');
+                    };
+                    
+                    this.ws.onclose = () => {
+                        console.log('WebSocket closed');
+                        this.connectionStatus.textContent = 'Disconnected';
+                        this.connectionStatus.classList.add('disconnected');
+                        if (this.isActive) {
+                            this.stop();
+                        }
+                    };
+                    
+                    this.isActive = true;
+                    this.micButton.classList.add('active');
+                    this.statusText.textContent = 'Listening... Start speaking';
+                    
+                } catch (error) {
+                    console.error('Error starting:', error);
+                    this.showError('Could not access microphone');
+                }
+            }
+            
+            setupAudioProcessing() {
+                const source = this.audioContext.createMediaStreamSource(this.mediaStream);
+                this.processor = this.audioContext.createScriptProcessor(4096, 1, 1);
+                
+                source.connect(this.processor);
+                this.processor.connect(this.audioContext.destination);
+                
+                this.processor.onaudioprocess = (e) => {
+                    if (!this.isActive || this.ws.readyState !== WebSocket.OPEN) return;
+                    
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    
+                    // Calculate volume for visual feedback
+                    let sum = 0;
+                    for (let i = 0; i < inputData.length; i++) {
+                        sum += Math.abs(inputData[i]);
+                    }
+                    const volume = sum / inputData.length;
+                    this.volumeBar.style.width = `${Math.min(100, volume * 500)}%`;
+                    
+                    // Convert float32 to int16
+                    const buffer = new ArrayBuffer(inputData.length * 2);
+                    const view = new DataView(buffer);
+                    
+                    for (let i = 0; i < inputData.length; i++) {
+                        const sample = Math.max(-1, Math.min(1, inputData[i]));
+                        view.setInt16(i * 2, sample * 0x7FFF, true);
+                    }
+                    
+                    // Send to Deepgram via WebSocket
+                    this.ws.send(buffer);
+                };
+            }
+            
+            handleMessage(data) {
+                switch (data.type) {
+                    case 'transcript':
+                        this.showTranscript(data.text, data.is_final);
+                        break;
+                    
+                    case 'response':
+                        this.showAssistantMessage(data.text);
+                        break;
+                    
+                    case 'products':
+                        this.displayProducts(data.products);
+                        break;
+                    
+                    case 'error':
+                        this.showError(data.message);
+                        break;
+                    
+                    case 'processing':
+                        this.micButton.classList.add('processing');
+                        this.statusText.textContent = 'Processing...';
+                        break;
+                }
+            }
+            
+            showTranscript(text, isFinal) {
+                // Remove previous transcript if not final
+                const existingTranscript = this.messages.querySelector('.transcript:last-child');
+                if (existingTranscript && !existingTranscript.dataset.final) {
+                    existingTranscript.remove();
+                }
+                
+                if (text.trim()) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = isFinal ? 'message user-message' : 'message transcript';
+                    messageDiv.textContent = text;
+                    messageDiv.dataset.final = isFinal;
+                    this.messages.appendChild(messageDiv);
+                    this.messages.scrollTop = this.messages.scrollHeight;
+                }
+            }
+            
+            showAssistantMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message assistant-message';
+                messageDiv.textContent = text;
+                this.messages.appendChild(messageDiv);
+                this.messages.scrollTop = this.messages.scrollHeight;
+                
+                this.micButton.classList.remove('processing');
+                this.statusText.textContent = 'Listening...';
+            }
+            
+            displayProducts(products) {
+                if (!products || products.length === 0) {
+                    this.productsList.innerHTML = '<p style="color: #999;">No products found</p>';
+                    return;
+                }
+                
+                this.productsList.innerHTML = '';
+                products.forEach((product, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card';
+                    card.innerHTML = `
+                        <div class="product-name">${index + 1}. ${product.product_name}</div>
+                        <div class="product-supplier">${product.supplier || ''}</div>
+                        <div class="product-price">$${product.price.toFixed(2)}</div>
+                    `;
+                    
+                    card.addEventListener('click', () => {
+                        // Simulate speaking "Add number X to cart"
+                        this.simulateSpeak(`Add number ${index + 1} to my cart`);
+                    });
+                    
+                    this.productsList.appendChild(card);
+                });
+            }
+            
+            showError(message) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message assistant-message';
+                messageDiv.style.background = '#ffebee';
+                messageDiv.style.color = '#c62828';
+                messageDiv.textContent = `Error: ${message}`;
+                this.messages.appendChild(messageDiv);
+                this.messages.scrollTop = this.messages.scrollHeight;
+            }
+            
+            queueAudio(audioData) {
+                this.audioQueue.push(audioData);
+                if (!this.isPlaying) {
+                    this.playNextAudio();
+                }
+            }
+            
+            async playNextAudio() {
+                if (this.audioQueue.length === 0) {
+                    this.isPlaying = false;
+                    return;
+                }
+                
+                this.isPlaying = true;
+                const audioData = this.audioQueue.shift();
+                
+                try {
+                    // Decode and play audio
+                    const audioBuffer = await this.audioContext.decodeAudioData(audioData);
+                    const source = this.audioContext.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.connect(this.audioContext.destination);
+                    
+                    source.onended = () => {
+                        this.playNextAudio();
+                    };
+                    
+                    source.start();
+                } catch (error) {
+                    console.error('Error playing audio:', error);
+                    this.playNextAudio();
+                }
+            }
+            
+            simulateSpeak(text) {
+                // Send text as if user spoke it
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    this.showTranscript(text, true);
+                    // The actual implementation would need to handle this server-side
+                }
+            }
+            
+            async stop() {
+                this.isActive = false;
+                this.micButton.classList.remove('active', 'processing');
+                this.statusText.textContent = 'Click the microphone to start';
+                this.volumeBar.style.width = '0%';
+                
+                // Clean up audio
+                if (this.processor) {
+                    this.processor.disconnect();
+                    this.processor = null;
+                }
+                
+                if (this.mediaStream) {
+                    this.mediaStream.getTracks().forEach(track => track.stop());
+                    this.mediaStream = null;
+                }
+                
+                if (this.audioContext) {
+                    await this.audioContext.close();
+                    this.audioContext = null;
+                }
+                
+                // Close WebSocket
+                if (this.ws) {
+                    this.ws.close();
+                    this.ws = null;
+                }
+                
+                this.audioQueue = [];
+                this.isPlaying = false;
+            }
+        }
+        
+        // Initialize the app
+        const voiceStreamer = new VoiceStreamer();
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target === document.body) {
+                e.preventDefault();
+                voiceStreamer.toggleRecording();
+            }
+        });
+    </script>
+</body>
+</html>

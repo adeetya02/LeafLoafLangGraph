@@ -1,0 +1,163 @@
+{
+  "timestamp": "2025-06-25T15:31:59.172069",
+  "tests": {
+    "search": [
+      {
+        "query": "tomatoes",
+        "description": "Simple product search",
+        "passed": true,
+        "products_found": 10,
+        "latency": 170.4060829943046,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "organic vegetables",
+        "description": "Category with modifier",
+        "passed": true,
+        "products_found": 10,
+        "latency": 361.6979169892147,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "Baldor",
+        "description": "Brand search",
+        "passed": true,
+        "products_found": 10,
+        "latency": 330.5477499961853,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "gluten free bread",
+        "description": "Dietary restriction",
+        "passed": false,
+        "products_found": 0,
+        "latency": 340.2400829945691,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "peppers red",
+        "description": "Product with color",
+        "passed": true,
+        "products_found": 10,
+        "latency": 425.17958296230063,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "strawberries 1 lb",
+        "description": "Product with size",
+        "passed": true,
+        "products_found": 10,
+        "latency": 246.03858299087733,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "vegitables",
+        "description": "Typo handling",
+        "passed": false,
+        "products_found": 0,
+        "latency": 239.79308299021795,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.5
+      },
+      {
+        "query": "healthy dinner ideas",
+        "description": "Semantic search",
+        "passed": false,
+        "products_found": 0,
+        "latency": 89.41754203988239,
+        "error": null,
+        "routing": "product_search",
+        "alpha": 0.8
+      }
+    ],
+    "cart": [
+      {
+        "query": "add tomatoes to cart",
+        "description": "Add by name",
+        "passed": true,
+        "routing": "order_agent",
+        "latency": 5.6621250114403665,
+        "error": null,
+        "has_order": true
+      },
+      {
+        "query": "add 2 more",
+        "description": "Contextual add",
+        "passed": true,
+        "routing": "order_agent",
+        "latency": 4.176124988589436,
+        "error": null,
+        "has_order": true
+      },
+      {
+        "query": "show my cart",
+        "description": "View cart",
+        "passed": true,
+        "routing": "order_agent",
+        "latency": 3.617917012888938,
+        "error": null,
+        "has_order": true
+      },
+      {
+        "query": "remove tomatoes",
+        "description": "Remove item",
+        "passed": true,
+        "routing": "order_agent",
+        "latency": 3.215292003005743,
+        "error": null,
+        "has_order": true
+      },
+      {
+        "query": "clear cart",
+        "description": "Clear all",
+        "passed": true,
+        "routing": "order_agent",
+        "latency": 3.15987499197945,
+        "error": null,
+        "has_order": true
+      }
+    ],
+    "memory": [
+      {
+        "test": "Search refinement",
+        "passed": true,
+        "initial_results": 10,
+        "refined_results": 8,
+        "organic_count": 8
+      }
+    ]
+  },
+  "summary": {
+    "total": 14,
+    "passed": 11,
+    "failed": 3,
+    "latencies": [
+      170.4060829943046,
+      361.6979169892147,
+      330.5477499961853,
+      340.2400829945691,
+      425.17958296230063,
+      246.03858299087733,
+      239.79308299021795,
+      89.41754203988239,
+      5.6621250114403665,
+      4.176124988589436,
+      3.617917012888938,
+      3.215292003005743,
+      3.15987499197945
+    ]
+  }
+}

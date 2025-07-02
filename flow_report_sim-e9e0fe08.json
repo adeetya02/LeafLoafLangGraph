@@ -1,0 +1,1201 @@
+{
+  "session_id": "sim-e9e0fe08",
+  "user_id": "priya-sharma-123",
+  "timestamp": "2025-06-26T00:03:59.675869",
+  "total_latency_ms": 1851,
+  "components": [
+    {
+      "component": "11Labs Voice Input",
+      "timestamp": "2025-06-26T00:03:59.644272",
+      "input": {
+        "audio_format": "wav",
+        "duration": "3.2s",
+        "language": "en-US",
+        "confidence": 0.95
+      },
+      "transcription": "I need my usual monthly groceries",
+      "metadata": {
+        "voice_id": "rachel",
+        "emotion_detected": "neutral",
+        "background_noise": "minimal"
+      },
+      "latency_ms": 280
+    },
+    {
+      "component": "Supervisor + Graphiti",
+      "timestamp": "2025-06-26T00:03:59.645197",
+      "input_query": "I need my usual monthly groceries",
+      "graphiti_extraction": {
+        "entities": [
+          {
+            "type": "INTENT",
+            "value": "usual_order",
+            "confidence": 0.92
+          },
+          {
+            "type": "TIME_PERIOD",
+            "value": "monthly",
+            "confidence": 0.88
+          },
+          {
+            "type": "PRODUCT_TYPE",
+            "value": "groceries",
+            "confidence": 0.85
+          }
+        ],
+        "relationships": [
+          {
+            "from": "user",
+            "to": "monthly_pattern",
+            "type": "HAS_PATTERN"
+          },
+          {
+            "from": "monthly_pattern",
+            "to": "groceries",
+            "type": "INCLUDES"
+          }
+        ]
+      },
+      "spanner_graph_context": {
+        "user_patterns": {
+          "shopping_frequency": "monthly",
+          "avg_order_value": 3500,
+          "preferred_brands": [
+            "Tata",
+            "Amul",
+            "Fortune"
+          ],
+          "dietary_preferences": [
+            "vegetarian"
+          ]
+        },
+        "reorder_patterns": [
+          {
+            "product": "Tata Sampann Toor Dal",
+            "frequency_days": 30,
+            "last_ordered": "2024-11-26",
+            "usual_quantity": 2
+          },
+          {
+            "product": "Fortune Rice Bran Oil",
+            "frequency_days": 45,
+            "last_ordered": "2024-11-11",
+            "usual_quantity": 2
+          },
+          {
+            "product": "Aashirvaad Atta",
+            "frequency_days": 21,
+            "last_ordered": "2024-12-05",
+            "usual_quantity": 1
+          }
+        ],
+        "last_orders": [
+          {
+            "order_id": "ORD-2024-1126",
+            "date": "2024-11-26",
+            "total": 3250,
+            "items": 12
+          }
+        ]
+      },
+      "intent_analysis": {
+        "primary_intent": "usual_order",
+        "confidence": 0.92,
+        "routing_decision": "order_agent",
+        "requires_search": false,
+        "use_graph_patterns": true
+      },
+      "gemini_enhancement": {
+        "enhanced_query": "Retrieve user's regular monthly grocery items with usual quantities",
+        "suggested_alpha": 0.3,
+        "context_used": [
+          "reorder_patterns",
+          "shopping_frequency"
+        ]
+      },
+      "latency_ms": 145
+    },
+    {
+      "component": "Spanner Graph Query",
+      "timestamp": "2025-06-26T00:03:59.647655",
+      "queries_executed": [
+        {
+          "type": "reorder_patterns",
+          "query": "\n        GRAPH UserShoppingGraph\n        MATCH (u:Users {user_id: 'priya-sharma-123'})-[:PLACED]->(o:Orders)-[:CONTAINS]->(p:Products)\n        WHERE o.order_timestamp > TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)\n        WITH p, COUNT(o) as order_count, AVG(oi.quantity) as avg_quantity\n        WHERE order_count >= 3\n        RETURN p.sku, p.name, p.brand, p.price, order_count, avg_quantity\n        ORDER BY order_count DESC\n        ",
+          "result_count": 5,
+          "execution_time_ms": 47
+        },
+        {
+          "type": "product_relationships",
+          "query": "\n        MATCH (p1:Products)-[r:BOUGHT_WITH]->(p2:Products)\n        WHERE p1.sku IN ['DAL001', 'RICE001']\n        RETURN p1.name, p2.name, r.confidence\n        ",
+          "result_count": 3,
+          "execution_time_ms": 23
+        }
+      ],
+      "usual_items": [
+        {
+          "sku": "DAL001",
+          "name": "Tata Sampann Toor Dal",
+          "brand": "Tata",
+          "price": 155,
+          "order_count": 8,
+          "avg_quantity": 2
+        },
+        {
+          "sku": "OIL001",
+          "name": "Fortune Rice Bran Oil",
+          "brand": "Fortune",
+          "price": 189,
+          "order_count": 6,
+          "avg_quantity": 2
+        },
+        {
+          "sku": "ATTA001",
+          "name": "Aashirvaad Atta",
+          "brand": "Aashirvaad",
+          "price": 220,
+          "order_count": 9,
+          "avg_quantity": 1
+        },
+        {
+          "sku": "RICE001",
+          "name": "India Gate Basmati",
+          "brand": "India Gate",
+          "price": 250,
+          "order_count": 7,
+          "avg_quantity": 1
+        },
+        {
+          "sku": "MILK001",
+          "name": "Amul Toned Milk",
+          "brand": "Amul",
+          "price": 56,
+          "order_count": 12,
+          "avg_quantity": 4
+        }
+      ],
+      "relationships": [
+        {
+          "p1": "Toor Dal",
+          "p2": "Rice",
+          "confidence": 0.85
+        },
+        {
+          "p1": "Rice",
+          "p2": "Ghee",
+          "confidence": 0.72
+        },
+        {
+          "p1": "Toor Dal",
+          "p2": "Turmeric",
+          "confidence": 0.68
+        }
+      ],
+      "graph_traversal_depth": 2,
+      "nodes_visited": 156,
+      "total_latency_ms": 82
+    },
+    {
+      "component": "Product Search Enhancement",
+      "timestamp": "2025-06-26T00:03:59.648437",
+      "search_method": "graph_based_usual_items",
+      "weaviate_query": {
+        "type": "batch_lookup",
+        "skus": [
+          "DAL001",
+          "OIL001",
+          "ATTA001",
+          "RICE001",
+          "MILK001"
+        ],
+        "alpha": 0.3
+      },
+      "products_found": 5,
+      "enhanced_products": [
+        {
+          "sku": "DAL001",
+          "name": "Tata Sampann Toor Dal",
+          "brand": "Tata",
+          "price": 155,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 8,
+            "usual_quantity": 2,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "OIL001",
+          "name": "Fortune Rice Bran Oil",
+          "brand": "Fortune",
+          "price": 189,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 6,
+            "usual_quantity": 2,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "ATTA001",
+          "name": "Aashirvaad Atta",
+          "brand": "Aashirvaad",
+          "price": 220,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 9,
+            "usual_quantity": 1,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "RICE001",
+          "name": "India Gate Basmati",
+          "brand": "India Gate",
+          "price": 250,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 7,
+            "usual_quantity": 1,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "MILK001",
+          "name": "Amul Toned Milk",
+          "brand": "Amul",
+          "price": 56,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 12,
+            "usual_quantity": 4,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        }
+      ],
+      "search_metrics": {
+        "weaviate_latency_ms": 45,
+        "graph_enhancement_ms": 12,
+        "total_latency_ms": 57
+      }
+    },
+    {
+      "component": "Order Agent",
+      "timestamp": "2025-06-26T00:03:59.649542",
+      "agent_type": "react_with_tools",
+      "reasoning_steps": [
+        {
+          "step": 1,
+          "thought": "User wants usual monthly groceries. Graph data shows 5 regular items.",
+          "action": "add_usual_items_to_cart",
+          "observation": "Added 5 usual items with historical quantities"
+        },
+        {
+          "step": 2,
+          "thought": "Checking for items due for reorder based on frequency patterns",
+          "action": "verify_reorder_timing",
+          "observation": "3 items are due now, 2 items ordered recently"
+        },
+        {
+          "step": 3,
+          "thought": "Applying user's usual quantity preferences from graph data",
+          "action": "adjust_quantities",
+          "observation": "Quantities set based on 90-day average"
+        }
+      ],
+      "tools_used": [
+        "add_to_cart",
+        "check_reorder_patterns",
+        "apply_usual_quantities"
+      ],
+      "cart": {
+        "items": [
+          {
+            "sku": "DAL001",
+            "name": "Tata Sampann Toor Dal",
+            "quantity": 2,
+            "price": 155,
+            "total": 310,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "OIL001",
+            "name": "Fortune Rice Bran Oil",
+            "quantity": 2,
+            "price": 189,
+            "total": 378,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "ATTA001",
+            "name": "Aashirvaad Atta",
+            "quantity": 1,
+            "price": 220,
+            "total": 220,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "RICE001",
+            "name": "India Gate Basmati",
+            "quantity": 1,
+            "price": 250,
+            "total": 250,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "MILK001",
+            "name": "Amul Toned Milk",
+            "quantity": 4,
+            "price": 56,
+            "total": 224,
+            "added_reason": "due_for_reorder"
+          }
+        ],
+        "item_count": 5,
+        "total": 1382,
+        "savings": 69.10000000000001,
+        "delivery_slot": "Tomorrow 10 AM - 12 PM"
+      },
+      "graph_insights_applied": {
+        "usual_quantities": true,
+        "reorder_timing": true,
+        "brand_preferences": true
+      },
+      "latency_ms": 125
+    },
+    {
+      "component": "Response Compiler",
+      "timestamp": "2025-06-26T00:03:59.652686",
+      "compilation_method": "graphrag_enhanced",
+      "response_text": "Based on your purchase history, I've added your usual monthly items:\n\n\u2022 2 x Tata Sampann Toor Dal - \u20b9310\n\u2022 2 x Fortune Rice Bran Oil - \u20b9378\n\u2022 1 x Aashirvaad Atta - \u20b9220\n\u2022 ... and 2 more items\n\nTotal: \u20b91382 (includes \u20b969 loyalty savings)\nDelivery: Tomorrow 10 AM - 12 PM\n\nThese are the items you typically order every month. Would you like to confirm this order?",
+      "response_metadata": {
+        "tone": "friendly_informative",
+        "personalization_level": "high",
+        "graphrag_enhancements": {
+          "personalization_applied": [
+            "Used 90-day purchase history",
+            "Applied usual quantity preferences",
+            "Included only items due for reorder",
+            "Applied loyalty discount"
+          ],
+          "context_used": [
+            "reorder_patterns",
+            "brand_preferences",
+            "quantity_history",
+            "delivery_preferences"
+          ]
+        },
+        "suggestions_included": false,
+        "call_to_action": "confirm_order"
+      },
+      "tokens_used": {
+        "prompt": 245,
+        "completion": 156,
+        "total": 401
+      },
+      "latency_ms": 67
+    },
+    {
+      "component": "11Labs Voice Response",
+      "timestamp": "2025-06-26T00:03:59.653796",
+      "tts_config": {
+        "voice_id": "rachel",
+        "model": "eleven_multilingual_v2",
+        "stability": 0.5,
+        "similarity_boost": 0.75,
+        "style": "friendly_professional"
+      },
+      "audio_output": {
+        "format": "mp3",
+        "duration": "12.5s",
+        "bitrate": "128kbps",
+        "size": "196KB"
+      },
+      "streaming": true,
+      "first_byte_latency_ms": 145,
+      "total_latency_ms": 380
+    },
+    {
+      "component": "11Labs Voice Input",
+      "timestamp": "2025-06-26T00:03:59.654770",
+      "input": {
+        "audio_format": "wav",
+        "duration": "3.2s",
+        "language": "en-US",
+        "confidence": 0.95
+      },
+      "transcription": "What did I order for my daughter's birthday party last month?",
+      "metadata": {
+        "voice_id": "rachel",
+        "emotion_detected": "neutral",
+        "background_noise": "minimal"
+      },
+      "latency_ms": 280
+    },
+    {
+      "component": "Supervisor + Graphiti",
+      "timestamp": "2025-06-26T00:03:59.655618",
+      "input_query": "What did I order for my daughter's birthday party last month?",
+      "graphiti_extraction": {
+        "entities": [
+          {
+            "type": "INTENT",
+            "value": "usual_order",
+            "confidence": 0.92
+          },
+          {
+            "type": "TIME_PERIOD",
+            "value": "monthly",
+            "confidence": 0.88
+          },
+          {
+            "type": "PRODUCT_TYPE",
+            "value": "groceries",
+            "confidence": 0.85
+          }
+        ],
+        "relationships": [
+          {
+            "from": "user",
+            "to": "monthly_pattern",
+            "type": "HAS_PATTERN"
+          },
+          {
+            "from": "monthly_pattern",
+            "to": "groceries",
+            "type": "INCLUDES"
+          }
+        ]
+      },
+      "spanner_graph_context": {
+        "user_patterns": {
+          "shopping_frequency": "monthly",
+          "avg_order_value": 3500,
+          "preferred_brands": [
+            "Tata",
+            "Amul",
+            "Fortune"
+          ],
+          "dietary_preferences": [
+            "vegetarian"
+          ]
+        },
+        "reorder_patterns": [
+          {
+            "product": "Tata Sampann Toor Dal",
+            "frequency_days": 30,
+            "last_ordered": "2024-11-26",
+            "usual_quantity": 2
+          },
+          {
+            "product": "Fortune Rice Bran Oil",
+            "frequency_days": 45,
+            "last_ordered": "2024-11-11",
+            "usual_quantity": 2
+          },
+          {
+            "product": "Aashirvaad Atta",
+            "frequency_days": 21,
+            "last_ordered": "2024-12-05",
+            "usual_quantity": 1
+          }
+        ],
+        "last_orders": [
+          {
+            "order_id": "ORD-2024-1126",
+            "date": "2024-11-26",
+            "total": 3250,
+            "items": 12
+          }
+        ]
+      },
+      "intent_analysis": {
+        "primary_intent": "usual_order",
+        "confidence": 0.92,
+        "routing_decision": "order_agent",
+        "requires_search": false,
+        "use_graph_patterns": true
+      },
+      "gemini_enhancement": {
+        "enhanced_query": "Retrieve user's regular monthly grocery items with usual quantities",
+        "suggested_alpha": 0.3,
+        "context_used": [
+          "reorder_patterns",
+          "shopping_frequency"
+        ]
+      },
+      "latency_ms": 145
+    },
+    {
+      "component": "Product Search Enhancement",
+      "timestamp": "2025-06-26T00:03:59.657329",
+      "search_method": "event_based_lookup",
+      "weaviate_query": {
+        "type": "event_lookup",
+        "skus": [
+          "EVT-CHO",
+          "EVT-PAR",
+          "EVT-JUI",
+          "EVT-SNA"
+        ],
+        "alpha": 0.3
+      },
+      "products_found": 4,
+      "enhanced_products": [
+        {
+          "sku": "EVT-CHO",
+          "name": "Chocolate Cake Mix",
+          "brand": "Various",
+          "price": 150,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "event_context": true,
+            "ordered_for": "Daughter's 5th Birthday",
+            "order_date": "2024-11-05",
+            "quantity_ordered": 2
+          },
+          "vector_score": 0.9,
+          "bm25_score": 0.85
+        },
+        {
+          "sku": "EVT-PAR",
+          "name": "Party Decorations Set",
+          "brand": "Various",
+          "price": 150,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "event_context": true,
+            "ordered_for": "Daughter's 5th Birthday",
+            "order_date": "2024-11-05",
+            "quantity_ordered": 1
+          },
+          "vector_score": 0.9,
+          "bm25_score": 0.85
+        },
+        {
+          "sku": "EVT-JUI",
+          "name": "Juice Variety Pack",
+          "brand": "Various",
+          "price": 150,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "event_context": true,
+            "ordered_for": "Daughter's 5th Birthday",
+            "order_date": "2024-11-05",
+            "quantity_ordered": 3
+          },
+          "vector_score": 0.9,
+          "bm25_score": 0.85
+        },
+        {
+          "sku": "EVT-SNA",
+          "name": "Snacks Party Pack",
+          "brand": "Various",
+          "price": 150,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "event_context": true,
+            "ordered_for": "Daughter's 5th Birthday",
+            "order_date": "2024-11-05",
+            "quantity_ordered": 2
+          },
+          "vector_score": 0.9,
+          "bm25_score": 0.85
+        }
+      ],
+      "search_metrics": {
+        "weaviate_latency_ms": 45,
+        "graph_enhancement_ms": 12,
+        "total_latency_ms": 57
+      }
+    },
+    {
+      "component": "Order Agent",
+      "timestamp": "2025-06-26T00:03:59.658331",
+      "agent_type": "react_with_tools",
+      "reasoning_steps": [
+        {
+          "step": 1,
+          "thought": "User wants usual monthly groceries. Graph data shows 5 regular items.",
+          "action": "add_usual_items_to_cart",
+          "observation": "Added 5 usual items with historical quantities"
+        },
+        {
+          "step": 2,
+          "thought": "Checking for items due for reorder based on frequency patterns",
+          "action": "verify_reorder_timing",
+          "observation": "3 items are due now, 2 items ordered recently"
+        },
+        {
+          "step": 3,
+          "thought": "Applying user's usual quantity preferences from graph data",
+          "action": "adjust_quantities",
+          "observation": "Quantities set based on 90-day average"
+        }
+      ],
+      "tools_used": [
+        "add_to_cart",
+        "check_reorder_patterns",
+        "apply_usual_quantities"
+      ],
+      "cart": {
+        "items": [
+          {
+            "sku": "EVT-CHO",
+            "name": "Chocolate Cake Mix",
+            "quantity": 2,
+            "price": 150,
+            "total": 300,
+            "added_reason": "event_history"
+          },
+          {
+            "sku": "EVT-PAR",
+            "name": "Party Decorations Set",
+            "quantity": 1,
+            "price": 150,
+            "total": 150,
+            "added_reason": "event_history"
+          },
+          {
+            "sku": "EVT-JUI",
+            "name": "Juice Variety Pack",
+            "quantity": 3,
+            "price": 150,
+            "total": 450,
+            "added_reason": "event_history"
+          },
+          {
+            "sku": "EVT-SNA",
+            "name": "Snacks Party Pack",
+            "quantity": 2,
+            "price": 150,
+            "total": 300,
+            "added_reason": "event_history"
+          }
+        ],
+        "item_count": 4,
+        "total": 1200,
+        "savings": 60.0,
+        "delivery_slot": "Tomorrow 10 AM - 12 PM"
+      },
+      "graph_insights_applied": {
+        "usual_quantities": true,
+        "reorder_timing": true,
+        "brand_preferences": true
+      },
+      "latency_ms": 125
+    },
+    {
+      "component": "Response Compiler",
+      "timestamp": "2025-06-26T00:03:59.661203",
+      "compilation_method": "graphrag_enhanced",
+      "response_text": "Based on your purchase history, I've added your usual monthly items:\n\n\u2022 2 x Chocolate Cake Mix - \u20b9300\n\u2022 1 x Party Decorations Set - \u20b9150\n\u2022 3 x Juice Variety Pack - \u20b9450\n\u2022 ... and 1 more items\n\nTotal: \u20b91200 (includes \u20b960 loyalty savings)\nDelivery: Tomorrow 10 AM - 12 PM\n\nThese are the items you typically order every month. Would you like to confirm this order?",
+      "response_metadata": {
+        "tone": "friendly_informative",
+        "personalization_level": "high",
+        "graphrag_enhancements": {
+          "personalization_applied": [
+            "Used 90-day purchase history",
+            "Applied usual quantity preferences",
+            "Included only items due for reorder",
+            "Applied loyalty discount"
+          ],
+          "context_used": [
+            "reorder_patterns",
+            "brand_preferences",
+            "quantity_history",
+            "delivery_preferences"
+          ]
+        },
+        "suggestions_included": false,
+        "call_to_action": "confirm_order"
+      },
+      "tokens_used": {
+        "prompt": 245,
+        "completion": 156,
+        "total": 401
+      },
+      "latency_ms": 67
+    },
+    {
+      "component": "11Labs Voice Response",
+      "timestamp": "2025-06-26T00:03:59.662145",
+      "tts_config": {
+        "voice_id": "rachel",
+        "model": "eleven_multilingual_v2",
+        "stability": 0.5,
+        "similarity_boost": 0.75,
+        "style": "friendly_professional"
+      },
+      "audio_output": {
+        "format": "mp3",
+        "duration": "12.5s",
+        "bitrate": "128kbps",
+        "size": "196KB"
+      },
+      "streaming": true,
+      "first_byte_latency_ms": 145,
+      "total_latency_ms": 380
+    },
+    {
+      "component": "11Labs Voice Input",
+      "timestamp": "2025-06-26T00:03:59.663061",
+      "input": {
+        "audio_format": "wav",
+        "duration": "3.2s",
+        "language": "en-US",
+        "confidence": 0.95
+      },
+      "transcription": "I need rice like last time but double the quantity",
+      "metadata": {
+        "voice_id": "rachel",
+        "emotion_detected": "neutral",
+        "background_noise": "minimal"
+      },
+      "latency_ms": 280
+    },
+    {
+      "component": "Supervisor + Graphiti",
+      "timestamp": "2025-06-26T00:03:59.663733",
+      "input_query": "I need rice like last time but double the quantity",
+      "graphiti_extraction": {
+        "entities": [
+          {
+            "type": "INTENT",
+            "value": "usual_order",
+            "confidence": 0.92
+          },
+          {
+            "type": "TIME_PERIOD",
+            "value": "monthly",
+            "confidence": 0.88
+          },
+          {
+            "type": "PRODUCT_TYPE",
+            "value": "groceries",
+            "confidence": 0.85
+          }
+        ],
+        "relationships": [
+          {
+            "from": "user",
+            "to": "monthly_pattern",
+            "type": "HAS_PATTERN"
+          },
+          {
+            "from": "monthly_pattern",
+            "to": "groceries",
+            "type": "INCLUDES"
+          }
+        ]
+      },
+      "spanner_graph_context": {
+        "user_patterns": {
+          "shopping_frequency": "monthly",
+          "avg_order_value": 3500,
+          "preferred_brands": [
+            "Tata",
+            "Amul",
+            "Fortune"
+          ],
+          "dietary_preferences": [
+            "vegetarian"
+          ]
+        },
+        "reorder_patterns": [
+          {
+            "product": "Tata Sampann Toor Dal",
+            "frequency_days": 30,
+            "last_ordered": "2024-11-26",
+            "usual_quantity": 2
+          },
+          {
+            "product": "Fortune Rice Bran Oil",
+            "frequency_days": 45,
+            "last_ordered": "2024-11-11",
+            "usual_quantity": 2
+          },
+          {
+            "product": "Aashirvaad Atta",
+            "frequency_days": 21,
+            "last_ordered": "2024-12-05",
+            "usual_quantity": 1
+          }
+        ],
+        "last_orders": [
+          {
+            "order_id": "ORD-2024-1126",
+            "date": "2024-11-26",
+            "total": 3250,
+            "items": 12
+          }
+        ]
+      },
+      "intent_analysis": {
+        "primary_intent": "usual_order",
+        "confidence": 0.92,
+        "routing_decision": "order_agent",
+        "requires_search": false,
+        "use_graph_patterns": true
+      },
+      "gemini_enhancement": {
+        "enhanced_query": "Retrieve user's regular monthly grocery items with usual quantities",
+        "suggested_alpha": 0.3,
+        "context_used": [
+          "reorder_patterns",
+          "shopping_frequency"
+        ]
+      },
+      "latency_ms": 145
+    },
+    {
+      "component": "Spanner Graph Query",
+      "timestamp": "2025-06-26T00:03:59.665169",
+      "queries_executed": [
+        {
+          "type": "reorder_patterns",
+          "query": "\n        GRAPH UserShoppingGraph\n        MATCH (u:Users {user_id: 'priya-sharma-123'})-[:PLACED]->(o:Orders)-[:CONTAINS]->(p:Products)\n        WHERE o.order_timestamp > TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)\n        WITH p, COUNT(o) as order_count, AVG(oi.quantity) as avg_quantity\n        WHERE order_count >= 3\n        RETURN p.sku, p.name, p.brand, p.price, order_count, avg_quantity\n        ORDER BY order_count DESC\n        ",
+          "result_count": 5,
+          "execution_time_ms": 47
+        },
+        {
+          "type": "product_relationships",
+          "query": "\n        MATCH (p1:Products)-[r:BOUGHT_WITH]->(p2:Products)\n        WHERE p1.sku IN ['DAL001', 'RICE001']\n        RETURN p1.name, p2.name, r.confidence\n        ",
+          "result_count": 3,
+          "execution_time_ms": 23
+        }
+      ],
+      "usual_items": [
+        {
+          "sku": "DAL001",
+          "name": "Tata Sampann Toor Dal",
+          "brand": "Tata",
+          "price": 155,
+          "order_count": 8,
+          "avg_quantity": 2
+        },
+        {
+          "sku": "OIL001",
+          "name": "Fortune Rice Bran Oil",
+          "brand": "Fortune",
+          "price": 189,
+          "order_count": 6,
+          "avg_quantity": 2
+        },
+        {
+          "sku": "ATTA001",
+          "name": "Aashirvaad Atta",
+          "brand": "Aashirvaad",
+          "price": 220,
+          "order_count": 9,
+          "avg_quantity": 1
+        },
+        {
+          "sku": "RICE001",
+          "name": "India Gate Basmati",
+          "brand": "India Gate",
+          "price": 250,
+          "order_count": 7,
+          "avg_quantity": 1
+        },
+        {
+          "sku": "MILK001",
+          "name": "Amul Toned Milk",
+          "brand": "Amul",
+          "price": 56,
+          "order_count": 12,
+          "avg_quantity": 4
+        }
+      ],
+      "relationships": [
+        {
+          "p1": "Toor Dal",
+          "p2": "Rice",
+          "confidence": 0.85
+        },
+        {
+          "p1": "Rice",
+          "p2": "Ghee",
+          "confidence": 0.72
+        },
+        {
+          "p1": "Toor Dal",
+          "p2": "Turmeric",
+          "confidence": 0.68
+        }
+      ],
+      "graph_traversal_depth": 2,
+      "nodes_visited": 156,
+      "total_latency_ms": 82
+    },
+    {
+      "component": "Product Search Enhancement",
+      "timestamp": "2025-06-26T00:03:59.665889",
+      "search_method": "graph_based_usual_items",
+      "weaviate_query": {
+        "type": "batch_lookup",
+        "skus": [
+          "DAL001",
+          "OIL001",
+          "ATTA001",
+          "RICE001",
+          "MILK001"
+        ],
+        "alpha": 0.3
+      },
+      "products_found": 5,
+      "enhanced_products": [
+        {
+          "sku": "DAL001",
+          "name": "Tata Sampann Toor Dal",
+          "brand": "Tata",
+          "price": 155,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 8,
+            "usual_quantity": 2,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "OIL001",
+          "name": "Fortune Rice Bran Oil",
+          "brand": "Fortune",
+          "price": 189,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 6,
+            "usual_quantity": 2,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "ATTA001",
+          "name": "Aashirvaad Atta",
+          "brand": "Aashirvaad",
+          "price": 220,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 9,
+            "usual_quantity": 1,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "RICE001",
+          "name": "India Gate Basmati",
+          "brand": "India Gate",
+          "price": 250,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 7,
+            "usual_quantity": 1,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        },
+        {
+          "sku": "MILK001",
+          "name": "Amul Toned Milk",
+          "brand": "Amul",
+          "price": 56,
+          "in_stock": true,
+          "quantity_available": 50,
+          "graph_data": {
+            "user_order_count": 12,
+            "usual_quantity": 4,
+            "last_ordered": "2024-11-26",
+            "reorder_due": true
+          },
+          "vector_score": 0.95,
+          "bm25_score": 0.88
+        }
+      ],
+      "search_metrics": {
+        "weaviate_latency_ms": 45,
+        "graph_enhancement_ms": 12,
+        "total_latency_ms": 57
+      }
+    },
+    {
+      "component": "Order Agent",
+      "timestamp": "2025-06-26T00:03:59.666833",
+      "agent_type": "react_with_tools",
+      "reasoning_steps": [
+        {
+          "step": 1,
+          "thought": "User wants usual monthly groceries. Graph data shows 5 regular items.",
+          "action": "add_usual_items_to_cart",
+          "observation": "Added 5 usual items with historical quantities"
+        },
+        {
+          "step": 2,
+          "thought": "Checking for items due for reorder based on frequency patterns",
+          "action": "verify_reorder_timing",
+          "observation": "3 items are due now, 2 items ordered recently"
+        },
+        {
+          "step": 3,
+          "thought": "Applying user's usual quantity preferences from graph data",
+          "action": "adjust_quantities",
+          "observation": "Quantities set based on 90-day average"
+        }
+      ],
+      "tools_used": [
+        "add_to_cart",
+        "check_reorder_patterns",
+        "apply_usual_quantities"
+      ],
+      "cart": {
+        "items": [
+          {
+            "sku": "DAL001",
+            "name": "Tata Sampann Toor Dal",
+            "quantity": 2,
+            "price": 155,
+            "total": 310,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "OIL001",
+            "name": "Fortune Rice Bran Oil",
+            "quantity": 2,
+            "price": 189,
+            "total": 378,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "ATTA001",
+            "name": "Aashirvaad Atta",
+            "quantity": 1,
+            "price": 220,
+            "total": 220,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "RICE001",
+            "name": "India Gate Basmati",
+            "quantity": 1,
+            "price": 250,
+            "total": 250,
+            "added_reason": "due_for_reorder"
+          },
+          {
+            "sku": "MILK001",
+            "name": "Amul Toned Milk",
+            "quantity": 4,
+            "price": 56,
+            "total": 224,
+            "added_reason": "due_for_reorder"
+          }
+        ],
+        "item_count": 5,
+        "total": 1382,
+        "savings": 69.10000000000001,
+        "delivery_slot": "Tomorrow 10 AM - 12 PM"
+      },
+      "graph_insights_applied": {
+        "usual_quantities": true,
+        "reorder_timing": true,
+        "brand_preferences": true
+      },
+      "latency_ms": 125
+    },
+    {
+      "component": "Response Compiler",
+      "timestamp": "2025-06-26T00:03:59.669786",
+      "compilation_method": "graphrag_enhanced",
+      "response_text": "Based on your purchase history, I've added your usual monthly items:\n\n\u2022 2 x Tata Sampann Toor Dal - \u20b9310\n\u2022 2 x Fortune Rice Bran Oil - \u20b9378\n\u2022 1 x Aashirvaad Atta - \u20b9220\n\u2022 ... and 2 more items\n\nTotal: \u20b91382 (includes \u20b969 loyalty savings)\nDelivery: Tomorrow 10 AM - 12 PM\n\nThese are the items you typically order every month. Would you like to confirm this order?",
+      "response_metadata": {
+        "tone": "friendly_informative",
+        "personalization_level": "high",
+        "graphrag_enhancements": {
+          "personalization_applied": [
+            "Used 90-day purchase history",
+            "Applied usual quantity preferences",
+            "Included only items due for reorder",
+            "Applied loyalty discount"
+          ],
+          "context_used": [
+            "reorder_patterns",
+            "brand_preferences",
+            "quantity_history",
+            "delivery_preferences"
+          ]
+        },
+        "suggestions_included": false,
+        "call_to_action": "confirm_order"
+      },
+      "tokens_used": {
+        "prompt": 245,
+        "completion": 156,
+        "total": 401
+      },
+      "latency_ms": 67
+    },
+    {
+      "component": "11Labs Voice Response",
+      "timestamp": "2025-06-26T00:03:59.670614",
+      "tts_config": {
+        "voice_id": "rachel",
+        "model": "eleven_multilingual_v2",
+        "stability": 0.5,
+        "similarity_boost": 0.75,
+        "style": "friendly_professional"
+      },
+      "audio_output": {
+        "format": "mp3",
+        "duration": "12.5s",
+        "bitrate": "128kbps",
+        "size": "196KB"
+      },
+      "streaming": true,
+      "first_byte_latency_ms": 145,
+      "total_latency_ms": 380
+    }
+  ],
+  "test_scenarios": [
+    "monthly_order",
+    "event_query",
+    "contextual_reorder"
+  ]
+}

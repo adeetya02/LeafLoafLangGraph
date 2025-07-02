@@ -1,0 +1,104 @@
+{
+  "test_session": "gcp_test_1750986398",
+  "timestamp": "20250626_210654",
+  "gcp_url": "https://leafloaf-32905605817.us-central1.run.app",
+  "summary": {
+    "total_tests": 13,
+    "successful": 0,
+    "average_latency_ms": 54.851862100454476,
+    "median_latency_ms": 50.10724067687988
+  },
+  "results": [
+    {
+      "test_name": "Simple Search - Step 1",
+      "success": false,
+      "latency_ms": 49.85499382019043,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:41.290376"
+    },
+    {
+      "test_name": "Brand Search - Step 1",
+      "success": false,
+      "latency_ms": 79.82182502746582,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:42.874390"
+    },
+    {
+      "test_name": "Add to Cart - Step 1",
+      "success": false,
+      "latency_ms": 50.06098747253418,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:44.428090"
+    },
+    {
+      "test_name": "Add to Cart - Step 2",
+      "success": false,
+      "latency_ms": 53.25508117675781,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:44.983050"
+    },
+    {
+      "test_name": "Cart Management - Step 1",
+      "success": false,
+      "latency_ms": 52.629947662353516,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:46.539664"
+    },
+    {
+      "test_name": "Cart Management - Step 2",
+      "success": false,
+      "latency_ms": 53.47800254821777,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:47.095220"
+    },
+    {
+      "test_name": "Cart Management - Step 3",
+      "success": false,
+      "latency_ms": 49.825191497802734,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:47.647066"
+    },
+    {
+      "test_name": "Reorder Flow - Step 1",
+      "success": false,
+      "latency_ms": 76.12276077270508,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:49.225958"
+    },
+    {
+      "test_name": "Reorder Flow - Step 2",
+      "success": false,
+      "latency_ms": 47.18804359436035,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:49.775242"
+    },
+    {
+      "test_name": "Complex Shopping - Step 1",
+      "success": false,
+      "latency_ms": 50.10724067687988,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:51.328001"
+    },
+    {
+      "test_name": "Complex Shopping - Step 2",
+      "success": false,
+      "latency_ms": 48.45428466796875,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:51.878368"
+    },
+    {
+      "test_name": "Complex Shopping - Step 3",
+      "success": false,
+      "latency_ms": 52.83093452453613,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:52.432786"
+    },
+    {
+      "test_name": "Complex Shopping - Step 4",
+      "success": false,
+      "latency_ms": 49.44491386413574,
+      "error": "HTTP 404",
+      "timestamp": "2025-06-26T21:06:52.982937"
+    }
+  ]
+}

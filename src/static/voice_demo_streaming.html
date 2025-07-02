@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaf & Loaf - Conversational Voice Shopping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 32px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #636e72;
+            margin-bottom: 30px;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .status {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #2e7d32;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            border-left-color: #f44336;
+            color: #c62828;
+        }
+        
+        .status.listening {
+            background: #e3f2fd;
+            border-left-color: #2196f3;
+            color: #1565c0;
+            animation: pulse-border 2s infinite;
+        }
+        
+        @keyframes pulse-border {
+            0%, 100% { border-left-width: 4px; }
+            50% { border-left-width: 8px; }
+        }
+        
+        .conversation {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.assistant {
+            text-align: left;
+        }
+        
+        .message-bubble {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 20px;
+            max-width: 80%;
+        }
+        
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .message.assistant .message-bubble {
+            background: #f1f3f5;
+            color: #2d3436;
+        }
+        
+        .transcript {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .connect-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        .connect-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+        
+        .connect-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .connect-button.connected {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+        }
+        
+        .waveform {
+            height: 60px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+        
+        .waveform.hidden {
+            display: none;
+        }
+        
+        .bar {
+            width: 4px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite;
+        }
+        
+        .bar:nth-child(2) { animation-delay: 0.1s; height: 30px; }
+        .bar:nth-child(3) { animation-delay: 0.2s; height: 25px; }
+        .bar:nth-child(4) { animation-delay: 0.3s; height: 35px; }
+        .bar:nth-child(5) { animation-delay: 0.4s; height: 20px; }
+        
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }
+        
+        .products {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+        
+        .product {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .product-price {
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 Conversational Shopping</h1>
+        <p class="subtitle">Real-time voice assistant powered by Deepgram</p>
+        
+        <div id="status" class="status">
+            Click "Start Conversation" to begin
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+        
+        <div class="waveform hidden" id="waveform">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        
+        <div class="controls">
+            <button id="connectButton" class="connect-button">
+                Start Conversation
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const WS_URL = window.location.hostname === 'localhost' 
+            ? 'ws://localhost:8080/api/v1/voice-streaming/ws' 
+            : 'wss://leafloaf-32905605817.us-central1.run.app/api/v1/voice-streaming/ws';
+        
+        // State
+        let websocket = null;
+        let mediaRecorder = null;
+        let audioContext = null;
+        let isConnected = false;
+        let sessionId = null;
+        
+        // Elements
+        const connectButton = document.getElementById('connectButton');
+        const statusDiv = document.getElementById('status');
+        const conversationDiv = document.getElementById('conversation');
+        const waveformDiv = document.getElementById('waveform');
+        
+        // Audio playback queue
+        const audioQueue = [];
+        let isPlaying = false;
+        
+        // Update status
+        function updateStatus(message, type = 'success') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+        
+        // Add message to conversation
+        function addMessage(text, type = 'assistant', transcript = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            bubbleDiv.textContent = text;
+            
+            messageDiv.appendChild(bubbleDiv);
+            
+            if (transcript && type === 'assistant') {
+                const transcriptDiv = document.createElement('div');
+                transcriptDiv.className = 'transcript';
+                transcriptDiv.textContent = `(${transcript})`;
+                messageDiv.appendChild(transcriptDiv);
+            }
+            
+            conversationDiv.appendChild(messageDiv);
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        }
+        
+        // Play audio from queue
+        async function playNextAudio() {
+            if (isPlaying || audioQueue.length === 0) return;
+            
+            isPlaying = true;
+            const audioData = audioQueue.shift();
+            
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const audioBuffer = await audioContext.decodeAudioData(audioData);
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                
+                source.onended = () => {
+                    isPlaying = false;
+                    playNextAudio(); // Play next in queue
+                };
+                
+                source.start(0);
+            } catch (error) {
+                console.error('Audio playback error:', error);
+                isPlaying = false;
+                playNextAudio(); // Try next
+            }
+        }
+        
+        // Connect to WebSocket
+        async function connect() {
+            if (isConnected) {
+                disconnect();
+                return;
+            }
+            
+            try {
+                updateStatus('Connecting...', 'listening');
+                
+                // Generate session ID
+                sessionId = 'session_' + Date.now();
+                
+                // Connect WebSocket
+                websocket = new WebSocket(`${WS_URL}/${sessionId}`);
+                websocket.binaryType = 'arraybuffer';
+                
+                websocket.onopen = async () => {
+                    console.log('WebSocket connected');
+                    isConnected = true;
+                    connectButton.textContent = 'End Conversation';
+                    connectButton.classList.add('connected');
+                    updateStatus('Connected! Start speaking...', 'listening');
+                    waveformDiv.classList.remove('hidden');
+                    
+                    // Start microphone
+                    await startMicrophone();
+                    
+                    // Send initial greeting
+                    addMessage("Hi! I'm your shopping assistant. What can I help you find today?");
+                };
+                
+                websocket.onmessage = (event) => {
+                    if (event.data instanceof ArrayBuffer) {
+                        // Audio data - add to playback queue
+                        audioQueue.push(event.data);
+                        playNextAudio();
+                    } else {
+                        // Text message (transcript, status, etc.)
+                        try {
+                            const data = JSON.parse(event.data);
+                            handleTextMessage(data);
+                        } catch (e) {
+                            console.error('Failed to parse message:', e);
+                        }
+                    }
+                };
+                
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    updateStatus('Connection error', 'error');
+                };
+                
+                websocket.onclose = () => {
+                    console.log('WebSocket closed');
+                    disconnect();
+                };
+                
+            } catch (error) {
+                console.error('Connection error:', error);
+                updateStatus('Failed to connect', 'error');
+                disconnect();
+            }
+        }
+        
+        // Handle text messages from server
+        function handleTextMessage(data) {
+            switch (data.type) {
+                case 'transcript':
+                    // User's speech transcribed
+                    if (data.is_final && data.text) {
+                        addMessage(data.text, 'user');
+                    }
+                    break;
+                    
+                case 'response':
+                    // Assistant's response
+                    if (data.text) {
+                        addMessage(data.text, 'assistant');
+                    }
+                    if (data.products && data.products.length > 0) {
+                        addProducts(data.products);
+                    }
+                    break;
+                    
+                case 'status':
+                    // Status update
+                    updateStatus(data.message, data.level || 'success');
+                    break;
+                    
+                case 'error':
+                    // Error message
+                    updateStatus(data.message, 'error');
+                    break;
+            }
+        }
+        
+        // Add products to conversation
+        function addProducts(products) {
+            const productsDiv = document.createElement('div');
+            productsDiv.className = 'products';
+            
+            products.slice(0, 5).forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <div>
+                        <strong>${product.product_name}</strong>
+                        <small> - ${product.supplier || product.category}</small>
+                    </div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                `;
+                productsDiv.appendChild(productDiv);
+            });
+            
+            conversationDiv.appendChild(productsDiv);
+            conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        }
+        
+        // Start microphone and stream audio
+        async function startMicrophone() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        sampleRate: 16000
+                    }
+                });
+                
+                // Use MediaRecorder for chunked streaming
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0 && websocket.readyState === WebSocket.OPEN) {
+                        // Send audio chunks directly
+                        websocket.send(event.data);
+                    }
+                };
+                
+                // Start recording in 100ms chunks
+                mediaRecorder.start(100);
+                
+            } catch (error) {
+                console.error('Microphone error:', error);
+                updateStatus('Microphone access denied', 'error');
+                disconnect();
+            }
+        }
+        
+        // Disconnect
+        function disconnect() {
+            isConnected = false;
+            connectButton.textContent = 'Start Conversation';
+            connectButton.classList.remove('connected');
+            waveformDiv.classList.add('hidden');
+            
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (websocket) {
+                websocket.close();
+                websocket = null;
+            }
+            
+            updateStatus('Disconnected', 'success');
+        }
+        
+        // Connect button handler
+        connectButton.addEventListener('click', connect);
+        
+        // Check microphone permission on load
+        window.addEventListener('load', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop());
+                updateStatus('Ready to start conversation', 'success');
+            } catch (err) {
+                updateStatus('Please allow microphone access', 'error');
+                connectButton.disabled = true;
+            }
+        });
+    </script>
+</body>
+</html>
