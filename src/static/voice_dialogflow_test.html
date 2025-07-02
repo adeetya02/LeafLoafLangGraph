@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice - Dialogflow Integration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #2E7D32;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .voice-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+        
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+        
+        .mic-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.4);
+        }
+        
+        .mic-button.recording {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .mic-button svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+        
+        .status {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            min-height: 30px;
+        }
+        
+        .response-container {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            min-height: 150px;
+            position: relative;
+        }
+        
+        .response-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .response-content {
+            color: #555;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: #f44336;
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #4CAF50;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .product-details {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .connection-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+        }
+        
+        .status-dot.connected {
+            background: #4CAF50;
+        }
+        
+        .status-dot.connecting {
+            background: #ff9800;
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="connection-status">
+            <span class="status-dot" id="connectionDot"></span>
+            <span id="connectionText">Disconnected</span>
+        </div>
+        
+        <h1>🥬 LeafLoaf Voice</h1>
+        <p class="subtitle">Powered by Dialogflow CX</p>
+        
+        <div class="voice-container">
+            <button class="mic-button" id="micButton">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                </svg>
+            </button>
+            <div class="status" id="status">Click the microphone to start</div>
+        </div>
+        
+        <div class="response-container">
+            <div class="response-title">
+                <span>Response</span>
+                <span class="loading" id="loadingSpinner" style="display: none;"></span>
+            </div>
+            <div class="response-content" id="responseContent">
+                Your voice assistant is ready. Ask me about groceries!
+            </div>
+            <div class="products-grid" id="productsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+        
+        const micButton = document.getElementById('micButton');
+        const status = document.getElementById('status');
+        const responseContent = document.getElementById('responseContent');
+        const productsGrid = document.getElementById('productsGrid');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const connectionDot = document.getElementById('connectionDot');
+        const connectionText = document.getElementById('connectionText');
+        
+        // Initialize WebSocket connection
+        function initWebSocket() {
+            const wsUrl = `ws://${window.location.host}/api/v1/voice/dialogflow/stream`;
+            
+            updateConnectionStatus('connecting');
+            
+            ws = new WebSocket(wsUrl);
+            ws.binaryType = 'arraybuffer';
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                updateConnectionStatus('connected');
+            };
+            
+            ws.onmessage = (event) => {
+                if (typeof event.data === 'string') {
+                    try {
+                        const data = JSON.parse(event.data);
+                        handleServerMessage(data);
+                    } catch (e) {
+                        console.error('Failed to parse message:', e);
+                    }
+                } else {
+                    // Binary data (audio)
+                    playAudio(event.data);
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateConnectionStatus('disconnected');
+                showError('Connection error. Please refresh the page.');
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket disconnected');
+                updateConnectionStatus('disconnected');
+                // Attempt to reconnect after 3 seconds
+                setTimeout(initWebSocket, 3000);
+            };
+        }
+        
+        function updateConnectionStatus(status) {
+            connectionDot.className = 'status-dot ' + status;
+            connectionText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+        }
+        
+        function handleServerMessage(data) {
+            console.log('Server message:', data);
+            
+            if (data.type === 'response') {
+                loadingSpinner.style.display = 'none';
+                responseContent.textContent = data.text;
+                
+                // If there are products, display them
+                if (data.products && data.products.length > 0) {
+                    displayProducts(data.products);
+                } else {
+                    productsGrid.innerHTML = '';
+                }
+            } else if (data.type === 'error') {
+                loadingSpinner.style.display = 'none';
+                showError(data.message);
+            } else if (data.type === 'status') {
+                status.textContent = data.message;
+            }
+        }
+        
+        function displayProducts(products) {
+            productsGrid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price}</div>
+                    <div class="product-details">
+                        ${product.quantity || ''} ${product.unit || ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function playAudio(audioData) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const audioBuffer = await audioContext.decodeAudioData(audioData);
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start(0);
+            } catch (e) {
+                console.error('Failed to play audio:', e);
+            }
+        }
+        
+        function showError(message) {
+            responseContent.innerHTML = `<div class="error">${message}</div>`;
+            productsGrid.innerHTML = '';
+        }
+        
+        // Microphone button handling
+        micButton.addEventListener('click', async () => {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                showError('Not connected to server. Please wait...');
+                return;
+            }
+            
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+        
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        sampleRate: 16000
+                    } 
+                });
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await sendAudioToServer(audioBlob);
+                    
+                    // Stop all tracks
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                micButton.classList.add('recording');
+                status.textContent = 'Listening... Click again to stop';
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                showError('Could not access microphone. Please check permissions.');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                isRecording = false;
+                micButton.classList.remove('recording');
+                status.textContent = 'Processing...';
+                loadingSpinner.style.display = 'inline-block';
+            }
+        }
+        
+        async function sendAudioToServer(audioBlob) {
+            try {
+                // Convert blob to array buffer and send
+                const arrayBuffer = await audioBlob.arrayBuffer();
+                ws.send(arrayBuffer);
+            } catch (error) {
+                console.error('Error sending audio:', error);
+                showError('Failed to send audio to server.');
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            initWebSocket();
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (ws) {
+                ws.close();
+            }
+        });
+    </script>
+</body>
+</html>

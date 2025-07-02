@@ -6,6 +6,7 @@ import asyncio
 import time
 import json
 import os
+import re
 from langsmith import traceable
 from src.agents.memory_aware_base import MemoryAwareAgent
 from src.models.state import SearchState
@@ -50,8 +51,32 @@ class OptimizedSupervisorAgent(MemoryAwareAgent):
                 location = os.getenv("GCP_LOCATION", "us-central1")
                 vertexai.init(project=project_id, location=location)
                 
-                # Try available Gemini models as Gemma alternatives
-                for model_name in ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro"]:
+                # Try available Gemini models
+                # Try regular Gemini API first if key exists
+                # Always try Gemini API first with hardcoded key
+                gemini_key = "AIzaSyAGLGwNEXgoksFCawjU_x3pWMC-RFTlhPA"
+                if gemini_key:
+                    try:
+                        import google.generativeai as genai
+                        genai.configure(api_key=gemini_key)
+                        
+                        # Try different Gemini models
+                        for model_name in ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']:
+                            try:
+                                model = genai.GenerativeModel(model_name)
+                                # Test the model
+                                test_response = model.generate_content("Say yes")
+                                if test_response.text:
+                                    logger.info(f"Using {model_name} via Google AI API on GCP")
+                                    return model
+                            except:
+                                continue
+                                
+                    except Exception as e:
+                        logger.debug(f"Gemini API failed: {e}")
+                
+                # Try Vertex AI models as fallback
+                for model_name in ["gemini-pro", "gemini-1.0-pro", "text-bison"]:
                     try:
                         model = GenerativeModel(
                             model_name,
@@ -68,7 +93,7 @@ class OptimizedSupervisorAgent(MemoryAwareAgent):
                         logger.debug(f"{model_name} not available: {model_error}")
                         continue
                         
-                raise Exception("No Vertex AI models available")
+                raise Exception("No Google AI models available")
                 
             except Exception as vertex_error:
                 logger.warning(f"Vertex AI failed: {vertex_error}")
@@ -96,8 +121,30 @@ class OptimizedSupervisorAgent(MemoryAwareAgent):
             except Exception as hf_error:
                 logger.warning(f"HuggingFace failed: {hf_error}")
                 
-                # Try 2: Vertex AI Gemini as fallback
+                # Try 2: Google AI or Vertex AI as fallback
                 try:
+                    # Try regular Gemini API first
+                    gemini_key = "AIzaSyAGLGwNEXgoksFCawjU_x3pWMC-RFTlhPA"
+                    if gemini_key:
+                        try:
+                            import google.generativeai as genai
+                            genai.configure(api_key=gemini_key)
+                            
+                            # Try different models
+                            for model_name in ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']:
+                                try:
+                                    model = genai.GenerativeModel(model_name)
+                                    test_response = model.generate_content("Say yes")
+                                    if test_response.text:
+                                        logger.info(f"Using {model_name} via Google AI API as fallback")
+                                        return model
+                                except:
+                                    continue
+                                    
+                        except Exception as e:
+                            logger.debug(f"Gemini API fallback failed: {e}")
+                    
+                    # Try Vertex AI if Gemini API fails
                     import vertexai
                     from vertexai.generative_models import GenerativeModel, GenerationConfig
                     
@@ -105,26 +152,67 @@ class OptimizedSupervisorAgent(MemoryAwareAgent):
                     location = os.getenv("GCP_LOCATION", "us-central1")
                     vertexai.init(project=project_id, location=location)
                     
-                    # Use Gemini as fallback
-                    model = GenerativeModel(
-                        "gemini-1.5-flash",
-                        generation_config=GenerationConfig(
-                            temperature=0.1,
-                            max_output_tokens=150,
-                            top_p=0.95,
-                            top_k=20
-                        )
-                    )
-                    logger.info("Using Gemini 1.5 Flash as local fallback")
-                    return model
+                    # Try Gemini models that actually work
+                    for model_name in ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"]:
+                        try:
+                            model = GenerativeModel(
+                                model_name,
+                                generation_config=GenerationConfig(
+                                    temperature=0.1,
+                                    max_output_tokens=150,
+                                    top_p=0.95,
+                                    top_k=20
+                                )
+                            )
+                            logger.info(f"Using {model_name} as local fallback")
+                            return model
+                        except:
+                            continue
                     
                 except Exception as vertex_error:
                     logger.warning(f"Vertex AI fallback failed: {vertex_error}")
                     
-        # Final fallback - optimized client
-        logger.warning("All LLM options failed, using final fallback")
-        from src.integrations.gemma_optimized_client import GemmaOptimizedClient
-        return GemmaOptimizedClient()
+        # Try Groq as fallback
+        groq_key = os.getenv("GROQ_API_KEY")
+        if groq_key:
+            try:
+                from groq import Groq
+                client = Groq(api_key=groq_key)
+                
+                logger.info("Using Groq as final fallback")
+                
+                # Wrap Groq in our interface
+                class GroqModel:
+                    def __init__(self, client):
+                        self.client = client
+                        
+                    def generate_content(self, prompt: str) -> Any:
+                        try:
+                            response = self.client.chat.completions.create(
+                                model="mixtral-8x7b-32768",  # Fast and capable
+                                messages=[{"role": "user", "content": prompt}],
+                                temperature=0.1,
+                                max_tokens=150
+                            )
+                            
+                            class Response:
+                                def __init__(self, text):
+                                    self.text = text
+                            
+                            return Response(response.choices[0].message.content)
+                        except Exception as e:
+                            logger.error(f"Groq generation failed: {e}")
+                            raise
+                
+                return GroqModel(client)
+                
+            except Exception as e:
+                logger.warning(f"Groq fallback failed: {e}")
+        
+        # Final fallback - simple rule-based analyzer
+        logger.warning("All LLM options failed, using simple rule-based analyzer")
+        from src.integrations.simple_intent_analyzer import SimpleIntentAnalyzer
+        return SimpleIntentAnalyzer()
     
     def _init_huggingface_gemma(self, api_key: str):
         """Initialize HuggingFace Gemma with Pro subscription"""
@@ -133,9 +221,35 @@ class OptimizedSupervisorAgent(MemoryAwareAgent):
         # Since you have Pro, use a dedicated inference endpoint or serverless API
         # Try using the Inference API directly without testing
         try:
-            # Use Mistral 7B as it's reliably available
-            model_id = "mistralai/Mistral-7B-Instruct-v0.3"
+            # Try multiple models in order of preference - Gemma models for Pro users
+            models_to_try = [
+                "google/gemma-2-9b-it",                   # Gemma 2 9B Instruct
+                "google/gemma-2-9b",                      # Gemma 2 9B base
+                "google/gemma-7b-it",                     # Gemma 7B Instruct
+                "google/gemma-2b-it",                     # Gemma 2B Instruct (faster)
+                "mistralai/Mistral-7B-Instruct-v0.3"     # Fallback
+            ]
+            
             client = InferenceClient(token=api_key)
+            
+            for model_id in models_to_try:
+                try:
+                    # Test the model with a simple query
+                    test_response = client.text_generation(
+                        "Hi",
+                        model=model_id,
+                        max_new_tokens=10
+                    )
+                    if test_response:
+                        logger.info(f"Using {model_id} via HuggingFace Pro")
+                        break
+                except Exception as e:
+                    logger.debug(f"{model_id} not available: {e}")
+                    continue
+            else:
+                # If no model worked, use the most reliable one
+                model_id = "mistralai/Mistral-7B-Instruct-v0.3"
+                logger.info(f"Falling back to {model_id}")
             
             logger.info(f"Using {model_id} via HuggingFace Inference API")
             
@@ -162,6 +276,8 @@ class OptimizedSupervisorAgent(MemoryAwareAgent):
                             def __init__(self, text):
                                 self.text = text
                         
+                        # Log the raw response for debugging
+                        logger.debug(f"HuggingFace raw response: {response[:200]}")
                         return Response(response)
                     except Exception as e:
                         logger.error(f"HuggingFace {self.model_name} generation failed: {e}")
@@ -283,21 +399,111 @@ Output only valid JSON, no other text."""
                 if asyncio.iscoroutinefunction(self.llm.generate_content):
                     response = await self.llm.generate_content(prompt)
                 else:
-                    response = await asyncio.to_thread(
-                        self.llm.generate_content,
-                        prompt
-                    )
-                result_text = response.text.strip()
+                    # Run in executor to avoid blocking
+                    loop = asyncio.get_event_loop()
+                    
+                    # Add timeout for Gemini API call
+                    try:
+                        logger.debug(f"Calling Gemini API with prompt length: {len(prompt)}")
+                        logger.debug(f"First 200 chars of prompt: {prompt[:200]}")
+                        response = await asyncio.wait_for(
+                            loop.run_in_executor(
+                                None,
+                                self.llm.generate_content,
+                                prompt
+                            ),
+                            timeout=10.0  # 10 second timeout
+                        )
+                        logger.debug(f"Gemini API returned, response type: {type(response)}")
+                        logger.debug(f"Response attributes: {dir(response)}")
+                    except asyncio.TimeoutError:
+                        logger.error("Gemini API call timed out after 10 seconds")
+                        raise
+                    except Exception as e:
+                        logger.error(f"Gemini API call failed: {e}", exc_info=True)
+                        raise
+                
+                if not response:
+                    logger.error("LLM returned None response")
+                    raise ValueError("LLM returned None")
+                
+                if not hasattr(response, 'text'):
+                    logger.error(f"LLM response has no text attribute. Type: {type(response)}, attrs: {dir(response)}")
+                    raise ValueError("LLM response has no text attribute")
+                    
+                if not response.text:
+                    logger.error(f"LLM returned empty text. Response: {response}")
+                    raise ValueError("Empty LLM response text")
+                    
+                result_text = response.text.strip() if response.text else ""
+                logger.info(f"Raw LLM response length: {len(result_text)}")
+                logger.info(f"Raw LLM response: '{result_text[:500]}'")
+                if not result_text:
+                    logger.error(f"Empty LLM response! Response object: {response}, Has text: {hasattr(response, 'text')}, Text value: {response.text}")
             else:
                 # Fallback client
                 response = await self.llm.analyze_query(query, {"voice_metadata": voice_metadata})
                 return response
             
             # Parse JSON response
-            return json.loads(result_text)
+            # Clean up the response text (remove any extra whitespace/newlines)
+            cleaned_text = result_text.strip()
+            
+            # Remove markdown code blocks if present
+            if cleaned_text.startswith('```json'):
+                cleaned_text = cleaned_text[7:]  # Remove ```json
+                if cleaned_text.endswith('```'):
+                    cleaned_text = cleaned_text[:-3]  # Remove trailing ```
+                cleaned_text = cleaned_text.strip()
+            elif cleaned_text.startswith('```'):
+                cleaned_text = cleaned_text[3:]  # Remove ```
+                if cleaned_text.endswith('```'):
+                    cleaned_text = cleaned_text[:-3]  # Remove trailing ```
+                cleaned_text = cleaned_text.strip()
+            
+            # Try to extract JSON if there's extra text
+            json_match = re.search(r'\{.*\}', cleaned_text, re.DOTALL)
+            if json_match:
+                cleaned_text = json_match.group(0)
+            
+            try:
+                return json.loads(cleaned_text)
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse JSON: {e}")
+                logger.error(f"JSON error position: line {e.lineno}, column {e.colno}")
+                logger.error(f"Original text: '{result_text[:500] if result_text else 'NONE'}'")
+                logger.error(f"Cleaned text: '{cleaned_text[:500] if cleaned_text else 'NONE'}'")
+                logger.error(f"Response object: {response}")
+                logger.error(f"Response has text: {hasattr(response, 'text')}")
+                if hasattr(response, 'text'):
+                    logger.error(f"Response.text is None: {response.text is None}")
+                    logger.error(f"Response.text type: {type(response.text)}")
+                    logger.error(f"Response.text repr: {repr(response.text)}")
+                raise
             
         except Exception as e:
-            logger.error(f"LLM analysis failed: {e}")
+            logger.error(f"LLM analysis failed: {e}", exc_info=True)
+            # Log more details about the failure
+            logger.error(f"LLM type: {type(self.llm).__name__}")
+            logger.error(f"Query: {query}")
+            logger.error(f"Voice metadata: {voice_metadata}")
+            
+            # Try to use SimpleIntentAnalyzer if we have it
+            try:
+                from src.integrations.simple_intent_analyzer import SimpleIntentAnalyzer
+                if isinstance(self.llm, SimpleIntentAnalyzer):
+                    # Already using simple analyzer, return emergency fallback
+                    logger.warning("SimpleIntentAnalyzer also failed, using emergency fallback")
+                else:
+                    # Try simple analyzer
+                    logger.info("Falling back to SimpleIntentAnalyzer")
+                    simple_analyzer = SimpleIntentAnalyzer()
+                    response = simple_analyzer.generate_content(prompt)
+                    if response and hasattr(response, 'text') and response.text:
+                        return json.loads(response.text)
+            except Exception as fallback_error:
+                logger.error(f"SimpleIntentAnalyzer fallback failed: {fallback_error}")
+            
             # Emergency fallback
             return {
                 "intent": "product_search",

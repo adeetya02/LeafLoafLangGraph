@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .endpoint {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background-color: #d4edda; }
+        .error { background-color: #f8d7da; }
+        .pending { background-color: #fff3cd; }
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        #log {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>WebSocket Endpoint Tester</h1>
+    
+    <div id="endpoints"></div>
+    
+    <h2>Debug Log</h2>
+    <div id="log"></div>
+
+    <script>
+        const endpoints = [
+            '/api/v1/test/ws',
+            '/api/v1/voice-streaming/ws/test-session',
+            '/api/v1/voice-streaming/websocket/conversational',
+            '/api/v1/voice-conversational/stream',
+            '/api/v1/voice-conv/stream',
+            '/ws',
+            '/api/ws',
+            '/api/v1/ws'
+        ];
+
+        const log = document.getElementById('log');
+        const endpointsDiv = document.getElementById('endpoints');
+
+        function addLog(message) {
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML = `${time}: ${message}<br>` + log.innerHTML;
+        }
+
+        function testWebSocket(endpoint) {
+            const div = document.createElement('div');
+            div.className = 'endpoint pending';
+            div.innerHTML = `
+                <strong>${endpoint}</strong>
+                <span id="status-${endpoint.replace(/\//g, '-')}"> - Testing...</span>
+                <button onclick="testSingle('${endpoint}')">Retest</button>
+            `;
+            endpointsDiv.appendChild(div);
+
+            testSingle(endpoint);
+        }
+
+        function testSingle(endpoint) {
+            const statusId = `status-${endpoint.replace(/\//g, '-')}`;
+            const statusSpan = document.getElementById(statusId);
+            const div = statusSpan.parentElement;
+            
+            div.className = 'endpoint pending';
+            statusSpan.textContent = ' - Testing...';
+            
+            const wsUrl = `ws://${window.location.host}${endpoint}`;
+            addLog(`Testing ${wsUrl}`);
+            
+            try {
+                const ws = new WebSocket(wsUrl);
+                
+                ws.onopen = () => {
+                    addLog(`✅ Connected to ${endpoint}`);
+                    div.className = 'endpoint success';
+                    statusSpan.textContent = ' - Connected!';
+                    
+                    // Send test message
+                    ws.send(JSON.stringify({ type: 'ping' }));
+                    
+                    // Close after 2 seconds
+                    setTimeout(() => ws.close(), 2000);
+                };
+                
+                ws.onerror = (error) => {
+                    addLog(`❌ Error on ${endpoint}: ${error}`);
+                    div.className = 'endpoint error';
+                    statusSpan.textContent = ' - Connection error';
+                };
+                
+                ws.onclose = (event) => {
+                    if (event.code === 1006) {
+                        addLog(`❌ ${endpoint} closed abnormally (code ${event.code})`);
+                        div.className = 'endpoint error';
+                        statusSpan.textContent = ` - Failed (${event.code})`;
+                    } else if (event.code !== 1000) {
+                        addLog(`⚠️ ${endpoint} closed with code ${event.code}`);
+                    }
+                };
+                
+                ws.onmessage = (event) => {
+                    addLog(`📥 Message from ${endpoint}: ${event.data}`);
+                };
+                
+            } catch (error) {
+                addLog(`❌ Exception testing ${endpoint}: ${error}`);
+                div.className = 'endpoint error';
+                statusSpan.textContent = ' - Exception';
+            }
+        }
+
+        // Test all endpoints
+        addLog('Starting WebSocket tests...');
+        endpoints.forEach(endpoint => testWebSocket(endpoint));
+
+        // Also test HTTP endpoints
+        fetch('/api/v1/voice-streaming/health')
+            .then(resp => resp.json())
+            .then(data => addLog(`Voice streaming health: ${JSON.stringify(data)}`))
+            .catch(err => addLog(`Voice streaming health check failed: ${err}`));
+    </script>
+</body>
+</html>

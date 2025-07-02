@@ -12,19 +12,43 @@ import structlog
 
 logger = structlog.get_logger()
 
-# Initialize agents
-supervisor = SupervisorReactAgent()
-product_search = ProductSearchReactAgent()
-response_compiler = ResponseCompilerAgent()
-order_agent = OrderReactAgent()
-promotion_agent = PromotionAgent()
+# Create agent factories to avoid concurrency issues
+def create_supervisor():
+    """Create a new supervisor instance for each request"""
+    return SupervisorReactAgent()
+
+def create_product_search():
+    """Create a new product search instance for each request"""
+    return ProductSearchReactAgent()
+
+def create_response_compiler():
+    """Create a new response compiler instance for each request"""
+    return ResponseCompilerAgent()
+
+def create_order_agent():
+    """Create a new order agent instance for each request"""
+    return OrderReactAgent()
+
+def create_promotion_agent():
+    """Create a new promotion agent instance for each request"""
+    return PromotionAgent()
+
+# Create shared instances for backward compatibility
+# These will be replaced by per-request instances in the nodes
+supervisor = create_supervisor()
+product_search = create_product_search()
+response_compiler = create_response_compiler()
+order_agent = create_order_agent()
+promotion_agent = create_promotion_agent()
 
 @traceable(name="supervisor_node")
 async def supervisor_node(state: SearchState) -> SearchState:
   """Supervisor node - analyzes and routes"""
   import time
   start = time.time()
-  result = await supervisor.execute(state)
+  # Create a new supervisor instance for this request to avoid concurrency issues
+  supervisor_instance = create_supervisor()
+  result = await supervisor_instance.execute(state)
   elapsed = (time.time() - start) * 1000
   if 'agent_timings' not in result:
     result['agent_timings'] = {}

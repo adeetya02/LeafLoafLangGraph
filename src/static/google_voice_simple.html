@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Cloud Voice Demo - Simple</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4285f4;
+            text-align: center;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .ready { background-color: #e8f5e9; color: #2e7d32; }
+        .recording { background-color: #ffebee; color: #c62828; }
+        .processing { background-color: #e3f2fd; color: #1565c0; }
+        button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .record-btn {
+            background-color: #ea4335;
+            color: white;
+        }
+        .record-btn:hover {
+            background-color: #d33b2c;
+        }
+        .record-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .transcript {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        .response {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+        .audio-player {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .instructions {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Google Cloud Voice Demo</h1>
+        <p class="instructions">
+            Simple demo using Google Cloud Speech-to-Text and Text-to-Speech
+        </p>
+        
+        <div class="status ready" id="status">Ready</div>
+        
+        <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+            Start Recording
+        </button>
+        
+        <div class="transcript" id="transcript">
+            <strong>Your speech will appear here...</strong>
+        </div>
+        
+        <div class="response" id="response" style="display: none;">
+            <strong>Response:</strong>
+            <p id="responseText"></p>
+            <audio class="audio-player" id="audioPlayer" controls style="display: none;"></audio>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    await processAudio(audioBlob);
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                
+                document.getElementById('recordBtn').textContent = 'Stop Recording';
+                document.getElementById('status').textContent = 'Recording...';
+                document.getElementById('status').className = 'status recording';
+                document.getElementById('transcript').innerHTML = '<strong>Listening...</strong>';
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                alert('Could not access microphone. Please check permissions.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                
+                document.getElementById('recordBtn').textContent = 'Start Recording';
+                document.getElementById('recordBtn').disabled = true;
+                document.getElementById('status').textContent = 'Processing...';
+                document.getElementById('status').className = 'status processing';
+            }
+        }
+
+        async function processAudio(audioBlob) {
+            try {
+                // Convert blob to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+                    
+                    // Send to backend
+                    const response = await fetch('/api/v1/voice/google/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            audio: base64Audio,
+                            format: 'webm'
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Server error');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    // Display transcript
+                    document.getElementById('transcript').innerHTML = 
+                        `<strong>You said:</strong> ${data.transcript || 'No speech detected'}`;
+                    
+                    // Display response
+                    if (data.response_text) {
+                        document.getElementById('response').style.display = 'block';
+                        document.getElementById('responseText').textContent = data.response_text;
+                        
+                        // Play audio if available
+                        if (data.audio) {
+                            const audioPlayer = document.getElementById('audioPlayer');
+                            audioPlayer.src = 'data:audio/mp3;base64,' + data.audio;
+                            audioPlayer.style.display = 'block';
+                            audioPlayer.play();
+                        }
+                    }
+                    
+                    // Reset status
+                    document.getElementById('status').textContent = 'Ready';
+                    document.getElementById('status').className = 'status ready';
+                    document.getElementById('recordBtn').disabled = false;
+                    
+                };
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                document.getElementById('status').textContent = 'Error occurred';
+                document.getElementById('status').className = 'status ready';
+                document.getElementById('recordBtn').disabled = false;
+                alert('Error processing audio. Please try again.');
+            }
+        }
+
+        // Auto-play response
+        document.getElementById('audioPlayer').onended = () => {
+            document.getElementById('transcript').innerHTML = '<strong>Your speech will appear here...</strong>';
+            document.getElementById('response').style.display = 'none';
+        };
+    </script>
+</body>
+</html>

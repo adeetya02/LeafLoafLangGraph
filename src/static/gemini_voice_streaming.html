@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice - Powered by Gemini</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .language-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .lang-btn {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .lang-btn:hover {
+            border-color: #667eea;
+        }
+        .mic-container {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+        }
+        .mic-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: none;
+            background: #667eea;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+        .mic-button:hover {
+            transform: scale(1.05);
+        }
+        .mic-button.active {
+            background: #4caf50;
+            animation: pulse 1.5s infinite;
+        }
+        .mic-button.active::after {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border: 3px solid #4caf50;
+            border-radius: 50%;
+            animation: ripple 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3); }
+            50% { box-shadow: 0 4px 30px rgba(76, 175, 80, 0.6); }
+            100% { box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3); }
+        }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.3); opacity: 0; }
+        }
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 500;
+            color: #666;
+        }
+        .conversation {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .user-message {
+            background: #e3f2fd;
+            margin-left: 40px;
+            text-align: right;
+        }
+        .assistant-message {
+            background: #e8f5e9;
+            margin-right: 40px;
+        }
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .suggestion {
+            padding: 6px 12px;
+            background: #fff3cd;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background: #ffe9a6;
+        }
+        .text-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .text-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .text-input button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .text-input button:hover {
+            background: #5a67d8;
+        }
+        .supported {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 LeafLoaf Voice Assistant</h1>
+        <p class="subtitle">Speak in your language, shop with ease</p>
+        
+        <div class="language-selector">
+            <strong>Select your language:</strong>
+            <div class="language-grid">
+                <button class="lang-btn active" data-lang="en-US" onclick="setLanguage('en-US')">English</button>
+                <button class="lang-btn" data-lang="es-US" onclick="setLanguage('es-US')">Español</button>
+                <button class="lang-btn" data-lang="hi-IN" onclick="setLanguage('hi-IN')">हिन्दी</button>
+                <button class="lang-btn" data-lang="zh-CN" onclick="setLanguage('zh-CN')">中文</button>
+                <button class="lang-btn" data-lang="ar-SA" onclick="setLanguage('ar-SA')">العربية</button>
+                <button class="lang-btn" data-lang="bn-IN" onclick="setLanguage('bn-IN')">বাংলা</button>
+                <button class="lang-btn" data-lang="ta-IN" onclick="setLanguage('ta-IN')">தமிழ்</button>
+                <button class="lang-btn" data-lang="ko-KR" onclick="setLanguage('ko-KR')">한국어</button>
+                <button class="lang-btn" data-lang="ja-JP" onclick="setLanguage('ja-JP')">日本語</button>
+                <button class="lang-btn" data-lang="vi-VN" onclick="setLanguage('vi-VN')">Tiếng Việt</button>
+                <button class="lang-btn" data-lang="pa-IN" onclick="setLanguage('pa-IN')">ਪੰਜਾਬੀ</button>
+                <button class="lang-btn" data-lang="ur-PK" onclick="setLanguage('ur-PK')">اردو</button>
+            </div>
+        </div>
+        
+        <div class="mic-container">
+            <button class="mic-button" id="micBtn" onclick="toggleRecording()">
+                🎤
+            </button>
+        </div>
+        
+        <div class="status" id="status">Click the microphone to start</div>
+        
+        <div class="conversation" id="conversation">
+            <div class="message assistant-message">
+                Welcome to LeafLoaf! I can help you in multiple languages. Just speak or type below.
+            </div>
+        </div>
+        
+        <div class="text-input">
+            <input type="text" id="textInput" placeholder="Or type your message..." onkeypress="handleKeyPress(event)">
+            <button onclick="sendText()">Send</button>
+        </div>
+        
+        <p class="supported">
+            Powered by Gemini AI • Supports 20+ languages • Voice enabled
+        </p>
+    </div>
+
+    <script>
+        let ws = null;
+        let mediaRecorder = null;
+        let isRecording = false;
+        let currentLanguage = 'en-US';
+        let audioContext = null;
+
+        // Connect WebSocket on load
+        window.addEventListener('load', () => {
+            connectWebSocket();
+        });
+
+        function connectWebSocket() {
+            const wsUrl = `ws://localhost:8080/api/v1/voice-gemini/stream`;
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                console.log('Connected to Gemini Voice');
+                updateStatus('Connected - Ready to help!');
+            };
+            
+            ws.onmessage = async (event) => {
+                if (event.data instanceof Blob) {
+                    // Audio response
+                    const arrayBuffer = await event.data.arrayBuffer();
+                    playAudioBuffer(arrayBuffer);
+                } else {
+                    // JSON message
+                    const data = JSON.parse(event.data);
+                    handleMessage(data);
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateStatus('Connection error - Please refresh');
+            };
+            
+            ws.onclose = () => {
+                console.log('Disconnected');
+                updateStatus('Disconnected - Reconnecting...');
+                setTimeout(connectWebSocket, 2000);
+            };
+        }
+
+        function handleMessage(data) {
+            switch (data.type) {
+                case 'connected':
+                    console.log('Supported languages:', data.supported_languages);
+                    break;
+                    
+                case 'transcript':
+                    addMessage(data.text, 'user');
+                    break;
+                    
+                case 'response':
+                    addMessage(data.text, 'assistant', data.suggestions);
+                    if (data.audio) {
+                        playAudio(data.audio);
+                    }
+                    break;
+                    
+                case 'error':
+                    updateStatus(`Error: ${data.message}`);
+                    break;
+            }
+        }
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update UI
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            // Update WebSocket
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'set_language',
+                    language: lang
+                }));
+            }
+            
+            // Reconnect with new language
+            if (ws) {
+                ws.close();
+            }
+            connectWebSocket();
+        }
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 48000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = async (event) => {
+                    if (event.data.size > 0 && ws && ws.readyState === WebSocket.OPEN) {
+                        // Send as binary directly
+                        const arrayBuffer = await event.data.arrayBuffer();
+                        ws.send(arrayBuffer);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    // Send completion signal
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({ type: 'audio_complete' }));
+                    }
+                };
+                
+                // Start recording with 500ms chunks
+                mediaRecorder.start(500);
+                isRecording = true;
+                
+                document.getElementById('micBtn').classList.add('active');
+                updateStatus('Listening... Click to stop');
+                
+            } catch (error) {
+                console.error('Microphone error:', error);
+                updateStatus('Microphone access denied');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            isRecording = false;
+            document.getElementById('micBtn').classList.remove('active');
+            updateStatus('Processing...');
+            
+            setTimeout(() => {
+                updateStatus('Click the microphone to start');
+            }, 1000);
+        }
+
+        function sendText() {
+            const input = document.getElementById('textInput');
+            const text = input.value.trim();
+            
+            if (text && ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'text_input',
+                    text: text
+                }));
+                
+                addMessage(text, 'user');
+                input.value = '';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendText();
+            }
+        }
+
+        function updateStatus(text) {
+            document.getElementById('status').textContent = text;
+        }
+
+        function addMessage(text, type, suggestions = []) {
+            const conversation = document.getElementById('conversation');
+            const message = document.createElement('div');
+            message.className = `message ${type}-message`;
+            
+            let html = text;
+            
+            if (suggestions && suggestions.length > 0) {
+                html += '<div class="suggestions">';
+                suggestions.forEach(s => {
+                    html += `<span class="suggestion" onclick="sendSuggestion('${s}')">${s}</span>`;
+                });
+                html += '</div>';
+            }
+            
+            message.innerHTML = html;
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function sendSuggestion(text) {
+            document.getElementById('textInput').value = text;
+            sendText();
+        }
+
+        function playAudio(base64Audio) {
+            const audio = new Audio('data:audio/mp3;base64,' + base64Audio);
+            audio.play().catch(e => console.error('Audio playback error:', e));
+        }
+        
+        async function playAudioBuffer(arrayBuffer) {
+            try {
+                const audioContext = new AudioContext();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+            } catch (e) {
+                console.error('Audio buffer playback error:', e);
+            }
+        }
+    </script>
+</body>
+</html>

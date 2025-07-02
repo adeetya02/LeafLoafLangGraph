@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Voice Demo - Simple SSE</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4285f4;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background: #ea4335;
+            color: white;
+            font-size: 48px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(234, 67, 53, 0.3);
+        }
+        .record-button:hover {
+            transform: scale(1.05);
+        }
+        .record-button.recording {
+            background: #34a853;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(52, 168, 83, 0.6); }
+            100% { box-shadow: 0 4px 15px rgba(52, 168, 83, 0.3); }
+        }
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            color: #666;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            min-height: 100px;
+        }
+        .transcript {
+            font-size: 16px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 6px;
+        }
+        .response {
+            font-size: 16px;
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .error {
+            color: #d32f2f;
+            background: #ffebee;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .tips {
+            margin-top: 30px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Google Voice Demo</h1>
+        
+        <div class="status" id="status">Press the microphone to start</div>
+        
+        <button class="record-button" id="recordBtn" onclick="toggleRecording()">
+            🎤
+        </button>
+        
+        <div class="results" id="results">
+            <div style="color: #999; text-align: center;">Your conversation will appear here...</div>
+        </div>
+        
+        <div class="tips">
+            <strong>Try saying:</strong>
+            <ul>
+                <li>"Hello"</li>
+                <li>"I need organic milk"</li>
+                <li>"What's on sale today?"</li>
+                <li>"Show me gluten-free bread"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                // Clear previous results
+                document.getElementById('results').innerHTML = '<div style="color: #666;">Listening...</div>';
+                
+                // Get microphone access
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                // Create media recorder
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    // Create blob from chunks
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    
+                    // Process audio
+                    await processAudio(audioBlob);
+                };
+                
+                // Start recording
+                mediaRecorder.start();
+                isRecording = true;
+                
+                // Update UI
+                document.getElementById('recordBtn').classList.add('recording');
+                document.getElementById('recordBtn').textContent = '⏹️';
+                document.getElementById('status').textContent = 'Recording... Click to stop';
+                
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                showError('Could not access microphone. Please check permissions.');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                isRecording = false;
+                document.getElementById('recordBtn').classList.remove('recording');
+                document.getElementById('recordBtn').textContent = '🎤';
+                document.getElementById('status').textContent = 'Processing...';
+            }
+        }
+
+        async function processAudio(audioBlob) {
+            try {
+                // Convert to base64
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+                    
+                    // Clear results
+                    document.getElementById('results').innerHTML = '';
+                    
+                    // Send to server with SSE
+                    const response = await fetch('/api/v1/voice/google-sse/stream', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            audio: base64Audio,
+                            language: 'en-US'
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Server error');
+                    }
+                    
+                    // Read SSE stream
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        const chunk = decoder.decode(value);
+                        const lines = chunk.split('\n');
+                        
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                try {
+                                    const data = JSON.parse(line.slice(6));
+                                    handleSSEMessage(data);
+                                } catch (e) {
+                                    console.error('Error parsing SSE data:', e);
+                                }
+                            }
+                        }
+                    }
+                    
+                    document.getElementById('status').textContent = 'Press the microphone to start';
+                };
+                
+            } catch (error) {
+                console.error('Error processing audio:', error);
+                showError('Error processing audio. Please try again.');
+                document.getElementById('status').textContent = 'Press the microphone to start';
+            }
+        }
+
+        function handleSSEMessage(data) {
+            const results = document.getElementById('results');
+            
+            switch (data.type) {
+                case 'transcript':
+                    const transcript = document.createElement('div');
+                    transcript.className = 'transcript';
+                    transcript.innerHTML = `<strong>You said:</strong> ${data.text}`;
+                    results.appendChild(transcript);
+                    break;
+                    
+                case 'response':
+                    const response = document.createElement('div');
+                    response.className = 'response';
+                    response.innerHTML = `<strong>Assistant:</strong> ${data.text}`;
+                    results.appendChild(response);
+                    break;
+                    
+                case 'audio':
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.autoplay = true;
+                    audio.src = 'data:audio/mp3;base64,' + data.data;
+                    results.appendChild(audio);
+                    break;
+                    
+                case 'error':
+                    showError(data.message);
+                    break;
+            }
+        }
+
+        function showError(message) {
+            const results = document.getElementById('results');
+            const error = document.createElement('div');
+            error.className = 'error';
+            error.textContent = `Error: ${message}`;
+            results.appendChild(error);
+        }
+
+        // Test endpoint on load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('/api/v1/voice/google-sse/test');
+                const data = await response.json();
+                console.log('Google Voice test:', data);
+            } catch (e) {
+                console.error('Test failed:', e);
+            }
+        });
+    </script>
+</body>
+</html>

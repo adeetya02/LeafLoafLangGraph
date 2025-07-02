@@ -314,7 +314,7 @@
 
         function connect() {
             const language = document.getElementById('language').value;
-            const wsUrl = `ws://localhost:8080/api/v1/voice/google/ws?language=${language}`;
+            const wsUrl = `ws://localhost:8000/api/v1/voice/google/ws?language=${language}`;
             
             updateStatus('Connecting...', 'processing');
             

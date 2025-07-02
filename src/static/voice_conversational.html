@@ -405,7 +405,7 @@
                 log('Got microphone access');
                 
                 // Create WebSocket connection with current host
-                const wsUrl = `ws://${window.location.host}/api/v1/voice-conv/stream`;
+                const wsUrl = `ws://${window.location.host}/api/v1/voice-conversational/stream`;
                 log(`Connecting to WebSocket: ${wsUrl}`);
                 ws = new WebSocket(wsUrl);
                 

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf Voice - Simple & Working</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .status {
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .ready { background: #e0f2fe; color: #0369a1; }
+        .listening { background: #fee2e2; color: #dc2626; }
+        .processing { background: #fef3c7; color: #d97706; }
+        
+        .mic-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: none;
+            background: #667eea;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            margin: 30px auto;
+            display: block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .mic-button.active {
+            background: #dc2626;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(220, 38, 38, 0.6); }
+            100% { box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3); }
+        }
+        
+        .conversation {
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user { background: #e0f2fe; margin-left: 30px; }
+        .assistant { background: #f0e7ff; margin-right: 30px; }
+        
+        .info {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #92400e;
+        }
+        
+        .error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 LeafLoaf Voice</h1>
+        <p style="color: #6b7280;">Simple & Reliable Voice Assistant</p>
+        
+        <div class="status ready" id="status">Click mic to start</div>
+        
+        <button class="mic-button" id="micBtn" onclick="toggleRecording()">
+            🎤
+        </button>
+        
+        <div class="conversation" id="conversation">
+            <div class="message assistant">
+                Hi! I'm your grocery shopping assistant. Press the mic and tell me what you need!
+            </div>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="info">
+            <strong>Try saying:</strong><br>
+            "I need milk and eggs" • "What vegetables are fresh?" • "Show me organic options"
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let recognition = null;
+        let isListening = false;
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            connectWebSocket();
+            setupSpeechRecognition();
+        });
+
+        function connectWebSocket() {
+            ws = new WebSocket('ws://localhost:8080/api/v1/voice/simple/stream');
+            
+            ws.onopen = () => {
+                console.log('Connected to voice assistant');
+                updateStatus('Ready - Click mic to start', 'ready');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleMessage(data);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                showError('Connection error. Please refresh.');
+            };
+            
+            ws.onclose = () => {
+                updateStatus('Reconnecting...', 'ready');
+                setTimeout(connectWebSocket, 2000);
+            };
+        }
+
+        function setupSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window)) {
+                showError('Speech recognition not supported. Please use Chrome.');
+                return;
+            }
+            
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('micBtn').classList.add('active');
+                updateStatus('Listening...', 'listening');
+            };
+            
+            recognition.onresult = (event) => {
+                const last = event.results.length - 1;
+                const transcript = event.results[last][0].transcript;
+                const isFinal = event.results[last].isFinal;
+                
+                if (isFinal && ws && ws.readyState === WebSocket.OPEN) {
+                    addMessage(transcript, 'user');
+                    ws.send(JSON.stringify({
+                        type: 'text',
+                        text: transcript
+                    }));
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                if (event.error === 'no-speech') {
+                    showError('No speech detected. Please try again.');
+                } else {
+                    showError('Speech recognition error: ' + event.error);
+                }
+                stopListening();
+            };
+            
+            recognition.onend = () => {
+                stopListening();
+            };
+        }
+
+        function toggleRecording() {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
+        function stopListening() {
+            isListening = false;
+            document.getElementById('micBtn').classList.remove('active');
+            updateStatus('Ready - Click mic to start', 'ready');
+        }
+
+        function handleMessage(data) {
+            switch (data.type) {
+                case 'session_started':
+                    console.log('Session started:', data.session_id);
+                    break;
+                    
+                case 'text_response':
+                    addMessage(data.text, 'assistant');
+                    updateStatus('Ready - Click mic to start', 'ready');
+                    // Use browser TTS to speak response
+                    speak(data.text);
+                    break;
+                    
+                case 'voice_response':
+                    if (data.response_text) {
+                        addMessage(data.response_text, 'assistant');
+                    }
+                    updateStatus('Ready - Click mic to start', 'ready');
+                    // Play audio response if available
+                    if (data.audio_response) {
+                        playAudio(data.audio_response);
+                    }
+                    break;
+                    
+                case 'error':
+                    showError(data.message);
+                    break;
+            }
+        }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                speechSynthesis.speak(utterance);
+            }
+        }
+        
+        function playAudio(base64Audio) {
+            const audio = new Audio('data:audio/mp3;base64,' + base64Audio);
+            audio.play().catch(e => console.error('Audio playback error:', e));
+        }
+
+        function updateStatus(text, className) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = 'status ' + className;
+        }
+
+        function addMessage(text, type) {
+            const conversation = document.getElementById('conversation');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

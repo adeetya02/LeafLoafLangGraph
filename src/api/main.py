@@ -952,6 +952,22 @@ try:
 except Exception as e:
     logger.error(f"Could not load voice streaming router: {e}")
 
+# Include test WebSocket endpoint for debugging
+try:
+    from src.api.test_ws import router as test_ws_router
+    app.include_router(test_ws_router)
+    logger.info("Loaded test WebSocket endpoint")
+except Exception as e:
+    logger.error(f"Could not load test WebSocket router: {e}")
+
+# Include simple voice WebSocket endpoint
+try:
+    from src.api.voice_websocket_simple import router as voice_simple_ws_router
+    app.include_router(voice_simple_ws_router)
+    logger.info("Loaded simple voice WebSocket endpoint")
+except Exception as e:
+    logger.error(f"Could not load simple voice WebSocket router: {e}")
+
 # Include fixed WebSocket streaming with Deepgram SDK
 try:
     from src.api.voice_streaming_fixed import router as voice_streaming_fixed_router
@@ -1068,8 +1084,114 @@ try:
     from src.api.voice_google_streaming import router as google_streaming_router
     app.include_router(google_streaming_router)
     logger.info("Loaded Google Voice continuous streaming endpoint")
+    
+    # Add unified Google Voice with voice-native supervisor
+    from src.api.voice_google_unified import router as google_unified_router
+    app.include_router(google_unified_router)
+    logger.info("Loaded unified Google Voice with voice-native supervisor")
+    
+    # Add fixed Google Voice v2 for testing
+    from src.api.voice_google_fixed_v2 import router as google_fixed_v2_router
+    app.include_router(google_fixed_v2_router)
+    logger.info("Loaded fixed Google Voice v2 endpoint")
 except Exception as e:
     logger.error(f"Could not load Google Voice router: {e}")
+
+# Load Google Voice streaming endpoint with AI-native supervisor
+try:
+    from src.api.voice_google_streaming import router as voice_google_streaming_router
+    app.include_router(voice_google_streaming_router)
+    logger.info("Loaded Google Voice streaming with AI-native supervisor")
+except Exception as e:
+    logger.error(f"Could not load Google Voice streaming router: {e}")
+
+# Add basic Google voice endpoint
+try:
+    from src.api.voice_google_basic import router as voice_google_basic_router
+    app.include_router(voice_google_basic_router)
+    logger.info("Loaded basic Google Voice (STT/TTS only)")
+except Exception as e:
+    logger.error(f"Could not load basic Google Voice router: {e}")
+
+# Add Google WebSocket streaming
+try:
+    from src.api.voice_google_websocket import router as voice_google_ws_router
+    app.include_router(voice_google_ws_router)
+    logger.info("Loaded Google Voice WebSocket streaming")
+except Exception as e:
+    logger.error(f"Could not load Google Voice WebSocket router: {e}")
+
+# Add Google SSE streaming
+try:
+    from src.api.voice_google_sse import router as voice_google_sse_router
+    app.include_router(voice_google_sse_router)
+    logger.info("Loaded Google Voice SSE streaming")
+except Exception as e:
+    logger.error(f"Could not load Google Voice SSE router: {e}")
+
+# Add Gemini native voice streaming
+try:
+    from src.api.voice_gemini_streaming import router as voice_gemini_streaming_router
+    app.include_router(voice_gemini_streaming_router)
+    logger.info("Loaded Gemini native voice streaming with multimodal support")
+except Exception as e:
+    logger.error(f"Could not load Gemini voice streaming router: {e}")
+
+# Add Hybrid voice streaming (Google STT + Gemini + Google TTS)
+try:
+    from src.api.voice_google_gemini_hybrid import router as voice_hybrid_router
+    app.include_router(voice_hybrid_router)
+    logger.info("Loaded hybrid voice streaming (Google STT + Gemini + Google TTS)")
+except Exception as e:
+    logger.error(f"Could not load hybrid voice router: {e}")
+
+# Load simple working voice endpoint
+try:
+    from src.api.voice_simple_working import router as voice_simple_router
+    app.include_router(voice_simple_router)
+    logger.info("Loaded simple working voice endpoint")
+except Exception as e:
+    logger.error(f"Could not load simple voice router: {e}")
+
+# Add Gemini 2.5 native audio
+try:
+    from src.api.voice_gemini_25_native import router as voice_gemini25_router
+    app.include_router(voice_gemini25_router)
+    logger.info("Loaded Gemini 2.5 native audio streaming")
+except Exception as e:
+    logger.error(f"Could not load Gemini 2.5 voice router: {e}")
+
+# Add simple Gemini voice
+try:
+    from src.api.voice_gemini_simple import router as voice_gemini_simple_router
+    app.include_router(voice_gemini_simple_router)
+    logger.info("Loaded simple Gemini voice with browser STT")
+except Exception as e:
+    logger.error(f"Could not load simple Gemini voice router: {e}")
+
+# Add Dialogflow CX voice
+try:
+    from src.api.voice_dialogflow_cx import router as voice_dialogflow_router
+    app.include_router(voice_dialogflow_router)
+    logger.info("Loaded Dialogflow CX voice integration")
+except Exception as e:
+    logger.error(f"Could not load Dialogflow CX router: {e}")
+
+# Add Vertex AI Conversation
+try:
+    from src.api.voice_vertex_conversation import router as voice_vertex_router
+    app.include_router(voice_vertex_router)
+    logger.info("Loaded Vertex AI Conversation integration")
+except Exception as e:
+    logger.error(f"Could not load Vertex AI Conversation router: {e}")
+
+# Add Streaming Conversational Voice
+try:
+    from src.api.voice_streaming_conversational import router as voice_streaming_router
+    app.include_router(voice_streaming_router)
+    logger.info("Loaded streaming conversational voice")
+except Exception as e:
+    logger.error(f"Could not load streaming conversational router: {e}")
 
 
 if __name__ == "__main__":

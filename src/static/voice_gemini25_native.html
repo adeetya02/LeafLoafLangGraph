@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Gemini 2.5 Native Audio</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        h1 {
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .status {
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .connected { background: #e8f5e9; color: #2e7d32; }
+        .listening { background: #ffebee; color: #c62828; }
+        .processing { background: #e3f2fd; color: #1565c0; }
+        .error { background: #ffebee; color: #c62828; }
+        
+        .mic-container {
+            position: relative;
+            display: inline-block;
+            margin: 30px 0;
+        }
+        
+        .mic-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: none;
+            background: #3949ab;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(57, 73, 171, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(57, 73, 171, 0.4);
+        }
+        
+        .mic-button.active {
+            background: #e91e63;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(233, 30, 99, 0.6); }
+            100% { box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3); }
+        }
+        
+        .wave {
+            position: absolute;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            opacity: 0;
+            animation: wave 1.5s ease-out infinite;
+        }
+        
+        .mic-button.active .wave {
+            opacity: 1;
+        }
+        
+        .wave:nth-child(2) { animation-delay: 0.3s; }
+        .wave:nth-child(3) { animation-delay: 0.6s; }
+        
+        @keyframes wave {
+            0% {
+                width: 100px;
+                height: 100px;
+                opacity: 1;
+            }
+            100% {
+                width: 150px;
+                height: 150px;
+                opacity: 0;
+            }
+        }
+        
+        .conversation {
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 12px;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user { background: #e3f2fd; margin-left: 30px; }
+        .assistant { background: #f3e5f5; margin-right: 30px; }
+        
+        .info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #856404;
+        }
+        
+        .feature-badge {
+            display: inline-block;
+            background: #1a237e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 LeafLoaf Voice</h1>
+        <p class="subtitle">Powered by Gemini 2.5 Native Audio</p>
+        
+        <div class="feature-badge">Native Audio Understanding</div>
+        <div class="feature-badge">Real-time Streaming</div>
+        <div class="feature-badge">Context Aware</div>
+        
+        <div class="status connected" id="status">Connecting...</div>
+        
+        <div class="mic-container">
+            <button class="mic-button" id="micBtn" onclick="toggleRecording()">
+                🎤
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </button>
+        </div>
+        
+        <div class="conversation" id="conversation">
+            <div class="message assistant">
+                Welcome! Press the mic and tell me what groceries you need.
+            </div>
+        </div>
+        
+        <div class="info">
+            <strong>Try saying:</strong><br>
+            "I need milk and eggs" • "What's good for dinner tonight?" • "Show me organic vegetables"
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let isRecording = false;
+        let mediaRecorder = null;
+
+        // Connect on load
+        window.addEventListener('load', connectWebSocket);
+
+        function connectWebSocket() {
+            ws = new WebSocket('ws://localhost:8080/api/v1/voice/gemini25/stream');
+            
+            ws.onopen = () => {
+                console.log('Connected to Gemini 2.5 native audio');
+                updateStatus('Ready - Press mic to start', 'connected');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleMessage(data);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateStatus('Connection error', 'error');
+            };
+            
+            ws.onclose = () => {
+                updateStatus('Reconnecting...', 'error');
+                setTimeout(connectWebSocket, 2000);
+            };
+        }
+
+        function handleMessage(data) {
+            switch (data.type) {
+                case 'connected':
+                    console.log('Service ready:', data.message);
+                    break;
+                    
+                case 'listening_started':
+                    updateStatus('Listening...', 'listening');
+                    break;
+                    
+                case 'listening_stopped':
+                    updateStatus('Processing...', 'processing');
+                    break;
+                    
+                case 'processing':
+                    updateStatus(data.message, 'processing');
+                    break;
+                    
+                case 'response':
+                    addMessage(data.text, 'assistant');
+                    updateStatus('Ready', 'connected');
+                    break;
+                    
+                case 'speech_text':
+                    // Native TTS will come later
+                    console.log('Speech response:', data.text);
+                    break;
+                    
+                case 'error':
+                    addMessage(data.message, 'assistant');
+                    updateStatus('Ready', 'connected');
+                    break;
+            }
+        }
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = async (event) => {
+                    if (event.data.size > 0 && ws && ws.readyState === WebSocket.OPEN) {
+                        const arrayBuffer = await event.data.arrayBuffer();
+                        ws.send(arrayBuffer);
+                    }
+                };
+                
+                mediaRecorder.start(100); // Send chunks every 100ms
+                isRecording = true;
+                
+                // Notify server
+                ws.send(JSON.stringify({ type: 'start_listening' }));
+                
+                // Update UI
+                document.getElementById('micBtn').classList.add('active');
+                
+                // Add user message placeholder
+                addMessage('[Recording...]', 'user');
+                
+            } catch (error) {
+                console.error('Microphone error:', error);
+                updateStatus('Microphone access denied', 'error');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'stop_listening' }));
+            }
+            
+            isRecording = false;
+            document.getElementById('micBtn').classList.remove('active');
+            
+            // Remove recording placeholder
+            const messages = document.querySelectorAll('.message.user');
+            const lastMessage = messages[messages.length - 1];
+            if (lastMessage && lastMessage.textContent === '[Recording...]') {
+                lastMessage.remove();
+            }
+        }
+
+        function updateStatus(text, className) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = 'status ' + className;
+        }
+
+        function addMessage(text, type) {
+            const conversation = document.getElementById('conversation');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+    </script>
+</body>
+</html>

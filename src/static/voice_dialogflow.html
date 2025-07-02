@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Dialogflow CX Voice</title>
+    <style>
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a73e8 0%, #4285f4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        .subtitle {
+            color: #5f6368;
+            margin-bottom: 30px;
+        }
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+        .connected { background: #e6f4ea; color: #1e8e3e; }
+        .listening { background: #fce8e6; color: #d33b27; }
+        .processing { background: #e8f0fe; color: #1a73e8; }
+        
+        .mic-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .mic-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: #1a73e8;
+            color: white;
+            font-size: 36px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.4);
+        }
+        
+        .mic-button.active {
+            background: #d33b27;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 12px rgba(211, 59, 39, 0.3); }
+            50% { box-shadow: 0 4px 20px rgba(211, 59, 39, 0.6); }
+            100% { box-shadow: 0 4px 12px rgba(211, 59, 39, 0.3); }
+        }
+        
+        .conversation {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+        
+        .message {
+            margin: 12px 0;
+            padding: 12px 16px;
+            border-radius: 12px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user {
+            background: #e8f0fe;
+            margin-left: 40px;
+            text-align: right;
+        }
+        
+        .assistant {
+            background: #e6f4ea;
+            margin-right: 40px;
+        }
+        
+        .intent {
+            font-size: 12px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .product {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .product-name {
+            font-weight: 500;
+            color: #202124;
+        }
+        
+        .product-price {
+            color: #1a73e8;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .language-select {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        select {
+            padding: 8px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #3c4043;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .info {
+            background: #feefc3;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #3c4043;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 LeafLoaf Voice Assistant</h1>
+        <p class="subtitle">Powered by Google Dialogflow CX</p>
+        
+        <div class="language-select">
+            <select id="language" onchange="changeLanguage()">
+                <option value="en-US">English (US)</option>
+                <option value="es-US">Spanish (US)</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="ja-JP">Japanese</option>
+                <option value="ko-KR">Korean</option>
+                <option value="zh-CN">Chinese (Mandarin)</option>
+            </select>
+        </div>
+        
+        <div class="status connected" id="status">Connecting...</div>
+        
+        <div class="mic-container">
+            <button class="mic-button" id="micBtn" onclick="toggleRecording()">
+                🎤
+            </button>
+        </div>
+        
+        <div class="conversation" id="conversation">
+            <div class="message assistant">
+                Welcome! I understand natural language. Try saying "I need organic milk" or "Add 2 bananas to my cart".
+            </div>
+        </div>
+        
+        <div class="info">
+            <strong>Dialogflow Features:</strong><br>
+            • Natural language understanding<br>
+            • Multi-turn conversations<br>
+            • Intent recognition with entities<br>
+            • Context-aware responses
+        </div>
+    </div>
+
+    <script>
+        let ws = null;
+        let mediaRecorder = null;
+        let isRecording = false;
+        let currentLanguage = 'en-US';
+
+        // Connect on load
+        window.addEventListener('load', connectWebSocket);
+
+        function connectWebSocket() {
+            ws = new WebSocket('ws://localhost:8080/api/v1/voice/dialogflow/stream');
+            
+            ws.onopen = () => {
+                console.log('Connected to Dialogflow CX');
+                updateStatus('Ready - Click mic to start', 'connected');
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleMessage(data);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                updateStatus('Connection error', 'connected');
+            };
+            
+            ws.onclose = () => {
+                updateStatus('Disconnected - Reconnecting...', 'connected');
+                setTimeout(connectWebSocket, 2000);
+            };
+        }
+
+        function handleMessage(data) {
+            switch (data.type) {
+                case 'connected':
+                    console.log('Session:', data.session_id);
+                    break;
+                    
+                case 'transcript':
+                    addMessage(data.text, 'user', {
+                        confidence: data.confidence
+                    });
+                    break;
+                    
+                case 'intent':
+                    console.log('Intent detected:', data.name, data.parameters);
+                    break;
+                    
+                case 'response':
+                    addMessage(data.text, 'assistant');
+                    if (data.products && data.products.length > 0) {
+                        displayProducts(data.products);
+                    }
+                    break;
+                    
+                case 'audio':
+                    playAudio(data.data, data.format);
+                    break;
+                    
+                case 'error':
+                    console.error('Error:', data.message);
+                    updateStatus('Error', 'connected');
+                    break;
+            }
+        }
+
+        async function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 48000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                mediaRecorder.ondataavailable = async (event) => {
+                    if (event.data.size > 0 && ws && ws.readyState === WebSocket.OPEN) {
+                        const arrayBuffer = await event.data.arrayBuffer();
+                        ws.send(arrayBuffer);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start(100); // Send chunks every 100ms
+                isRecording = true;
+                
+                document.getElementById('micBtn').classList.add('active');
+                updateStatus('Listening...', 'listening');
+                
+            } catch (error) {
+                console.error('Microphone error:', error);
+                alert('Microphone access denied');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            
+            isRecording = false;
+            document.getElementById('micBtn').classList.remove('active');
+            updateStatus('Processing...', 'processing');
+            
+            // Reset status after a moment
+            setTimeout(() => {
+                updateStatus('Ready - Click mic to start', 'connected');
+            }, 1000);
+        }
+
+        function changeLanguage() {
+            currentLanguage = document.getElementById('language').value;
+            
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({
+                    type: 'language',
+                    code: currentLanguage
+                }));
+            }
+        }
+
+        function updateStatus(text, className) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = 'status ' + className;
+        }
+
+        function addMessage(text, type, metadata = {}) {
+            const conversation = document.getElementById('conversation');
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            
+            if (metadata.confidence !== undefined && type === 'user') {
+                const intent = document.createElement('div');
+                intent.className = 'intent';
+                intent.textContent = `Confidence: ${(metadata.confidence * 100).toFixed(1)}%`;
+                message.appendChild(intent);
+            }
+            
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function displayProducts(products) {
+            const conversation = document.getElementById('conversation');
+            const productsDiv = document.createElement('div');
+            productsDiv.className = 'products';
+            
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price.toFixed(2)}</div>
+                `;
+                productsDiv.appendChild(productDiv);
+            });
+            
+            conversation.appendChild(productsDiv);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+
+        function playAudio(base64Data, format) {
+            const audio = new Audio(`data:audio/${format};base64,${base64Data}`);
+            audio.play().catch(e => console.error('Audio playback error:', e));
+        }
+    </script>
+</body>
+</html>

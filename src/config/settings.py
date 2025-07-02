@@ -23,6 +23,9 @@ class Settings(BaseSettings):
   # Deepgram Configuration
   deepgram_api_key: Optional[str] = None
   
+  # Groq Configuration
+  groq_api_key: Optional[str] = None
+  
   # LangSmith Configuration
   langchain_tracing_v2: bool = True
   langchain_endpoint: str = "https://api.smith.langchain.com"

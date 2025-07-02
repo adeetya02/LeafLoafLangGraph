@@ -159,7 +159,7 @@
     </div>
     
     <script>
-        const WS_URL = 'ws://localhost:8080/api/v1/deepgram-sdk/conversation';
+        const WS_URL = `ws://${window.location.host}/api/v1/voice-simple/ws`;
         
         let websocket = null;
         let mediaRecorder = null;
@@ -188,24 +188,39 @@
             status.textContent = 'Connecting...';
             
             websocket = new WebSocket(WS_URL);
+            websocket.binaryType = 'arraybuffer';
             
             websocket.onopen = () => {
                 status.textContent = '🎤 Ready - Click microphone to start';
                 status.style.color = '#4ade80';
+                console.log('WebSocket connected');
             };
             
             websocket.onmessage = (event) => {
                 if (event.data instanceof ArrayBuffer) {
+                    console.log('Received audio:', event.data.byteLength, 'bytes');
                     playAudio(event.data);
                 } else {
-                    const data = JSON.parse(event.data);
-                    handleMessage(data);
+                    console.log('Received message:', event.data);
+                    try {
+                        const data = JSON.parse(event.data);
+                        handleMessage(data);
+                    } catch (e) {
+                        console.error('Failed to parse:', e);
+                    }
                 }
             };
             
-            websocket.onerror = () => {
+            websocket.onerror = (error) => {
+                console.error('WebSocket error:', error);
                 status.textContent = 'Connection error';
                 status.style.color = '#f87171';
+            };
+            
+            websocket.onclose = () => {
+                console.log('WebSocket closed');
+                status.textContent = 'Disconnected - Reconnecting...';
+                setTimeout(connectWebSocket, 2000);
             };
         }
         
@@ -246,12 +261,23 @@
         }
         
         async function startRecording() {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    sampleRate: 16000
+                } 
+            });
             
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.ondataavailable = (event) => {
-                if (websocket.readyState === WebSocket.OPEN) {
-                    websocket.send(event.data);
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'audio/webm;codecs=opus'
+            });
+            
+            mediaRecorder.ondataavailable = async (event) => {
+                if (event.data.size > 0 && websocket.readyState === WebSocket.OPEN) {
+                    const arrayBuffer = await event.data.arrayBuffer();
+                    websocket.send(arrayBuffer);
+                    console.log('Sent audio chunk:', arrayBuffer.byteLength, 'bytes');
                 }
             };
             

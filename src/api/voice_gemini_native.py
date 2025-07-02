@@ -60,7 +60,7 @@ class GeminiVoiceSession:
             # Using Gemini 2.0 Flash (latest available on Vertex AI)
             # For now, create without tools to avoid the error
             self.model = GenerativeModel(
-                model_name="gemini-1.5-flash-002",  # Latest Flash model on Vertex AI
+                model_name="gemini-1.5-flash",  # Flash model on Vertex AI
                 system_instruction="""You are LeafLoaf, a warm and friendly grocery shopping assistant with voice capabilities.
 
 Your personality:
