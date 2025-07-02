@@ -239,3 +239,7 @@ src/voice/deepgram_client.py
 *.mp3
 *.wav
 *.m4a
+
+# Deployment secrets
+GCP_DEPLOYMENT_SECRETS.md
+deploy-voice-to-gcp.sh
