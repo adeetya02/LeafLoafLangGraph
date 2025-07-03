@@ -1105,6 +1105,14 @@ try:
 except Exception as e:
     logger.error(f"Could not load Google Voice streaming router: {e}")
 
+# Load Google True Streaming with async-to-sync bridge
+try:
+    from src.api.voice_google_true_streaming import router as google_true_streaming_router
+    app.include_router(google_true_streaming_router)
+    logger.info("Loaded Google True Streaming with real streaming_recognize API")
+except Exception as e:
+    logger.error(f"Could not load Google True Streaming router: {e}")
+
 # Add basic Google voice endpoint
 try:
     from src.api.voice_google_basic import router as voice_google_basic_router
@@ -1153,6 +1161,14 @@ try:
 except Exception as e:
     logger.error(f"Could not load simple voice router: {e}")
 
+# Add Gemini 2.0 Flash native audio
+try:
+    from src.api.voice_gemini_2_flash import router as gemini_2_flash_router
+    app.include_router(gemini_2_flash_router)
+    logger.info("Loaded Gemini 2.0 Flash native audio streaming")
+except Exception as e:
+    logger.error(f"Could not load Gemini 2.0 Flash router: {e}")
+
 # Add Gemini 2.5 native audio
 try:
     from src.api.voice_gemini_25_native import router as voice_gemini25_router
@@ -1192,6 +1208,22 @@ try:
     logger.info("Loaded streaming conversational voice")
 except Exception as e:
     logger.error(f"Could not load streaming conversational router: {e}")
+
+# Add Vertex AI Personalized Voice
+try:
+    from src.api.voice_vertex_personalized import router as voice_vertex_personalized_router
+    app.include_router(voice_vertex_personalized_router)
+    logger.info("Loaded Vertex AI personalized voice with full personalization features")
+except Exception as e:
+    logger.error(f"Could not load Vertex AI personalized router: {e}")
+
+# Add Simple Vertex AI Voice (working implementation)
+try:
+    from src.api.voice_vertex_simple import router as voice_vertex_simple_router
+    app.include_router(voice_vertex_simple_router)
+    logger.info("Loaded simple Vertex AI voice (working implementation)")
+except Exception as e:
+    logger.error(f"Could not load simple Vertex AI router: {e}")
 
 
 if __name__ == "__main__":

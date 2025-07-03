@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Gemini 2.0 Flash Voice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .mic-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .mic-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .mic-button.listening {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .conversation {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            text-align: right;
+            margin-left: 20%;
+        }
+        
+        .assistant-message {
+            background: #f3e5f5;
+            margin-right: 20%;
+        }
+        
+        .test-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .features {
+            background: #f5f5f5;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .features h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        
+        .features ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .features li {
+            margin: 5px 0;
+        }
+        
+        .language-selector {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .language-selector select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 LeafLoaf Gemini 2.0 Flash Voice</h1>
+        
+        <div style="text-align: center;">
+            <button onclick="testConnection()" class="test-button">Test Gemini Connection</button>
+            <button onclick="testLanguages()" class="test-button">Show Languages</button>
+        </div>
+        
+        <div class="language-selector">
+            <label for="language">Language: </label>
+            <select id="language" onchange="updateLanguage()">
+                <option value="en">English</option>
+                <option value="hi">हिंदी (Hindi)</option>
+                <option value="ko">한국어 (Korean)</option>
+                <option value="gu">ગુજરાતી (Gujarati)</option>
+                <option value="es">Español (Spanish)</option>
+                <option value="fr">Français (French)</option>
+                <option value="zh">中文 (Chinese)</option>
+                <option value="ja">日本語 (Japanese)</option>
+                <option value="ar">العربية (Arabic)</option>
+                <option value="pt">Português (Portuguese)</option>
+            </select>
+        </div>
+        
+        <div class="mic-container">
+            <button id="mic-button" class="mic-button" onclick="toggleRecording()">
+                🎤
+            </button>
+        </div>
+        
+        <div class="status" id="status">Click the microphone to start talking</div>
+        
+        <div class="features">
+            <h3>Gemini 2.0 Flash Features:</h3>
+            <ul>
+                <li>🎯 Native audio understanding (no STT/TTS needed)</li>
+                <li>🌍 Multilingual support with code-switching</li>
+                <li>😊 Emotion and prosody detection</li>
+                <li>⚡ Real-time bidirectional streaming</li>
+                <li>🛒 Integrated with LeafLoaf supervisor</li>
+            </ul>
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+    </div>
+
+    <script>
+        let ws = null;
+        let mediaRecorder = null;
+        let isRecording = false;
+        let audioContext = null;
+        let currentLanguage = 'en';
+        
+        const micButton = document.getElementById('mic-button');
+        const status = document.getElementById('status');
+        const conversation = document.getElementById('conversation');
+        
+        async function testConnection() {
+            status.textContent = 'Testing Gemini 2.0 connection...';
+            try {
+                const response = await fetch('http://localhost:8080/api/v1/voice/gemini-2-flash/test');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showSuccess(`✅ ${data.response}`);
+                    addMessage('Gemini 2.0 Flash connection successful!', 'assistant');
+                    
+                    // Show features
+                    if (data.features) {
+                        const features = data.features.join(', ');
+                        addMessage(`Available features: ${features}`, 'assistant');
+                    }
+                } else {
+                    showError(`❌ ${data.message}`);
+                }
+            } catch (error) {
+                showError(`Connection failed: ${error.message}`);
+                addMessage('Error: Make sure the server is running on port 8080', 'assistant');
+            }
+        }
+        
+        async function testLanguages() {
+            try {
+                const response = await fetch('http://localhost:8080/api/v1/voice/gemini-2-flash/languages');
+                const data = await response.json();
+                
+                if (data.languages) {
+                    const languageList = data.languages.map(lang => 
+                        `${lang.native} (${lang.name})`
+                    ).join(', ');
+                    
+                    addMessage(`Supported languages: ${languageList}`, 'assistant');
+                    
+                    if (data.features) {
+                        const features = Object.entries(data.features)
+                            .filter(([_, value]) => value)
+                            .map(([key, _]) => key.replace(/_/g, ' '))
+                            .join(', ');
+                        addMessage(`Language features: ${features}`, 'assistant');
+                    }
+                }
+            } catch (error) {
+                showError(`Failed to fetch languages: ${error.message}`);
+            }
+        }
+        
+        function updateLanguage() {
+            currentLanguage = document.getElementById('language').value;
+            addMessage(`Switched to ${document.getElementById('language').selectedOptions[0].text}`, 'assistant');
+        }
+        
+        function initWebSocket() {
+            ws = new WebSocket('ws://localhost:8080/api/v1/voice/gemini-2-flash/ws');
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected to Gemini 2.0');
+                status.textContent = 'Connected to Gemini 2.0 Flash';
+                addMessage('🚀 Gemini 2.0 Flash connected! Start speaking...', 'assistant');
+            };
+            
+            ws.onmessage = async (event) => {
+                if (event.data instanceof Blob) {
+                    // Audio response - play it
+                    playAudioResponse(event.data);
+                } else {
+                    // JSON message
+                    try {
+                        const data = JSON.parse(event.data);
+                        handleMessage(data);
+                    } catch (e) {
+                        console.error('Error parsing message:', e);
+                    }
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                status.textContent = 'Connection error';
+                showError('WebSocket connection error - check if Gemini API is configured');
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket closed');
+                status.textContent = 'Disconnected - click mic to reconnect';
+                ws = null;
+            };
+        }
+        
+        function handleMessage(data) {
+            switch (data.type) {
+                case 'transcript':
+                    addMessage(data.text, 'user');
+                    break;
+                    
+                case 'assistant_message':
+                    addMessage(data.text, 'assistant');
+                    break;
+                    
+                case 'error':
+                    showError(data.message);
+                    break;
+            }
+        }
+        
+        async function playAudioResponse(audioBlob) {
+            try {
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const arrayBuffer = await audioBlob.arrayBuffer();
+                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+                
+                status.textContent = 'Playing response...';
+            } catch (error) {
+                console.error('Error playing audio:', error);
+                status.textContent = 'Error playing audio response';
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                if (!ws || ws.readyState !== WebSocket.OPEN) {
+                    initWebSocket();
+                    // Wait for connection
+                    await new Promise(resolve => {
+                        const checkConnection = setInterval(() => {
+                            if (ws && ws.readyState === WebSocket.OPEN) {
+                                clearInterval(checkConnection);
+                                resolve();
+                            }
+                        }, 100);
+                        setTimeout(() => {
+                            clearInterval(checkConnection);
+                            resolve();
+                        }, 5000);
+                    });
+                }
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000
+                    } 
+                });
+                
+                // Send language preference
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'language',
+                        language: currentLanguage
+                    }));
+                }
+                
+                // Use AudioContext for better control
+                if (!audioContext) {
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const source = audioContext.createMediaStreamSource(stream);
+                const processor = audioContext.createScriptProcessor(4096, 1, 1);
+                
+                source.connect(processor);
+                processor.connect(audioContext.destination);
+                
+                processor.onaudioprocess = (e) => {
+                    if (ws && ws.readyState === WebSocket.OPEN && isRecording) {
+                        const inputData = e.inputBuffer.getChannelData(0);
+                        const pcmData = convertFloat32ToPCM16(inputData);
+                        ws.send(pcmData);
+                    }
+                };
+                
+                isRecording = true;
+                micButton.classList.add('listening');
+                micButton.textContent = '🛑';
+                status.textContent = 'Listening... (Gemini 2.0 Flash)';
+                
+            } catch (error) {
+                console.error('Error starting recording:', error);
+                status.textContent = 'Error accessing microphone';
+                showError(`Microphone access error: ${error.message}`);
+            }
+        }
+        
+        function convertFloat32ToPCM16(buffer) {
+            const pcm = new Int16Array(buffer.length);
+            for (let i = 0; i < buffer.length; i++) {
+                pcm[i] = Math.max(-32768, Math.min(32767, buffer[i] * 32768));
+            }
+            return pcm.buffer;
+        }
+        
+        function stopRecording() {
+            isRecording = false;
+            micButton.classList.remove('listening');
+            micButton.textContent = '🎤';
+            status.textContent = 'Processing with Gemini 2.0...';
+            
+            // Send end signal
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: 'end' }));
+            }
+        }
+        
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+        
+        function addMessage(text, sender) {
+            const message = document.createElement('div');
+            message.className = `message ${sender}-message`;
+            message.textContent = text;
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        function showError(message) {
+            const error = document.createElement('div');
+            error.className = 'error';
+            error.textContent = message;
+            conversation.appendChild(error);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        function showSuccess(message) {
+            const success = document.createElement('div');
+            success.className = 'success';
+            success.textContent = message;
+            conversation.appendChild(success);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        // Space bar to talk
+        let spacePressed = false;
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !spacePressed && !isRecording) {
+                e.preventDefault();
+                spacePressed = true;
+                startRecording();
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space' && spacePressed && isRecording) {
+                e.preventDefault();
+                spacePressed = false;
+                stopRecording();
+            }
+        });
+        
+        // Test connection on load
+        window.onload = () => {
+            addMessage('Welcome to Gemini 2.0 Flash! This uses native audio understanding for natural conversation.', 'assistant');
+            addMessage('You can speak in multiple languages and switch between them naturally.', 'assistant');
+        };
+    </script>
+</body>
+</html>

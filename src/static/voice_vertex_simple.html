@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeafLoaf - Simple Voice Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .mic-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .mic-button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .mic-button:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+        
+        .mic-button.listening {
+            background: #f44336;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .conversation {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+        .user-message {
+            background: #e3f2fd;
+            text-align: right;
+        }
+        
+        .assistant-message {
+            background: #f1f8e9;
+        }
+        
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+        }
+        
+        .product-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: #4CAF50;
+            font-size: 18px;
+        }
+        
+        .cart-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .test-button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        .test-button:hover {
+            background: #1976D2;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 LeafLoaf Simple Voice Assistant</h1>
+        
+        <button onclick="testConnection()" class="test-button">Test Connection</button>
+        
+        <div class="mic-container">
+            <button id="mic-button" class="mic-button" onclick="toggleRecording()">
+                🎤
+            </button>
+        </div>
+        
+        <div class="status" id="status">Click the microphone to start talking</div>
+        
+        <div class="cart-info" id="cart-info" style="display: none;">
+            Cart: <span id="cart-count">0</span> items
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+        
+        <div class="products" id="products"></div>
+    </div>
+
+    <script>
+        let ws = null;
+        let mediaRecorder = null;
+        let isRecording = false;
+        let audioChunks = [];
+        
+        const micButton = document.getElementById('mic-button');
+        const status = document.getElementById('status');
+        const conversation = document.getElementById('conversation');
+        const productsContainer = document.getElementById('products');
+        const cartInfo = document.getElementById('cart-info');
+        const cartCount = document.getElementById('cart-count');
+        
+        async function testConnection() {
+            status.textContent = 'Testing connection...';
+            try {
+                const response = await fetch('http://localhost:8082/api/v1/voice/vertex-simple/test');
+                const data = await response.json();
+                if (data.status === 'success') {
+                    status.textContent = '✅ ' + data.response;
+                } else {
+                    status.textContent = '❌ ' + data.message;
+                }
+            } catch (error) {
+                status.textContent = '❌ Connection failed: ' + error.message;
+            }
+        }
+        
+        function initWebSocket() {
+            const protocol = 'ws:';
+            ws = new WebSocket(`${protocol}//localhost:8082/api/v1/voice/vertex-simple/ws`);
+            
+            ws.onopen = () => {
+                console.log('WebSocket connected');
+                status.textContent = 'Connected to voice assistant';
+            };
+            
+            ws.onmessage = async (event) => {
+                if (event.data instanceof Blob) {
+                    // Audio response - play it
+                    const audio = new Audio();
+                    audio.src = URL.createObjectURL(event.data);
+                    await audio.play();
+                } else {
+                    // JSON message
+                    try {
+                        const data = JSON.parse(event.data);
+                        handleMessage(data);
+                    } catch (e) {
+                        console.error('Error parsing message:', e);
+                    }
+                }
+            };
+            
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                status.textContent = 'Connection error';
+            };
+            
+            ws.onclose = () => {
+                console.log('WebSocket closed');
+                status.textContent = 'Disconnected - click mic to reconnect';
+                ws = null;
+            };
+        }
+        
+        function handleMessage(data) {
+            switch (data.type) {
+                case 'transcript':
+                    addMessage(data.text, 'user');
+                    break;
+                    
+                case 'assistant_message':
+                    addMessage(data.text, 'assistant');
+                    break;
+                    
+                case 'products':
+                    displayProducts(data.products);
+                    break;
+                    
+                case 'cart_update':
+                    updateCart(data);
+                    break;
+                    
+                case 'error':
+                    showError(data.message);
+                    break;
+            }
+        }
+        
+        function addMessage(text, sender) {
+            const message = document.createElement('div');
+            message.className = `message ${sender}-message`;
+            message.textContent = text;
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        function displayProducts(products) {
+            productsContainer.innerHTML = '';
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-name">${product.name}</div>
+                    <div class="product-price">$${product.price}</div>
+                `;
+                productsContainer.appendChild(card);
+            });
+        }
+        
+        function updateCart(data) {
+            cartInfo.style.display = 'block';
+            cartCount.textContent = data.total_items || 0;
+        }
+        
+        function showError(message) {
+            const error = document.createElement('div');
+            error.className = 'error';
+            error.textContent = message;
+            conversation.appendChild(error);
+        }
+        
+        async function startRecording() {
+            try {
+                if (!ws || ws.readyState !== WebSocket.OPEN) {
+                    initWebSocket();
+                    // Wait for connection
+                    await new Promise(resolve => {
+                        const checkConnection = setInterval(() => {
+                            if (ws && ws.readyState === WebSocket.OPEN) {
+                                clearInterval(checkConnection);
+                                resolve();
+                            }
+                        }, 100);
+                    });
+                }
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm;codecs=opus'
+                });
+                
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm;codecs=opus' });
+                    const arrayBuffer = await audioBlob.arrayBuffer();
+                    ws.send(arrayBuffer);
+                    
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                micButton.classList.add('listening');
+                micButton.textContent = '🛑';
+                status.textContent = 'Listening... Click to stop';
+                
+            } catch (error) {
+                console.error('Error starting recording:', error);
+                status.textContent = 'Error accessing microphone';
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+                isRecording = false;
+                micButton.classList.remove('listening');
+                micButton.textContent = '🎤';
+                status.textContent = 'Processing...';
+            }
+        }
+        
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+        
+        // Space bar to talk
+        let spacePressed = false;
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && !spacePressed && !isRecording) {
+                e.preventDefault();
+                spacePressed = true;
+                startRecording();
+            }
+        });
+        
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'Space' && spacePressed && isRecording) {
+                e.preventDefault();
+                spacePressed = false;
+                stopRecording();
+            }
+        });
+        
+        // Test connection on load
+        window.onload = testConnection;
+    </script>
+</body>
+</html>
