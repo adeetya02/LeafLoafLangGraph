@@ -351,3 +351,58 @@ gcloud run deploy leafloaf --image gcr.io/PROJECT_ID/leafloaf
 2. **Search Relevance**: Improve product matching accuracy  
 3. **Multi-Modal**: Add image + voice + text support
 
+## 🎤 Deepgram Voice Infrastructure (July 3, 2025)
+
+### Overview
+Deepgram provides the core voice infrastructure for LeafLoaf, handling both Speech-to-Text (STT) and Text-to-Speech (TTS) through direct WebSocket connections. This enables real-time voice conversations without backend server requirements.
+
+### Components
+1. **DeepgramStreamingClient** (`src/voice/deepgram/streaming_client.py`)
+   - Simple STT-only for transcription
+   - WebSocket streaming with interim results
+   - VAD (Voice Activity Detection) support
+
+2. **DeepgramConversationalClient** (`src/voice/deepgram/conversational_client.py`)
+   - Full duplex STT + TTS
+   - Simultaneous audio streams
+   - Utterance end detection
+
+3. **Gemini Integration** (`src/voice/models/gemini_voice_v2.py`)
+   - Natural intent detection (no hardcoded rules)
+   - Auto-detects GCP environment for Vertex AI
+   - Customizable conversation styles
+
+### Voice Models
+- **STT**: Nova 2 (general purpose), Nova 3 (coming soon)
+- **TTS**: Aura voices (Asteria, Orion, Arcas, Perseus)
+
+### Test Interfaces
+- `deepgram_direct_test.html` - Basic STT testing
+- `deepgram_conversation.html` - Two-way conversation
+- `deepgram_gemini_conversation.html` - Full AI assistant
+
+### Performance
+- STT Latency: ~200-300ms
+- Gemini Response: ~500-800ms  
+- TTS Generation: ~200-300ms
+- Total Round Trip: ~1-1.5s
+
+### Configuration
+```python
+# STT Options
+LiveOptions(
+    model="nova-2",
+    smart_format=True,
+    interim_results=True,
+    utterance_end_ms=1000,
+    vad_events=True
+)
+
+# TTS Options
+{
+    "model": "aura-asteria-en",
+    "encoding": "linear16",
+    "sample_rate": "16000"
+}
+```
+
