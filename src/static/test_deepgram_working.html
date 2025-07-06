@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Working Deepgram Test</title>
+</head>
+<body>
+    <h1>Working Deepgram Test</h1>
+    <button id="start">Start Recording</button>
+    <button id="stop" disabled>Stop Recording</button>
+    <div id="status">Ready</div>
+    <div id="transcript"></div>
+    <div id="products"></div>
+
+    <script>
+        let ws, recorder, stream;
+        let audioContext, source, processor;
+        
+        document.getElementById('start').onclick = async () => {
+            document.getElementById('status').textContent = 'Getting microphone...';
+            
+            try {
+                // Get microphone
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        sampleSize: 16,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                // Create audio context for processing
+                audioContext = new AudioContext({ sampleRate: 16000 });
+                source = audioContext.createMediaStreamSource(stream);
+                
+                // Connect to WebSocket FIRST
+                const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+                ws = new WebSocket(`${protocol}//${location.host}/api/v1/voice/deepgram/ws`);
+                ws.binaryType = 'arraybuffer';
+                
+                ws.onopen = () => {
+                    document.getElementById('status').textContent = 'Connected! Speak now...';
+                    document.getElementById('start').disabled = true;
+                    document.getElementById('stop').disabled = false;
+                    
+                    // Create script processor for raw audio
+                    processor = audioContext.createScriptProcessor(4096, 1, 1);
+                    
+                    processor.onaudioprocess = (e) => {
+                        if (ws.readyState === WebSocket.OPEN) {
+                            const inputData = e.inputBuffer.getChannelData(0);
+                            
+                            // Convert float32 to int16
+                            const output = new Int16Array(inputData.length);
+                            for (let i = 0; i < inputData.length; i++) {
+                                const s = Math.max(-1, Math.min(1, inputData[i]));
+                                output[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                            }
+                            
+                            ws.send(output.buffer);
+                        }
+                    };
+                    
+                    // Connect the audio graph
+                    source.connect(processor);
+                    processor.connect(audioContext.destination);
+                };
+                
+                ws.onmessage = e => {
+                    const data = JSON.parse(e.data);
+                    console.log('Received:', data);
+                    
+                    if (data.status === "connected") {
+                        console.log("Deepgram connected successfully");
+                    }
+                    
+                    if (data.transcript) {
+                        document.getElementById('transcript').innerHTML = 
+                            `<h3>You said:</h3><p>${data.transcript}</p>`;
+                            
+                        // Display products if available
+                        if (data.products && data.products.length > 0) {
+                            let html = '<h3>Products found:</h3>';
+                            data.products.forEach(p => {
+                                html += `<div style="margin: 10px; padding: 10px; background: #f0f0f0;">
+                                    <strong>${p.name || p.product_name}</strong> - 
+                                    $${(p.price || p.retailPrice || 0).toFixed(2)}
+                                </div>`;
+                            });
+                            document.getElementById('products').innerHTML = html;
+                        }
+                    }
+                    
+                    if (data.error) {
+                        document.getElementById('status').textContent = 'Error: ' + data.error;
+                        console.error('Error:', data.error);
+                    }
+                };
+                
+                ws.onerror = e => {
+                    console.error('WebSocket error:', e);
+                    document.getElementById('status').textContent = 'WebSocket error';
+                };
+                
+                ws.onclose = () => {
+                    document.getElementById('status').textContent = 'Disconnected';
+                    cleanup();
+                };
+                
+            } catch (err) {
+                console.error('Error:', err);
+                document.getElementById('status').textContent = 'Error: ' + err.message;
+            }
+        };
+        
+        document.getElementById('stop').onclick = () => {
+            cleanup();
+        };
+        
+        function cleanup() {
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            if (source) {
+                source.disconnect();
+                source = null;
+            }
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+            }
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+            }
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+            
+            document.getElementById('start').disabled = false;
+            document.getElementById('stop').disabled = true;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deepgram Streaming Test - Fixed</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; text-align: center; }
+        .connected { background: #d4edda; color: #155724; }
+        .disconnected { background: #f8d7da; color: #721c24; }
+        button { padding: 15px 30px; font-size: 18px; margin: 10px; cursor: pointer; }
+        .transcript { background: #f0f0f0; padding: 20px; margin: 20px 0; min-height: 200px; }
+        .product { background: #007bff; color: white; padding: 2px 6px; border-radius: 10px; }
+        .log { font-family: monospace; font-size: 12px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Deepgram Streaming Test (Fixed)</h1>
+    <div class="status disconnected" id="status">Click Start to connect</div>
+    <button id="start">Start Recording</button>
+    <button id="stop" disabled>Stop Recording</button>
+    <div id="log" class="log"></div>
+    <div id="transcript" class="transcript"></div>
+    <div id="products"></div>
+
+    <script>
+        let ws, audioContext, source, processor, stream;
+        let deepgramReady = false;
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${time}] ${message}<br>`;
+            console.log(message);
+        }
+        
+        // Convert float audio to 16-bit PCM
+        function convertTo16BitPCM(float32Array) {
+            const buffer = new ArrayBuffer(float32Array.length * 2);
+            const view = new DataView(buffer);
+            let offset = 0;
+            for (let i = 0; i < float32Array.length; i++, offset += 2) {
+                const s = Math.max(-1, Math.min(1, float32Array[i]));
+                view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+            }
+            return buffer;
+        }
+        
+        document.getElementById('start').onclick = async () => {
+            document.getElementById('status').textContent = 'Getting microphone...';
+            log('Requesting microphone access...');
+            
+            try {
+                // Get microphone with specific settings
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                log('Microphone access granted');
+                
+                // Connect to WebSocket
+                const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const wsUrl = `${protocol}//${location.host}/api/v1/voice/deepgram/ws`;
+                log(`Connecting to WebSocket: ${wsUrl}`);
+                
+                ws = new WebSocket(wsUrl);
+                ws.binaryType = 'arraybuffer';
+                
+                ws.onopen = () => {
+                    log('WebSocket connected');
+                    document.getElementById('status').textContent = 'WebSocket connected, waiting for Deepgram...';
+                    document.getElementById('start').disabled = true;
+                    document.getElementById('stop').disabled = false;
+                };
+                
+                ws.onmessage = e => {
+                    const data = JSON.parse(e.data);
+                    log(`Received: ${JSON.stringify(data)}`);
+                    
+                    if (data.status === "connected") {
+                        log("Deepgram connected! Starting audio capture...");
+                        deepgramReady = true;
+                        document.getElementById('status').textContent = 'Connected! Speak now...';
+                        document.getElementById('status').className = 'status connected';
+                        
+                        // Start audio processing only after Deepgram is ready
+                        startAudioProcessing();
+                    }
+                    
+                    if (data.transcript) {
+                        document.getElementById('transcript').innerHTML = 
+                            `<h3>You said:</h3><p>${data.transcript}</p>`;
+                            
+                        // Display products if available
+                        if (data.products && data.products.length > 0) {
+                            let html = '<h3>Products found:</h3>';
+                            data.products.forEach(p => {
+                                html += `<div style="margin: 10px; padding: 10px; background: #f0f0f0;">
+                                    <strong>${p.name || p.product_name}</strong> - 
+                                    $${(p.price || p.retailPrice || 0).toFixed(2)}
+                                </div>`;
+                            });
+                            document.getElementById('products').innerHTML = html;
+                        }
+                    }
+                    
+                    if (data.error) {
+                        document.getElementById('status').textContent = 'Error: ' + data.error;
+                        log('Error: ' + data.error);
+                    }
+                };
+                
+                ws.onerror = e => {
+                    log('WebSocket error: ' + e);
+                    document.getElementById('status').textContent = 'WebSocket error';
+                };
+                
+                ws.onclose = () => {
+                    log('WebSocket closed');
+                    document.getElementById('status').textContent = 'Disconnected';
+                    cleanup();
+                };
+                
+            } catch (err) {
+                log('Error: ' + err.message);
+                document.getElementById('status').textContent = 'Error: ' + err.message;
+            }
+        };
+        
+        function startAudioProcessing() {
+            if (!deepgramReady) {
+                log('Warning: Starting audio processing but Deepgram not ready');
+            }
+            
+            // Create audio context at 16kHz
+            audioContext = new AudioContext({ sampleRate: 16000 });
+            source = audioContext.createMediaStreamSource(stream);
+            processor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            let chunkCount = 0;
+            
+            processor.onaudioprocess = (e) => {
+                if (ws.readyState === WebSocket.OPEN && deepgramReady) {
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    const pcm16 = convertTo16BitPCM(inputData);
+                    
+                    chunkCount++;
+                    if (chunkCount % 20 === 0) { // Log every 20th chunk
+                        log(`Sending audio chunk ${chunkCount}, size: ${pcm16.byteLength} bytes`);
+                    }
+                    
+                    ws.send(pcm16);
+                }
+            };
+            
+            // Connect audio processing chain
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            log('Audio processing started');
+        }
+        
+        document.getElementById('stop').onclick = () => {
+            log('Stopping recording...');
+            cleanup();
+        };
+        
+        function cleanup() {
+            deepgramReady = false;
+            
+            // Disconnect audio nodes
+            if (processor) {
+                processor.disconnect();
+                processor = null;
+            }
+            if (source) {
+                source.disconnect();
+                source = null;
+            }
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+                audioContext = null;
+            }
+            
+            // Stop media stream
+            if (stream) {
+                stream.getTracks().forEach(t => t.stop());
+                stream = null;
+            }
+            
+            // Close WebSocket
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
+            
+            document.getElementById('status').className = 'status disconnected';
+            document.getElementById('start').disabled = false;
+            document.getElementById('stop').disabled = true;
+            
+            log('Cleanup complete');
+        }
+    </script>
+</body>
+</html>

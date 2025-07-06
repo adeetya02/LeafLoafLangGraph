@@ -184,6 +184,14 @@ class ProductSearchTool:
       
       self.search_count += 1
 
+  async def invoke(self, params: Dict[str, Any]) -> Dict[str, Any]:
+      """Invoke method for tool compatibility"""
+      query = params.get("query", "")
+      limit = params.get("limit", SEARCH_DEFAULT_LIMIT)
+      alpha = params.get("alpha")
+      filters = params.get("filters")
+      return await self.run(query, limit, alpha, filters)
+  
   async def run(self, query: str, limit: int = SEARCH_DEFAULT_LIMIT, alpha: Optional[float]= None,filters: Optional[Dict] = None) -> Dict[str, Any]:
       """Execute product search"""
       

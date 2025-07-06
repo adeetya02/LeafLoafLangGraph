@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deepgram Conversational AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { text-align: center; color: #333; }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #45a049; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #status {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background: #f0f0f0;
+        }
+        #conversation {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 300px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .user {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            margin-left: 20%;
+        }
+        .assistant {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            margin-right: 20%;
+        }
+        .system {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            text-align: center;
+            font-size: 14px;
+        }
+        .interim { 
+            opacity: 0.6; 
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Deepgram Conversational AI</h1>
+        <p style="text-align: center;">Voice conversation with Deepgram STT + TTS</p>
+        
+        <button id="startBtn" onclick="startConversation()">Start Conversation</button>
+        <button id="stopBtn" onclick="stopConversation()" style="display: none;">Stop</button>
+        
+        <div id="status">Ready to start</div>
+        
+        <div id="conversation">
+            <div class="message system">Conversation will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        let sttWebsocket = null;
+        let mediaRecorder = null;
+        let audioStream = null;
+        let isProcessing = false;
+        let conversationHistory = [];
+        
+        const DEEPGRAM_API_KEY = '36a821d351939023aabad9beeaa68b391caa124a';
+        
+        // Simple response generation (we'll enhance this)
+        function generateResponse(userInput) {
+            const input = userInput.toLowerCase();
+            
+            // Greetings
+            if (input.includes('hello') || input.includes('hi') || input.includes('hey')) {
+                return "Hello! I'm your grocery shopping assistant. What can I help you find today?";
+            }
+            
+            // Product searches
+            if (input.includes('milk')) {
+                return "I can help you find milk. We have whole milk, 2%, skim, and almond milk available. Which type would you prefer?";
+            }
+            if (input.includes('bread')) {
+                return "We have several types of bread: whole wheat, white, sourdough, and multigrain. What kind would you like?";
+            }
+            if (input.includes('fruits') || input.includes('fruit')) {
+                return "Our fruit section has fresh apples, bananas, oranges, strawberries, and blueberries today. What sounds good to you?";
+            }
+            if (input.includes('vegetables') || input.includes('veggies')) {
+                return "We have fresh vegetables including lettuce, tomatoes, carrots, broccoli, and bell peppers. What do you need?";
+            }
+            
+            // Cart operations
+            if (input.includes('add') && input.includes('cart')) {
+                return "I've added that to your cart. Is there anything else you'd like?";
+            }
+            if (input.includes('show cart') || input.includes('what\'s in my cart')) {
+                return "Your cart currently has the items you've selected. Would you like to add more items or proceed to checkout?";
+            }
+            
+            // Closing
+            if (input.includes('bye') || input.includes('goodbye') || input.includes('thank')) {
+                return "Thank you for shopping with us! Have a great day!";
+            }
+            
+            // Default response
+            return "I can help you find groceries. Try asking about milk, bread, fruits, or vegetables. You can also ask me to add items to your cart.";
+        }
+        
+        async function startConversation() {
+            const status = document.getElementById('status');
+            const conversation = document.getElementById('conversation');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            try {
+                status.textContent = 'Getting microphone access...';
+                conversation.innerHTML = '';
+                
+                // Get microphone
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                status.textContent = 'Connecting to Deepgram STT...';
+                
+                // Connect to Deepgram STT
+                const sttUrl = 'wss://api.deepgram.com/v1/listen?' + new URLSearchParams({
+                    model: 'nova-2',
+                    language: 'en-US',
+                    smart_format: 'true',
+                    interim_results: 'true',
+                    utterance_end_ms: '1000',
+                    vad_events: 'true'
+                });
+                
+                sttWebsocket = new WebSocket(sttUrl, ['token', DEEPGRAM_API_KEY]);
+                
+                sttWebsocket.onopen = () => {
+                    status.textContent = '✅ Connected! Start speaking...';
+                    startBtn.style.display = 'none';
+                    stopBtn.style.display = 'block';
+                    
+                    addMessage("Hello! I'm ready to help you with your grocery shopping. What can I find for you?", 'assistant');
+                    speak("Hello! I'm ready to help you with your grocery shopping. What can I find for you?");
+                    
+                    // Start recording
+                    mediaRecorder = new MediaRecorder(audioStream);
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0 && sttWebsocket.readyState === WebSocket.OPEN) {
+                            sttWebsocket.send(event.data);
+                        }
+                    };
+                    
+                    mediaRecorder.start(250);
+                };
+                
+                let currentInterimId = null;
+                
+                sttWebsocket.onmessage = async (event) => {
+                    const response = JSON.parse(event.data);
+                    
+                    if (response.channel && response.channel.alternatives && response.channel.alternatives.length > 0) {
+                        const text = response.channel.alternatives[0].transcript;
+                        
+                        if (text) {
+                            if (response.is_final) {
+                                // Remove interim message
+                                if (currentInterimId) {
+                                    const elem = document.getElementById(currentInterimId);
+                                    if (elem) elem.remove();
+                                    currentInterimId = null;
+                                }
+                                
+                                // Add user message
+                                addMessage(text, 'user');
+                                
+                                // Process and respond
+                                if (!isProcessing) {
+                                    isProcessing = true;
+                                    
+                                    // Generate response
+                                    const response = generateResponse(text);
+                                    
+                                    // Add assistant message
+                                    addMessage(response, 'assistant');
+                                    
+                                    // Speak the response
+                                    await speak(response);
+                                    
+                                    isProcessing = false;
+                                }
+                            } else {
+                                // Show interim result
+                                if (!currentInterimId) {
+                                    currentInterimId = 'interim-' + Date.now();
+                                    const div = document.createElement('div');
+                                    div.id = currentInterimId;
+                                    div.className = 'message user interim';
+                                    div.textContent = text + '...';
+                                    document.getElementById('conversation').appendChild(div);
+                                } else {
+                                    const elem = document.getElementById(currentInterimId);
+                                    if (elem) elem.textContent = text + '...';
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                sttWebsocket.onerror = (error) => {
+                    console.error('STT WebSocket error:', error);
+                    status.textContent = '❌ Connection error';
+                    stopConversation();
+                };
+                
+                sttWebsocket.onclose = () => {
+                    status.textContent = 'Disconnected';
+                    stopConversation();
+                };
+                
+            } catch (error) {
+                console.error('Error:', error);
+                status.textContent = '❌ Error: ' + error.message;
+            }
+        }
+        
+        async function speak(text) {
+            try {
+                // Use Deepgram TTS API
+                const ttsUrl = 'https://api.deepgram.com/v1/speak?' + new URLSearchParams({
+                    model: 'aura-asteria-en',
+                    encoding: 'mp3'
+                });
+                
+                const response = await fetch(ttsUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + DEEPGRAM_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text })
+                });
+                
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    
+                    // Wait for audio to finish playing
+                    return new Promise((resolve) => {
+                        audio.onended = () => {
+                            URL.revokeObjectURL(audioUrl);
+                            resolve();
+                        };
+                        audio.play();
+                    });
+                }
+            } catch (error) {
+                console.error('TTS error:', error);
+                // Continue even if TTS fails
+            }
+        }
+        
+        function addMessage(text, type) {
+            const conversation = document.getElementById('conversation');
+            const div = document.createElement('div');
+            div.className = 'message ' + type;
+            div.textContent = text;
+            conversation.appendChild(div);
+            conversation.scrollTop = conversation.scrollHeight;
+            
+            // Add to history
+            conversationHistory.push({ role: type, content: text });
+        }
+        
+        function stopConversation() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            
+            if (audioStream) {
+                audioStream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (sttWebsocket) {
+                sttWebsocket.close();
+            }
+            
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('status').textContent = 'Stopped';
+        }
+    </script>
+</body>
+</html>

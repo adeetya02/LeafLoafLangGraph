@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Deepgram Test</title>
+</head>
+<body>
+    <h1>Simple Deepgram WebSocket Test</h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+    <div id="status">Ready</div>
+    <div id="transcript"></div>
+
+    <script>
+        let ws, recorder, stream;
+        
+        document.getElementById('start').onclick = async () => {
+            document.getElementById('status').textContent = 'Getting microphone...';
+            
+            try {
+                // Get microphone
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                // Connect to WebSocket
+                const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+                ws = new WebSocket(`${protocol}//${location.host}/api/v1/voice/deepgram/ws`);
+                
+                ws.onopen = () => {
+                    document.getElementById('status').textContent = 'Connected! Speak now...';
+                    
+                    // Start recording
+                    recorder = new MediaRecorder(stream, {
+                        mimeType: 'audio/webm'
+                    });
+                    
+                    recorder.ondataavailable = e => {
+                        if (e.data.size > 0 && ws.readyState === WebSocket.OPEN) {
+                            ws.send(e.data);
+                            console.log('Sent audio chunk:', e.data.size, 'bytes');
+                        }
+                    };
+                    
+                    recorder.start(100); // Send chunks every 100ms
+                };
+                
+                ws.onmessage = e => {
+                    const data = JSON.parse(e.data);
+                    console.log('Received:', data);
+                    
+                    if (data.transcript) {
+                        document.getElementById('transcript').innerHTML += 
+                            `<p>${data.transcript}</p>`;
+                    }
+                    
+                    if (data.error) {
+                        document.getElementById('status').textContent = 'Error: ' + data.error;
+                    }
+                };
+                
+                ws.onerror = e => {
+                    console.error('WebSocket error:', e);
+                    document.getElementById('status').textContent = 'WebSocket error';
+                };
+                
+                ws.onclose = () => {
+                    document.getElementById('status').textContent = 'Disconnected';
+                    if (recorder) recorder.stop();
+                    if (stream) stream.getTracks().forEach(t => t.stop());
+                };
+                
+            } catch (err) {
+                console.error('Error:', err);
+                document.getElementById('status').textContent = 'Error: ' + err.message;
+            }
+        };
+        
+        document.getElementById('stop').onclick = () => {
+            if (recorder) recorder.stop();
+            if (stream) stream.getTracks().forEach(t => t.stop());
+            if (ws) ws.close();
+        };
+    </script>
+</body>
+</html>

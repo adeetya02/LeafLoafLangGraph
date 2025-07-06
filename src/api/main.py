@@ -49,6 +49,20 @@ app.add_middleware(
 # Add cache middleware with feature flag support
 app.add_middleware(create_cache_middleware_v2)
 
+# Import voice endpoints
+from src.api.voice_deepgram_endpoint import router as deepgram_router
+from src.api.voice_deepgram_enhanced import router as deepgram_enhanced_router
+from src.api.voice_deepgram_enhanced_v2 import router as deepgram_v2_router
+from src.api.voice_deepgram_with_metadata import router as deepgram_metadata_router
+from src.api.voice_deepgram_dynamic_intents import router as deepgram_intents_router
+
+# Add voice routers
+app.include_router(deepgram_router)
+app.include_router(deepgram_enhanced_router)
+app.include_router(deepgram_v2_router)
+app.include_router(deepgram_metadata_router)
+# app.include_router(deepgram_intents_router)  # Temporarily disabled due to import error
+
 # Initialize search logging
 search_logger = SearchLoggingMiddlewareV2()
 
@@ -58,6 +72,13 @@ static_dir = Path(__file__).parent.parent / "static"
 if static_dir.exists():
     app.mount("/static", StaticFiles(directory=str(static_dir), html=True), name="static")
     logger.info(f"Static files mounted from: {static_dir}")
+    
+    # Mount test files in development
+    if os.getenv("ENVIRONMENT", "development") == "development":
+        test_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "tests", "implementation")
+        if os.path.exists(test_dir):
+            app.mount("/tests", StaticFiles(directory=test_dir, html=True), name="tests")
+            logger.info(f"Test files mounted from: {test_dir}")
 else:
     logger.warning(f"Static directory not found: {static_dir}")
 
@@ -892,338 +913,77 @@ async def voice_health():
   from src.integrations.web_voice_handler import web_voice_handler
   return await web_voice_handler.health_check()
 
-# Include webhook routes
-from src.api.voice_webhooks import router as voice_webhook_router
-app.include_router(voice_webhook_router)
+# Voice webhook and endpoint imports commented out - using only Deepgram endpoint
+# from src.api.voice_webhooks import router as voice_webhook_router
+# app.include_router(voice_webhook_router)
 
-# Include new voice endpoints (Whisper + ElevenLabs)
-from src.api.voice_endpoints import router as voice_router
-app.include_router(voice_router)
+# from src.api.voice_endpoints import router as voice_router
+# app.include_router(voice_router)
 
-# Include voice streaming endpoints (Deepgram STT + TTS)
-from src.api.voice_streaming import router as voice_streaming_router
-app.include_router(voice_streaming_router)
+# from src.api.voice_streaming import router as voice_streaming_router
+# app.include_router(voice_streaming_router)
 
-# Include HTTP-based voice endpoints (Cloud Run compatible)
-try:
-    from src.api.voice_http import router as voice_http_router
-    app.include_router(voice_http_router)
-    logger.info("Loaded voice_http router")
-except Exception as e:
-    logger.warning(f"Could not load voice_http router: {e}")
+# All other voice endpoints commented out - using only Deepgram endpoint
+# try:
+#     from src.api.voice_http import router as voice_http_router
+#     app.include_router(voice_http_router)
+#     logger.info("Loaded voice_http router")
+# except Exception as e:
+#     logger.warning(f"Could not load voice_http router: {e}")
 
-try:
-    from src.api.voice_websocket import router as voice_websocket_router
-    app.include_router(voice_websocket_router)
-    logger.info("Loaded voice_websocket router with WebSocket support")
-except Exception as e:
-    logger.error(f"Could not load voice_websocket router: {e}")
+# try:
+#     from src.api.voice_websocket import router as voice_websocket_router
+#     app.include_router(voice_websocket_router)
+#     logger.info("Loaded voice_websocket router with WebSocket support")
+# except Exception as e:
+#     logger.error(f"Could not load voice_websocket router: {e}")
 
-try:
-    from src.api.voice_realtime import router as voice_realtime_router
-    app.include_router(voice_realtime_router)
-    logger.info("Loaded voice_realtime router with natural conversation")
-except Exception as e:
-    logger.error(f"Could not load voice_realtime router: {e}")
+# try:
+#     from src.api.voice_realtime import router as voice_realtime_router
+#     app.include_router(voice_realtime_router)
+#     logger.info("Loaded voice_realtime router with natural conversation")
+# except Exception as e:
+#     logger.error(f"Could not load voice_realtime router: {e}")
     
 # Static files already mounted above
 
-# Include Deepgram conversational AI - After static files but with API prefix
-try:
-    from src.api.voice_deepgram_conversational import router as deepgram_router
-    app.include_router(deepgram_router)
-    logger.info("Loaded Deepgram conversational AI with full Audio Intelligence")
-except Exception as e:
-    logger.error(f"Could not load Deepgram conversational router: {e}")
+# Deepgram conversational AI commented out - using only simple Deepgram endpoint
+# try:
+#     from src.api.voice_deepgram_conversational import router as deepgram_router
+#     app.include_router(deepgram_router)
+#     logger.info("Loaded Deepgram conversational AI with full Audio Intelligence")
+# except Exception as e:
+#     logger.error(f"Could not load Deepgram conversational router: {e}")
 
-# Include Deepgram proxy for production continuous voice
-try:
-    from src.api.voice_deepgram_proxy import router as deepgram_proxy_router
-    app.include_router(deepgram_proxy_router)
-    logger.info("Loaded Deepgram proxy for TRUE continuous voice")
-except Exception as e:
-    logger.error(f"Could not load Deepgram proxy router: {e}")
-
-# Include simple streaming voice
-try:
-    from src.api.voice_stream_simple import router as voice_stream_router
-    app.include_router(voice_stream_router)
-    logger.info("Loaded simple voice streaming with SSE")
-except Exception as e:
-    logger.error(f"Could not load voice streaming router: {e}")
-
-# Include test WebSocket endpoint for debugging
-try:
-    from src.api.test_ws import router as test_ws_router
-    app.include_router(test_ws_router)
-    logger.info("Loaded test WebSocket endpoint")
-except Exception as e:
-    logger.error(f"Could not load test WebSocket router: {e}")
-
-# Include simple voice WebSocket endpoint
-try:
-    from src.api.voice_websocket_simple import router as voice_simple_ws_router
-    app.include_router(voice_simple_ws_router)
-    logger.info("Loaded simple voice WebSocket endpoint")
-except Exception as e:
-    logger.error(f"Could not load simple voice WebSocket router: {e}")
-
-# Include fixed WebSocket streaming with Deepgram SDK
-try:
-    from src.api.voice_streaming_fixed import router as voice_streaming_fixed_router
-    app.include_router(voice_streaming_fixed_router)
-    logger.info("Loaded fixed voice streaming with Deepgram SDK")
-except Exception as e:
-    logger.error(f"Could not load fixed voice streaming router: {e}")
-
-# Include simple WebSocket streaming
-try:
-    from src.api.voice_streaming_simple import router as voice_streaming_simple_router
-    app.include_router(voice_streaming_simple_router)
-    logger.info("Loaded simple voice streaming")
-except Exception as e:
-    logger.error(f"Could not load simple voice streaming router: {e}")
-
-# Include full conversational AI
-try:
-    from src.api.voice_conversational_full import router as voice_conversational_router
-    app.include_router(voice_conversational_router)
-    logger.info("Loaded full conversational AI with STT and TTS")
-except Exception as e:
-    logger.error(f"Could not load conversational AI router: {e}")
-
-# Include fixed Deepgram implementation
-try:
-    from src.api.voice_deepgram_fixed import router as deepgram_fixed_router
-    app.include_router(deepgram_fixed_router)
-    logger.info("Loaded fixed Deepgram implementation")
-except Exception as e:
-    logger.error(f"Could not load fixed Deepgram router: {e}")
-
-# Include Deepgram SDK implementation
-try:
-    from src.api.voice_deepgram_sdk import router as deepgram_sdk_router
-    app.include_router(deepgram_sdk_router)
-    logger.info("Loaded Deepgram SDK implementation")
-except Exception as e:
-    logger.error(f"Could not load Deepgram SDK router: {e}")
-
-# Include HTTP streaming voice (Production ready)
-try:
-    from src.api.voice_http_streaming import router as http_streaming_router
-    app.include_router(http_streaming_router)
-    logger.info("Loaded HTTP streaming voice (production ready)")
-except Exception as e:
-    logger.error(f"Could not load HTTP streaming router: {e}")
-
-# Include Gemini native voice
-try:
-    from src.api.voice_gemini_native import router as gemini_voice_router
-    app.include_router(gemini_voice_router)
-    logger.info("Loaded Gemini native voice with STT and TTS")
-except Exception as e:
-    logger.error(f"Could not load Gemini voice router: {e}")
-
-# Include Deepgram Voice Agent API
-try:
-    from src.api.voice_agent_api import router as voice_agent_router
-    app.include_router(voice_agent_router)
-    logger.info("Loaded Deepgram Voice Agent API")
-except Exception as e:
-    logger.error(f"Could not load Voice Agent router: {e}")
-
-# Include new Deepgram Voice Agent with LangGraph integration
-try:
-    from src.api.voice_agent_new import router as voice_agent_new_router
-    app.include_router(voice_agent_new_router)
-    logger.info("Loaded NEW Deepgram Voice Agent with LangGraph integration")
-except Exception as e:
-    logger.error(f"Could not load NEW Deepgram Voice Agent router: {e}")
-
-# Include Deepgram Voice Agent (original conversational)
-try:
-    from src.api.voice_agent_deepgram import router as voice_agent_deepgram_router
-    app.include_router(voice_agent_deepgram_router)
-    logger.info("Loaded Deepgram Voice Agent with LangGraph integration")
-except Exception as e:
-    logger.error(f"Could not load Deepgram Voice Agent router: {e}")
-
-# Include Simple Working Voice (STT + LLM + TTS)
-try:
-    from src.api.voice_simple_working import router as voice_simple_router
-    app.include_router(voice_simple_router)
-    logger.info("Loaded SIMPLE Working Voice with reliable STT + LLM + TTS")
-except Exception as e:
-    logger.error(f"Could not load Simple Voice router: {e}")
-
-# Include ElevenLabs Conversational AI (Natural Voice)
-try:
-    from src.api.voice_elevenlabs import router as elevenlabs_router
-    app.include_router(elevenlabs_router)
-    logger.info("Loaded ElevenLabs Conversational AI with natural voice and function calling")
-except Exception as e:
-    logger.error(f"Could not load ElevenLabs router: {e}")
-
-# Include Google Voice Integration (Multi-ethnic STT/TTS)
-try:
-    from src.api.voice_google import router as google_voice_router
-    app.include_router(google_voice_router)
-    logger.info("Loaded Google Voice with multi-ethnic STT/TTS support")
-    
-    # Add Google Voice test endpoint
-    from src.api.voice_google_test import router as google_test_router
-    app.include_router(google_test_router)
-    logger.info("Loaded Google Voice test endpoint")
-    
-    # Add fixed Google Voice endpoint
-    from src.api.voice_google_fixed import router as google_fixed_router
-    app.include_router(google_fixed_router)
-    logger.info("Loaded Google Voice fixed endpoint")
-    
-    # Add streaming Google Voice endpoint
-    from src.api.voice_google_streaming import router as google_streaming_router
-    app.include_router(google_streaming_router)
-    logger.info("Loaded Google Voice continuous streaming endpoint")
-    
-    # Add unified Google Voice with voice-native supervisor
-    from src.api.voice_google_unified import router as google_unified_router
-    app.include_router(google_unified_router)
-    logger.info("Loaded unified Google Voice with voice-native supervisor")
-    
-    # Add fixed Google Voice v2 for testing
-    from src.api.voice_google_fixed_v2 import router as google_fixed_v2_router
-    app.include_router(google_fixed_v2_router)
-    logger.info("Loaded fixed Google Voice v2 endpoint")
-except Exception as e:
-    logger.error(f"Could not load Google Voice router: {e}")
-
-# Load Google Voice streaming endpoint with AI-native supervisor
-try:
-    from src.api.voice_google_streaming import router as voice_google_streaming_router
-    app.include_router(voice_google_streaming_router)
-    logger.info("Loaded Google Voice streaming with AI-native supervisor")
-except Exception as e:
-    logger.error(f"Could not load Google Voice streaming router: {e}")
-
-# Load Google True Streaming with async-to-sync bridge
-try:
-    from src.api.voice_google_true_streaming import router as google_true_streaming_router
-    app.include_router(google_true_streaming_router)
-    logger.info("Loaded Google True Streaming with real streaming_recognize API")
-except Exception as e:
-    logger.error(f"Could not load Google True Streaming router: {e}")
-
-# Add basic Google voice endpoint
-try:
-    from src.api.voice_google_basic import router as voice_google_basic_router
-    app.include_router(voice_google_basic_router)
-    logger.info("Loaded basic Google Voice (STT/TTS only)")
-except Exception as e:
-    logger.error(f"Could not load basic Google Voice router: {e}")
-
-# Add Google WebSocket streaming
-try:
-    from src.api.voice_google_websocket import router as voice_google_ws_router
-    app.include_router(voice_google_ws_router)
-    logger.info("Loaded Google Voice WebSocket streaming")
-except Exception as e:
-    logger.error(f"Could not load Google Voice WebSocket router: {e}")
-
-# Add Google SSE streaming
-try:
-    from src.api.voice_google_sse import router as voice_google_sse_router
-    app.include_router(voice_google_sse_router)
-    logger.info("Loaded Google Voice SSE streaming")
-except Exception as e:
-    logger.error(f"Could not load Google Voice SSE router: {e}")
-
-# Add Gemini native voice streaming
-try:
-    from src.api.voice_gemini_streaming import router as voice_gemini_streaming_router
-    app.include_router(voice_gemini_streaming_router)
-    logger.info("Loaded Gemini native voice streaming with multimodal support")
-except Exception as e:
-    logger.error(f"Could not load Gemini voice streaming router: {e}")
-
-# Add Hybrid voice streaming (Google STT + Gemini + Google TTS)
-try:
-    from src.api.voice_google_gemini_hybrid import router as voice_hybrid_router
-    app.include_router(voice_hybrid_router)
-    logger.info("Loaded hybrid voice streaming (Google STT + Gemini + Google TTS)")
-except Exception as e:
-    logger.error(f"Could not load hybrid voice router: {e}")
-
-# Load simple working voice endpoint
-try:
-    from src.api.voice_simple_working import router as voice_simple_router
-    app.include_router(voice_simple_router)
-    logger.info("Loaded simple working voice endpoint")
-except Exception as e:
-    logger.error(f"Could not load simple voice router: {e}")
-
-# Add Gemini 2.0 Flash native audio
-try:
-    from src.api.voice_gemini_2_flash import router as gemini_2_flash_router
-    app.include_router(gemini_2_flash_router)
-    logger.info("Loaded Gemini 2.0 Flash native audio streaming")
-except Exception as e:
-    logger.error(f"Could not load Gemini 2.0 Flash router: {e}")
-
-# Add Gemini 2.5 native audio
-try:
-    from src.api.voice_gemini_25_native import router as voice_gemini25_router
-    app.include_router(voice_gemini25_router)
-    logger.info("Loaded Gemini 2.5 native audio streaming")
-except Exception as e:
-    logger.error(f"Could not load Gemini 2.5 voice router: {e}")
-
-# Add simple Gemini voice
-try:
-    from src.api.voice_gemini_simple import router as voice_gemini_simple_router
-    app.include_router(voice_gemini_simple_router)
-    logger.info("Loaded simple Gemini voice with browser STT")
-except Exception as e:
-    logger.error(f"Could not load simple Gemini voice router: {e}")
-
-# Add Dialogflow CX voice
-try:
-    from src.api.voice_dialogflow_cx import router as voice_dialogflow_router
-    app.include_router(voice_dialogflow_router)
-    logger.info("Loaded Dialogflow CX voice integration")
-except Exception as e:
-    logger.error(f"Could not load Dialogflow CX router: {e}")
-
-# Add Vertex AI Conversation
-try:
-    from src.api.voice_vertex_conversation import router as voice_vertex_router
-    app.include_router(voice_vertex_router)
-    logger.info("Loaded Vertex AI Conversation integration")
-except Exception as e:
-    logger.error(f"Could not load Vertex AI Conversation router: {e}")
-
-# Add Streaming Conversational Voice
-try:
-    from src.api.voice_streaming_conversational import router as voice_streaming_router
-    app.include_router(voice_streaming_router)
-    logger.info("Loaded streaming conversational voice")
-except Exception as e:
-    logger.error(f"Could not load streaming conversational router: {e}")
-
-# Add Vertex AI Personalized Voice
-try:
-    from src.api.voice_vertex_personalized import router as voice_vertex_personalized_router
-    app.include_router(voice_vertex_personalized_router)
-    logger.info("Loaded Vertex AI personalized voice with full personalization features")
-except Exception as e:
-    logger.error(f"Could not load Vertex AI personalized router: {e}")
-
-# Add Simple Vertex AI Voice (working implementation)
-try:
-    from src.api.voice_vertex_simple import router as voice_vertex_simple_router
-    app.include_router(voice_vertex_simple_router)
-    logger.info("Loaded simple Vertex AI voice (working implementation)")
-except Exception as e:
-    logger.error(f"Could not load simple Vertex AI router: {e}")
+# ALL OTHER VOICE ENDPOINTS COMMENTED OUT - USING ONLY DEEPGRAM ENDPOINT
+# The following voice endpoints have been disabled:
+# - voice_deepgram_proxy
+# - voice_stream_simple
+# - test_ws
+# - voice_websocket_simple
+# - voice_streaming_fixed
+# - voice_streaming_simple
+# - voice_conversational_full
+# - voice_deepgram_fixed
+# - voice_deepgram_sdk
+# - voice_http_streaming
+# - voice_gemini_native
+# - voice_agent_api
+# - voice_agent_new
+# - voice_agent_deepgram
+# - voice_simple_working
+# - voice_elevenlabs
+# - voice_google (and all variants)
+# - voice_gemini_streaming
+# - voice_google_gemini_hybrid
+# - voice_gemini_2_flash
+# - voice_gemini_25_native
+# - voice_gemini_simple
+# - voice_dialogflow_cx
+# - voice_vertex_conversation
+# - voice_streaming_conversational
+# - voice_vertex_personalized
+# - voice_vertex_simple
 
 
 if __name__ == "__main__":

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deepgram + Vertex AI Gemini Conversational AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { text-align: center; color: #333; }
+        .config {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .config input, .config select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #357ae8; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #status {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background: #f0f0f0;
+        }
+        #conversation {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 300px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .user {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            margin-left: 20%;
+        }
+        .assistant {
+            background: #f3e5f5;
+            border-left: 4px solid #9c27b0;
+            margin-right: 20%;
+        }
+        .system {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            text-align: center;
+            font-size: 14px;
+        }
+        .interim { 
+            opacity: 0.6; 
+            font-style: italic;
+        }
+        .thinking {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            font-style: italic;
+        }
+        .info {
+            background: #e1f5fe;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #81d4fa;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 LeafLoaf Voice Assistant</h1>
+        <p style="text-align: center;">Powered by Deepgram + Vertex AI Gemini</p>
+        
+        <div class="info">
+            <strong>Note:</strong> This demo shows how to integrate with Vertex AI Gemini. 
+            For production, you'll need to:
+            <ol>
+                <li>Set up authentication with GCP (service account or ADC)</li>
+                <li>Run a backend server to handle Vertex AI API calls</li>
+                <li>Replace the API endpoint below with your server endpoint</li>
+            </ol>
+        </div>
+        
+        <div class="config">
+            <label>Backend API Endpoint (your server that calls Vertex AI):</label>
+            <input type="text" id="apiEndpoint" placeholder="http://localhost:8080/api/v1/chat" value="http://localhost:8080/api/v1/chat">
+            
+            <label>Gemini Model:</label>
+            <select id="geminiModel">
+                <option value="gemini-1.5-pro">Gemini 1.5 Pro (Best for conversation)</option>
+                <option value="gemini-1.5-flash">Gemini 1.5 Flash (Faster)</option>
+                <option value="gemini-pro">Gemini Pro</option>
+            </select>
+            
+            <small>Your backend should handle Vertex AI authentication and API calls</small>
+        </div>
+        
+        <button id="startBtn" onclick="startConversation()">Start Conversation</button>
+        <button id="stopBtn" onclick="stopConversation()" style="display: none;">Stop</button>
+        
+        <div id="status">Configure endpoint and click Start</div>
+        
+        <div id="conversation">
+            <div class="message system">Conversation will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        let sttWebsocket = null;
+        let mediaRecorder = null;
+        let audioStream = null;
+        let isProcessing = false;
+        let conversationHistory = [];
+        
+        const DEEPGRAM_API_KEY = '36a821d351939023aabad9beeaa68b391caa124a';
+        
+        // System prompt for Vertex AI Gemini
+        const SYSTEM_PROMPT = `You are a friendly and helpful grocery shopping assistant for LeafLoaf. 
+Your role is to:
+1. Help customers find products they need
+2. Answer questions about groceries
+3. Assist with their shopping list
+4. Be conversational and natural
+5. Extract entities when customers mention products (for Graphiti/Spanner storage)
+
+Keep responses concise (2-3 sentences max) since they will be spoken aloud.
+When customers ask about products, mention 2-3 specific options with prices when possible.
+Be warm and personable - you can respond to greetings and casual conversation too.
+
+When you detect product mentions, include them in your response with this format:
+ENTITIES: [product names mentioned]`;
+        
+        async function generateResponse(userInput) {
+            const apiEndpoint = document.getElementById('apiEndpoint').value;
+            const model = document.getElementById('geminiModel').value;
+            
+            if (!apiEndpoint) {
+                return "Please configure your backend API endpoint first.";
+            }
+            
+            try {
+                // Show thinking indicator
+                addMessage("Thinking...", 'thinking', 'thinking-msg');
+                
+                // Call your backend which will call Vertex AI
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: userInput,
+                        history: conversationHistory.slice(-10),
+                        model: model,
+                        systemPrompt: SYSTEM_PROMPT,
+                        config: {
+                            temperature: 0.7,
+                            maxOutputTokens: 150,
+                        }
+                    })
+                });
+                
+                // Remove thinking indicator
+                const thinkingMsg = document.getElementById('thinking-msg');
+                if (thinkingMsg) thinkingMsg.remove();
+                
+                if (!response.ok) {
+                    throw new Error(`Backend API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const reply = data.response || data.text || data.message;
+                
+                // Extract entities if present (for Graphiti integration)
+                if (reply.includes('ENTITIES:')) {
+                    const parts = reply.split('ENTITIES:');
+                    const cleanReply = parts[0].trim();
+                    const entities = parts[1].trim();
+                    console.log('Extracted entities for Graphiti:', entities);
+                    return cleanReply;
+                }
+                
+                return reply;
+                
+            } catch (error) {
+                console.error('Vertex AI Gemini error:', error);
+                // Remove thinking indicator
+                const thinkingMsg = document.getElementById('thinking-msg');
+                if (thinkingMsg) thinkingMsg.remove();
+                
+                // Fallback response
+                return "I'm having trouble connecting to the backend. Make sure your server is running and the endpoint is correct.";
+            }
+        }
+        
+        // Example backend endpoint for Vertex AI (you'll implement this in Python)
+        function showBackendExample() {
+            const example = `
+# Example backend endpoint using Vertex AI Gemini
+
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from google.cloud import aiplatform
+from vertexai.generative_models import GenerativeModel, ChatSession
+import vertexai
+
+app = FastAPI()
+
+# Initialize Vertex AI
+vertexai.init(project="your-project-id", location="us-central1")
+
+class ChatRequest(BaseModel):
+    message: str
+    history: list = []
+    model: str = "gemini-1.5-pro"
+    systemPrompt: str = ""
+
+@app.post("/api/v1/chat")
+async def chat(request: ChatRequest):
+    try:
+        # Initialize the model
+        model = GenerativeModel(request.model)
+        
+        # Create chat session with history
+        chat = model.start_chat(history=[])
+        
+        # Add system prompt as first message if provided
+        if request.systemPrompt:
+            response = chat.send_message(request.systemPrompt)
+        
+        # Send user message
+        response = chat.send_message(request.message)
+        
+        return {"response": response.text}
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+`;
+            console.log('Backend example:', example);
+        }
+        
+        async function startConversation() {
+            const status = document.getElementById('status');
+            const conversation = document.getElementById('conversation');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            try {
+                status.textContent = 'Getting microphone access...';
+                conversation.innerHTML = '';
+                conversationHistory = [];
+                
+                // Get microphone
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                status.textContent = 'Connecting to Deepgram STT...';
+                
+                // Connect to Deepgram STT
+                const sttUrl = 'wss://api.deepgram.com/v1/listen?' + new URLSearchParams({
+                    model: 'nova-2',
+                    language: 'en-US',
+                    smart_format: 'true',
+                    interim_results: 'true',
+                    utterance_end_ms: '1000',
+                    vad_events: 'true'
+                });
+                
+                sttWebsocket = new WebSocket(sttUrl, ['token', DEEPGRAM_API_KEY]);
+                
+                sttWebsocket.onopen = () => {
+                    status.textContent = '✅ Connected! Start speaking...';
+                    startBtn.style.display = 'none';
+                    stopBtn.style.display = 'block';
+                    
+                    const greeting = "Hello! Welcome to LeafLoaf. I'm powered by Vertex AI Gemini. How can I help you with your grocery shopping today?";
+                    addMessage(greeting, 'assistant');
+                    speak(greeting);
+                    
+                    // Show backend example
+                    showBackendExample();
+                    
+                    // Start recording
+                    mediaRecorder = new MediaRecorder(audioStream);
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0 && sttWebsocket.readyState === WebSocket.OPEN) {
+                            sttWebsocket.send(event.data);
+                        }
+                    };
+                    
+                    mediaRecorder.start(250);
+                };
+                
+                let currentInterimId = null;
+                
+                sttWebsocket.onmessage = async (event) => {
+                    const response = JSON.parse(event.data);
+                    
+                    if (response.channel && response.channel.alternatives && response.channel.alternatives.length > 0) {
+                        const text = response.channel.alternatives[0].transcript;
+                        
+                        if (text) {
+                            if (response.is_final) {
+                                // Remove interim message
+                                if (currentInterimId) {
+                                    const elem = document.getElementById(currentInterimId);
+                                    if (elem) elem.remove();
+                                    currentInterimId = null;
+                                }
+                                
+                                // Add user message
+                                addMessage(text, 'user');
+                                
+                                // Process and respond
+                                if (!isProcessing) {
+                                    isProcessing = true;
+                                    
+                                    // Generate response with Vertex AI Gemini
+                                    const response = await generateResponse(text);
+                                    
+                                    // Add assistant message
+                                    addMessage(response, 'assistant');
+                                    
+                                    // Speak the response
+                                    await speak(response);
+                                    
+                                    isProcessing = false;
+                                }
+                            } else {
+                                // Show interim result
+                                if (!currentInterimId) {
+                                    currentInterimId = 'interim-' + Date.now();
+                                    const div = document.createElement('div');
+                                    div.id = currentInterimId;
+                                    div.className = 'message user interim';
+                                    div.textContent = text + '...';
+                                    document.getElementById('conversation').appendChild(div);
+                                } else {
+                                    const elem = document.getElementById(currentInterimId);
+                                    if (elem) elem.textContent = text + '...';
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                sttWebsocket.onerror = (error) => {
+                    console.error('STT WebSocket error:', error);
+                    status.textContent = '❌ Connection error';
+                    stopConversation();
+                };
+                
+                sttWebsocket.onclose = () => {
+                    status.textContent = 'Disconnected';
+                    stopConversation();
+                };
+                
+            } catch (error) {
+                console.error('Error:', error);
+                status.textContent = '❌ Error: ' + error.message;
+            }
+        }
+        
+        async function speak(text) {
+            try {
+                // Use Deepgram TTS API
+                const ttsUrl = 'https://api.deepgram.com/v1/speak?' + new URLSearchParams({
+                    model: 'aura-asteria-en',
+                    encoding: 'mp3'
+                });
+                
+                const response = await fetch(ttsUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + DEEPGRAM_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text })
+                });
+                
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    
+                    // Wait for audio to finish playing
+                    return new Promise((resolve) => {
+                        audio.onended = () => {
+                            URL.revokeObjectURL(audioUrl);
+                            resolve();
+                        };
+                        audio.play();
+                    });
+                }
+            } catch (error) {
+                console.error('TTS error:', error);
+                // Continue even if TTS fails
+            }
+        }
+        
+        function addMessage(text, type, id = null) {
+            const conversation = document.getElementById('conversation');
+            const div = document.createElement('div');
+            div.className = 'message ' + type;
+            div.textContent = text;
+            if (id) div.id = id;
+            conversation.appendChild(div);
+            conversation.scrollTop = conversation.scrollHeight;
+            
+            // Add to history (except thinking messages)
+            if (type !== 'thinking') {
+                conversationHistory.push({ role: type, content: text });
+            }
+        }
+        
+        function stopConversation() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            
+            if (audioStream) {
+                audioStream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (sttWebsocket) {
+                sttWebsocket.close();
+            }
+            
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('status').textContent = 'Stopped';
+        }
+        
+        // Load saved config
+        window.onload = () => {
+            const savedEndpoint = localStorage.getItem('vertexAiEndpoint');
+            if (savedEndpoint) {
+                document.getElementById('apiEndpoint').value = savedEndpoint;
+            }
+        };
+        
+        // Save config when changed
+        document.getElementById('apiEndpoint').addEventListener('change', (e) => {
+            localStorage.setItem('vertexAiEndpoint', e.target.value);
+        });
+    </script>
+</body>
+</html>

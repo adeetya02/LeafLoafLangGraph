@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multilingual Voice Test - LeafLoaf</title>
+    <meta charset="utf-8">
+    <style>
+        body { 
+            font-family: -apple-system, Arial, sans-serif; 
+            max-width: 900px; 
+            margin: 50px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2c3e50; margin-bottom: 10px; }
+        .subtitle { color: #7f8c8d; margin-bottom: 30px; }
+        
+        .language-examples {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        
+        .example {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example:hover {
+            background: #bbdefb;
+            transform: translateX(5px);
+        }
+        
+        .status { 
+            padding: 15px 25px; 
+            margin: 20px 0; 
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .ready { background: #e8f5e9; color: #2e7d32; }
+        .error { background: #f8d7da; color: #721c24; }
+        
+        button { 
+            padding: 15px 30px; 
+            font-size: 18px; 
+            margin: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .primary { background: #007bff; color: white; }
+        .danger { background: #dc3545; color: white; }
+        
+        .conversation {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            height: 400px;
+            overflow-y: auto;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message { background: #e3f2fd; }
+        .assistant-message { background: #e8f5e9; }
+        
+        .language-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            margin: 0 5px;
+            background: #ffc107;
+            color: #000;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Multilingual Voice Test</h1>
+        <p class="subtitle">Test Hindi, Gujarati, Korean, and Code-Switching</p>
+        
+        <div class="language-examples">
+            <h3>Try these examples:</h3>
+            
+            <div class="example" onclick="showExample(this)">
+                <strong>Hindi:</strong> मुझे दूध और पनीर चाहिए <span class="language-tag">HI</span><br>
+                <small>(I need milk and paneer)</small>
+            </div>
+            
+            <div class="example" onclick="showExample(this)">
+                <strong>Gujarati:</strong> મને દૂધ અને ઘી જોઈએ છે <span class="language-tag">GU</span><br>
+                <small>(I need milk and ghee)</small>
+            </div>
+            
+            <div class="example" onclick="showExample(this)">
+                <strong>Korean:</strong> 김치하고 된장 있어요? <span class="language-tag">KO</span><br>
+                <small>(Do you have kimchi and doenjang?)</small>
+            </div>
+            
+            <div class="example" onclick="showExample(this)">
+                <strong>Code-Switching:</strong> I need some दाल and rice, क्या आपके पास है? <span class="language-tag">EN+HI</span><br>
+                <small>(I need some lentils and rice, do you have it?)</small>
+            </div>
+            
+            <div class="example" onclick="showExample(this)">
+                <strong>Mixed:</strong> 오늘 special पर क्या है? Any Korean groceries? <span class="language-tag">KO+HI+EN</span><br>
+                <small>(What's on special today? Any Korean groceries?)</small>
+            </div>
+        </div>
+        
+        <div class="status ready" id="status">Click Start to begin</div>
+        
+        <div style="text-align: center;">
+            <button class="primary" onclick="startVoice()" id="startBtn">🎤 Start Voice</button>
+            <button class="danger" onclick="stopVoice()" id="stopBtn" disabled>⏹️ Stop</button>
+        </div>
+        
+        <div class="conversation" id="conversation"></div>
+        
+        <audio id="audioPlayer" style="display: none;"></audio>
+    </div>
+    
+    <script>
+        let ws, stream, audioContext, processor;
+        
+        function showExample(elem) {
+            alert('Click "Start Voice" and then speak this phrase:\n\n' + elem.innerText);
+        }
+        
+        function addMessage(text, type = 'user', lang = '') {
+            const conversation = document.getElementById('conversation');
+            const message = document.createElement('div');
+            message.className = `message ${type}-message`;
+            
+            let langTag = '';
+            if (lang) {
+                langTag = `<span class="language-tag">${lang}</span>`;
+            }
+            
+            message.innerHTML = `<strong>${type === 'user' ? 'You' : 'Assistant'}:</strong> ${text} ${langTag}`;
+            
+            conversation.appendChild(message);
+            conversation.scrollTop = conversation.scrollHeight;
+        }
+        
+        async function startVoice() {
+            try {
+                // Get microphone
+                stream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                });
+                
+                // Connect WebSocket
+                ws = new WebSocket('ws://localhost:7777/ws');
+                
+                ws.onopen = () => {
+                    document.getElementById('status').textContent = 'Connected - Initializing...';
+                    document.getElementById('status').className = 'status ready';
+                };
+                
+                ws.onmessage = (e) => {
+                    const data = JSON.parse(e.data);
+                    handleMessage(data);
+                };
+                
+                ws.onerror = (e) => {
+                    document.getElementById('status').textContent = 'Connection error';
+                    document.getElementById('status').className = 'status error';
+                };
+                
+                ws.onclose = () => {
+                    stopVoice();
+                };
+                
+            } catch (error) {
+                alert('Please allow microphone access to use voice assistant.');
+            }
+        }
+        
+        function startAudioCapture() {
+            audioContext = new AudioContext({ sampleRate: 16000 });
+            const source = audioContext.createMediaStreamSource(stream);
+            processor = audioContext.createScriptProcessor(4096, 1, 1);
+            
+            processor.onaudioprocess = (e) => {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    const inputData = e.inputBuffer.getChannelData(0);
+                    
+                    // Convert to int16
+                    const output = new Int16Array(inputData.length);
+                    for (let i = 0; i < inputData.length; i++) {
+                        const s = Math.max(-1, Math.min(1, inputData[i]));
+                        output[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                    }
+                    
+                    ws.send(output.buffer);
+                }
+            };
+            
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+            
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+        }
+        
+        function playAudio(base64Audio) {
+            const audioPlayer = document.getElementById('audioPlayer');
+            const audioBlob = base64ToBlob(base64Audio, 'audio/mp3');
+            const audioUrl = URL.createObjectURL(audioBlob);
+            
+            audioPlayer.src = audioUrl;
+            audioPlayer.play().catch(() => {
+                document.addEventListener('click', function enableAudio() {
+                    audioPlayer.play();
+                    document.removeEventListener('click', enableAudio);
+                });
+                alert('Click anywhere to enable audio playback');
+            });
+        }
+        
+        function base64ToBlob(base64, mimeType) {
+            const byteCharacters = atob(base64);
+            const byteNumbers = new Array(byteCharacters.length);
+            
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            
+            const byteArray = new Uint8Array(byteNumbers);
+            return new Blob([byteArray], { type: mimeType });
+        }
+        
+        function detectLanguage(text) {
+            // Simple language detection based on script
+            if (/[\u0900-\u097F]/.test(text)) return 'HI'; // Devanagari
+            if (/[\u0A80-\u0AFF]/.test(text)) return 'GU'; // Gujarati
+            if (/[\uAC00-\uD7AF]/.test(text)) return 'KO'; // Korean
+            if (/[\u0900-\u097F]/.test(text) && /[a-zA-Z]/.test(text)) return 'EN+HI';
+            return 'EN';
+        }
+        
+        function handleMessage(data) {
+            switch(data.type) {
+                case 'system':
+                    if (data.message.includes('ready')) {
+                        document.getElementById('status').textContent = '🎤 Listening... (Speak in any language)';
+                        document.getElementById('status').className = 'status ready';
+                        startAudioCapture();
+                        addMessage("Ready! Try speaking in Hindi, Gujarati, Korean, or mix languages", 'assistant');
+                    }
+                    break;
+                    
+                case 'transcript':
+                    if (data.is_final && data.text) {
+                        const lang = detectLanguage(data.text);
+                        addMessage(data.text, 'user', lang);
+                    }
+                    break;
+                    
+                case 'tts_audio':
+                    const lang = detectLanguage(data.text);
+                    addMessage(data.text, 'assistant', lang);
+                    
+                    if (data.audio) {
+                        playAudio(data.audio);
+                    }
+                    break;
+                    
+                case 'error':
+                    document.getElementById('status').textContent = 'Error occurred';
+                    document.getElementById('status').className = 'status error';
+                    break;
+            }
+        }
+        
+        function stopVoice() {
+            if (processor) processor.disconnect();
+            if (audioContext) audioContext.close();
+            if (stream) stream.getTracks().forEach(t => t.stop());
+            if (ws) ws.close();
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('status').textContent = 'Stopped';
+            document.getElementById('status').className = 'status ready';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deepgram Voice Test - Standalone</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px; 
+            margin: 40px auto; 
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+        h1 { 
+            color: #333;
+            text-align: center;
+        }
+        .status { 
+            padding: 15px; 
+            margin: 20px 0; 
+            border-radius: 8px; 
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .connected { 
+            background: #d4edda; 
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .disconnected { 
+            background: #f8d7da; 
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .connecting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        button { 
+            padding: 15px 30px; 
+            font-size: 18px; 
+            margin: 10px; 
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .output { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            margin: 20px 0; 
+            min-height: 300px;
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #bbdefb;
+            color: #1565c0;
+        }
+        .error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .success {
+            color: #388e3c;
+            font-weight: bold;
+        }
+        .transcript {
+            color: #1976d2;
+            margin: 5px 0;
+            padding: 5px;
+            background: #e3f2fd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Deepgram Voice Test (Standalone)</h1>
+        
+        <div class="info">
+            <strong>Instructions:</strong> Click "Start Voice Test" and allow microphone access. 
+            Then speak clearly and watch your words appear below. This connects directly to Deepgram's API.
+        </div>
+        
+        <div class="status disconnected" id="status">Click Start to begin</div>
+        
+        <div class="controls">
+            <button id="startBtn" onclick="startTest()">Start Voice Test</button>
+            <button id="stopBtn" onclick="stopTest()" disabled>Stop</button>
+        </div>
+        
+        <div class="output" id="output">
+            Ready to start...
+            
+            This test will:
+            1. Request microphone access
+            2. Connect to Deepgram Nova-3 model
+            3. Stream audio in real-time
+            4. Display transcriptions as you speak
+        </div>
+    </div>
+    
+    <script>
+        let ws = null;
+        let mediaRecorder = null;
+        let audioStream = null;
+        let isRecording = false;
+        
+        function log(message, className = '') {
+            const output = document.getElementById('output');
+            const timestamp = new Date().toLocaleTimeString();
+            const msgElement = document.createElement('div');
+            msgElement.textContent = `[${timestamp}] ${message}`;
+            if (className) msgElement.className = className;
+            output.appendChild(msgElement);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function updateStatus(text, className) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = 'status ' + className;
+        }
+        
+        async function startTest() {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            // Clear output
+            document.getElementById('output').innerHTML = '';
+            
+            try {
+                // Step 1: Get microphone access
+                updateStatus('Requesting microphone access...', 'connecting');
+                log('Requesting microphone access...');
+                
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    } 
+                });
+                
+                log('✓ Microphone access granted!', 'success');
+                
+                // Step 2: Connect to Deepgram
+                updateStatus('Connecting to Deepgram...', 'connecting');
+                log('Connecting to Deepgram Nova-3...');
+                
+                const apiKey = '36a821d351939023aabad9beeaa68b391caa124a';
+                const deepgramUrl = 'wss://api.deepgram.com/v1/listen?' + new URLSearchParams({
+                    model: 'nova-3',
+                    language: 'en-US',
+                    punctuate: 'true',
+                    smart_format: 'true',
+                    interim_results: 'true',
+                    utterance_end_ms: '1000',
+                    vad_events: 'true'
+                });
+                
+                ws = new WebSocket(deepgramUrl, ['token', apiKey]);
+                
+                ws.onopen = () => {
+                    log('✓ Connected to Deepgram!', 'success');
+                    updateStatus('Connected - Speak now!', 'connected');
+                    
+                    // Start recording
+                    const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/mp4';
+                    mediaRecorder = new MediaRecorder(audioStream, { mimeType });
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
+                            ws.send(event.data);
+                        }
+                    };
+                    
+                    mediaRecorder.start(250); // Send data every 250ms
+                    isRecording = true;
+                    log('🎤 Recording started - speak clearly!', 'success');
+                };
+                
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        
+                        if (data.type === 'Results') {
+                            const transcript = data.channel?.alternatives?.[0]?.transcript;
+                            if (transcript) {
+                                const isFinal = data.is_final;
+                                if (isFinal) {
+                                    log(`Speech: "${transcript}"`, 'transcript');
+                                } else {
+                                    // Show interim results in status
+                                    updateStatus(`Listening: "${transcript}"...`, 'connected');
+                                }
+                            }
+                        } else if (data.type === 'SpeechStarted') {
+                            log('🗣️ Speech detected', 'success');
+                        } else if (data.type === 'UtteranceEnd') {
+                            log('📍 End of utterance', 'success');
+                        }
+                    } catch (e) {
+                        console.error('Parse error:', e);
+                    }
+                };
+                
+                ws.onerror = (error) => {
+                    log('WebSocket error: ' + error, 'error');
+                    console.error('WebSocket error:', error);
+                };
+                
+                ws.onclose = (event) => {
+                    log(`Disconnected from Deepgram (code: ${event.code})`, 'error');
+                    updateStatus('Disconnected', 'disconnected');
+                    stopTest();
+                };
+                
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+                updateStatus('Error occurred', 'disconnected');
+                console.error('Test error:', error);
+                stopTest();
+            }
+        }
+        
+        function stopTest() {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                log('🛑 Recording stopped');
+            }
+            
+            if (audioStream) {
+                audioStream.getTracks().forEach(track => track.stop());
+                audioStream = null;
+            }
+            
+            if (ws) {
+                ws.close();
+                ws = null;
+            }
+            
+            isRecording = false;
+            updateStatus('Stopped', 'disconnected');
+        }
+        
+        // Clean up on page unload
+        window.addEventListener('beforeunload', () => {
+            stopTest();
+        });
+    </script>
+</body>
+</html>

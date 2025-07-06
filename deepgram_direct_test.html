@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deepgram Direct API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { text-align: center; color: #333; }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background: #45a049; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #status {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            background: #f0f0f0;
+        }
+        #transcript {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 200px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+        }
+        .final { color: #333; margin: 5px 0; }
+        .interim { color: #999; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Deepgram Direct API Test</h1>
+        <p style="text-align: center;">This connects directly to Deepgram's WebSocket API</p>
+        
+        <button id="startBtn" onclick="startDeepgram()">Start Listening</button>
+        <button id="stopBtn" onclick="stopDeepgram()" style="display: none;">Stop</button>
+        
+        <div id="status">Ready to start</div>
+        
+        <div id="transcript">
+            <p style="color: #999; text-align: center;">Your speech will appear here...</p>
+        </div>
+    </div>
+
+    <script>
+        let websocket = null;
+        let mediaRecorder = null;
+        let audioStream = null;
+        const DEEPGRAM_API_KEY = '36a821d351939023aabad9beeaa68b391caa124a';
+        
+        async function startDeepgram() {
+            const status = document.getElementById('status');
+            const transcript = document.getElementById('transcript');
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            
+            try {
+                status.textContent = 'Getting microphone access...';
+                
+                // Get microphone
+                audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 16000,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+                
+                status.textContent = 'Connecting to Deepgram...';
+                
+                // Connect directly to Deepgram WebSocket API
+                const deepgramUrl = 'wss://api.deepgram.com/v1/listen?' + new URLSearchParams({
+                    model: 'nova-2',
+                    language: 'en-US',
+                    smart_format: 'true',
+                    interim_results: 'true',
+                    utterance_end_ms: '1000',
+                    vad_events: 'true'
+                });
+                
+                websocket = new WebSocket(deepgramUrl, ['token', DEEPGRAM_API_KEY]);
+                
+                websocket.onopen = () => {
+                    status.textContent = '✅ Connected! Start speaking...';
+                    transcript.innerHTML = '';
+                    startBtn.style.display = 'none';
+                    stopBtn.style.display = 'block';
+                    
+                    // Start recording
+                    mediaRecorder = new MediaRecorder(audioStream);
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0 && websocket.readyState === WebSocket.OPEN) {
+                            websocket.send(event.data);
+                        }
+                    };
+                    
+                    mediaRecorder.start(250); // Send chunks every 250ms
+                };
+                
+                websocket.onmessage = (event) => {
+                    const response = JSON.parse(event.data);
+                    
+                    if (response.channel) {
+                        const alternatives = response.channel.alternatives;
+                        if (alternatives && alternatives.length > 0) {
+                            const text = alternatives[0].transcript;
+                            
+                            if (text) {
+                                if (response.is_final) {
+                                    // Remove interim results
+                                    const interims = transcript.querySelectorAll('.interim');
+                                    interims.forEach(el => el.remove());
+                                    
+                                    // Add final transcript
+                                    const p = document.createElement('p');
+                                    p.className = 'final';
+                                    p.textContent = text;
+                                    transcript.appendChild(p);
+                                } else {
+                                    // Update interim result
+                                    let interim = transcript.querySelector('.interim');
+                                    if (!interim) {
+                                        interim = document.createElement('p');
+                                        interim.className = 'interim';
+                                        transcript.appendChild(interim);
+                                    }
+                                    interim.textContent = text + '...';
+                                }
+                                
+                                // Auto-scroll
+                                transcript.scrollTop = transcript.scrollHeight;
+                            }
+                        }
+                    }
+                };
+                
+                websocket.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    status.textContent = '❌ Connection error';
+                    stopDeepgram();
+                };
+                
+                websocket.onclose = () => {
+                    status.textContent = 'Disconnected';
+                    stopDeepgram();
+                };
+                
+            } catch (error) {
+                console.error('Error:', error);
+                status.textContent = '❌ Error: ' + error.message;
+            }
+        }
+        
+        function stopDeepgram() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+            
+            if (audioStream) {
+                audioStream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (websocket) {
+                websocket.close();
+            }
+            
+            document.getElementById('startBtn').style.display = 'block';
+            document.getElementById('stopBtn').style.display = 'none';
+            document.getElementById('status').textContent = 'Stopped';
+        }
+    </script>
+</body>
+</html>
